@@ -6,6 +6,18 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
+        <div class="row container print-header d-print-block">
+            <div class="col s12">
+                <h4>{{ env('APP_NAME') }} — Relatório do Dashboard</h4>
+                <p>
+                    Colaborador: <strong>{{ auth()->user()->name }}</strong> &nbsp;|&nbsp;
+                    Período: <strong id="print-periodo-label">Último mês</strong> &nbsp;|&nbsp;
+                    Gerado em: <strong>{{ now()->format('d/m/Y H:i') }}</strong>
+                </p>
+                <hr>
+            </div>
+        </div>
+
         <div class="row container">
             <section class="info">
 
@@ -49,16 +61,6 @@
                       <i class="material-icons" style="font-size: 1rem; vertical-align: text-bottom;">print</i>
                       Imprimir Relatório
                   </button>
-              </div>
-
-              <div class="col s12 print-header d-print-block">
-                  <h4>{{ env('APP_NAME') }} — Relatório do Dashboard</h4>
-                  <p>
-                      Colaborador: <strong>{{ auth()->user()->name }}</strong> &nbsp;|&nbsp;
-                      Período: <strong id="print-periodo-label">Último mês</strong> &nbsp;|&nbsp;
-                      Gerado em: <strong>{{ now()->format('d/m/Y H:i') }}</strong>
-                  </p>
-                  <hr>
               </div>
           </div>
 
@@ -109,6 +111,8 @@
         @media print {
             .grafico { box-shadow: none !important; border: 1px solid #ddd; page-break-inside: avoid; }
             .graficos { width: 50% !important; float: left; }
+            .info { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 8px; }
+            .info > div { flex: 1 1 0 !important; width: auto !important; max-width: none !important; }
         }
     </style>
 
