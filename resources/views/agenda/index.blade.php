@@ -271,10 +271,12 @@
         const cadastrarModal = new bootstrap.Modal(document.getElementById("cModal"));
         //Rotina para Abrir o Modal
         const abrirModal = (info) => {
-            let newStartDate = info.date;
-            let newEndDate   = moment(newStartDate).add(1, 'hour').toDate();
-            document.getElementById("start").value  = moment(newStartDate).format('YYYY-MM-DDTHH:mm');
-            document.getElementById("end").value    = moment(newEndDate).format('YYYY-MM-DDTHH:mm');
+            // info.dateStr já vem no fuso configurado do calendário (UTC-4); usar
+            // moment.parseZone evita que o JS reconverta pro fuso local do navegador.
+            let inicio = moment.parseZone(info.dateStr);
+            let fim    = inicio.clone().add(1, 'hour');
+            document.getElementById("start").value  = inicio.format('YYYY-MM-DDTHH:mm');
+            document.getElementById("end").value    = fim.format('YYYY-MM-DDTHH:mm');
             cadastrarModal.show();
         }
         //Rotina para Visualizar os dados do Evento
@@ -298,10 +300,12 @@
         }     
         //Rotina para Criar Evento a partir de um intervalo selecionado (arraste)
         const criarModal = (info) => {
-            let newStartDate = info.start;
-            let newEndDate   = info.end || moment(newStartDate).add(1, 'hour').toDate();
-            document.getElementById("start").value = moment(newStartDate).format('YYYY-MM-DDTHH:mm');
-            document.getElementById("end").value   = moment(newEndDate).format('YYYY-MM-DDTHH:mm');
+            // info.startStr/endStr já vêm no fuso configurado do calendário (UTC-4);
+            // moment.parseZone evita que o JS reconverta pro fuso local do navegador.
+            let inicio = moment.parseZone(info.startStr);
+            let fim    = info.endStr ? moment.parseZone(info.endStr) : inicio.clone().add(1, 'hour');
+            document.getElementById("start").value = inicio.format('YYYY-MM-DDTHH:mm');
+            document.getElementById("end").value   = fim.format('YYYY-MM-DDTHH:mm');
             cadastrarModal.show();
         };
         //Rotina para apagar Evento
