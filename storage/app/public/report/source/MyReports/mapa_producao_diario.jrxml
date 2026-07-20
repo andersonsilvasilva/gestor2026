@@ -1,0 +1,225 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="relatorio_aveian" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c5afc206-5535-4c19-8fdd-84a2b0b2d92f" summaryWithPageHeaderAndFooter="true">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="230"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="763"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Jasperreport\DataAdapter1.jrdax"/>
+	<style name="Estilo_cores_alternadas" mode="Opaque" backcolor="#FFFFFF">
+		<conditionalStyle backcolor="#CCFFFF">
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2==0]]></conditionExpression>
+		</conditionalStyle>
+	</style>
+	<parameter name="id_colaborador" class="java.lang.Integer"/>
+	<parameter name="dta_inicio" class="java.lang.String"/>
+	<parameter name="dta_fim" class="java.lang.String"/>
+	<query language="SQL"><![CDATA[SELECT	
+    DATE(eventos.start) AS dia_mes,
+    procedimento.tipo_relate,
+    procedimento.codigo,
+    procedimento.name AS nome_proc,
+    eventos.user_id,
+    colaborador.name AS nome_colaborador,
+    eventos.status,
+    eventos.procediments_id,
+    eventos.id AS id_evento,
+    procedimento.id AS id_procedimento,
+    COUNT(*) AS quant_realizada
+FROM eventos AS eventos
+INNER JOIN procediments AS procedimento 
+        ON eventos.procediments_id = procedimento.id 
+INNER JOIN users AS colaborador 
+        ON eventos.user_id = colaborador.id
+WHERE 
+      eventos.user_id = $P{id_colaborador}
+  AND eventos.start BETWEEN CAST($P{dta_inicio} AS DATE) AND CAST($P{dta_fim} AS DATE)
+GROUP BY 
+    dia_mes,
+    nome_proc
+ORDER BY  
+    dia_mes ASC,
+    nome_proc ASC
+]]></query>
+	<field name="dia_mes" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="dia_mes"/>
+		<property name="com.jaspersoft.studio.field.label" value="dia_mes"/>
+	</field>
+	<field name="tipo_relate" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tipo_relate"/>
+		<property name="com.jaspersoft.studio.field.label" value="tipo_relate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="procediments"/>
+	</field>
+	<field name="codigo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.label" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="procediments"/>
+	</field>
+	<field name="nome_proc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="nome_proc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="procediments"/>
+	</field>
+	<field name="user_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="user_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="user_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="nome_colaborador" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="nome_colaborador"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="status"/>
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="procediments_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="procediments_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="procediments_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="id_evento" class="java.math.BigInteger">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_evento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="id_procedimento" class="java.math.BigInteger">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_procedimento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="procediments"/>
+	</field>
+	<field name="quant_realizada" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="quant_realizada"/>
+		<property name="com.jaspersoft.studio.field.label" value="quant_realizada"/>
+	</field>
+	<variable name="Total" calculation="Sum" class="java.lang.Integer">
+		<expression><![CDATA[$F{quant_realizada}]]></expression>
+	</variable>
+	<background splitType="Stretch"/>
+	<title height="93" splitType="Stretch">
+		<element kind="image" uuid="cf713853-3ce3-4f75-abba-331d4dbe1c45" x="2" y="7" width="190" height="79">
+			<expression><![CDATA["images/logo_prefeitura.png"]]></expression>
+		</element>
+		<element kind="staticText" uuid="30da2b68-c354-4714-9fc9-4962cfc3efe5" x="200" y="5" width="591" height="43" fontName="Arial" fontSize="21.0" bold="true" hTextAlign="Left" vTextAlign="Bottom">
+			<text><![CDATA[SECRETÁRIA MUNICIPAL DE SAÚDE DE CUIABÁ]]></text>
+			<box padding="5"/>
+		</element>
+		<element kind="staticText" uuid="87e97373-6331-458c-bd8c-291e99630412" x="200" y="50" width="460" height="28" fontName="Arial" fontSize="13.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[COORDENADORIA DE ATENÇÃO SECUNDÁRIA]]></text>
+			<box padding="5"/>
+		</element>
+	</title>
+	<pageHeader height="95" splitType="Stretch">
+		<element kind="staticText" uuid="18c37209-1a90-4f9c-bebe-a50b51b858eb" x="1" y="65" width="140" height="30" fontName="Arial" fontSize="12.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Nome do Profissional:]]></text>
+		</element>
+		<element kind="staticText" uuid="3d574ca9-cd80-4993-b688-46fd7edd162e" x="471" y="65" width="219" height="30" vTextAlign="Middle">
+			<text><![CDATA[TERAPEUTA HOLISTICO]]></text>
+		</element>
+		<element kind="textField" uuid="75f344d0-d7c3-461c-9fae-1e0988fa4669" x="137" y="64" width="255" height="30" fontSize="12.0" vTextAlign="Middle">
+			<expression><![CDATA[$F{nome_colaborador}]]></expression>
+		</element>
+		<element kind="staticText" uuid="60debe8e-4031-4a40-8137-ba7313fea6a4" x="400" y="64" width="60" height="30" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<text><![CDATA[Função: ]]></text>
+		</element>
+		<element kind="staticText" uuid="ccfff195-e1e0-4c93-a36c-5a203b44507b" x="1" y="36" width="129" height="30" fontName="Arial" fontSize="12.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Unidade de Saúde: ]]></text>
+		</element>
+		<element kind="staticText" uuid="09ad3954-1a8a-410a-beaf-0eed1e1ec2ee" x="135" y="35" width="548" height="30" fontName="Arial" fontSize="11.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[URPICS- UNIDADE DE REFERÊNCIA EM PRÁTICAS INTEGRATIVAS E COMPLEMENTARES EM SAUDE]]></text>
+		</element>
+		<element kind="textField" uuid="2a9c43fa-fb26-4c5f-9d48-481606c5a861" x="681" y="64" width="116" height="30" fontSize="12.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[new java.text.SimpleDateFormat("M / yyyy").format($F{dia_mes})]]></expression>
+		</element>
+		<element kind="staticText" uuid="287eb743-0bdd-4a9f-9698-550a3f0595c1" x="687" y="34" width="110" height="30" fontSize="12.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<text><![CDATA[Mês Referência:]]></text>
+		</element>
+		<element kind="staticText" uuid="61f12743-4bd9-451e-bcf3-f943a1996d4e" mode="Opaque" x="0" y="0" width="798" height="34" forecolor="#FFFFFF" backcolor="#030303" fontName="Arial" fontSize="15.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[MAPA DE PRODUÇÃO DIARIA]]></text>
+			<box padding="5"/>
+		</element>
+	</pageHeader>
+	<columnHeader height="30" splitType="Stretch">
+		<element kind="staticText" uuid="901fe272-c400-4022-a1f1-aa67aa47943a" mode="Opaque" x="274" y="0" width="427" height="30" forecolor="#FFFFFF" backcolor="#030303" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[Nome Procedimento]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="486f1996-1896-45a2-8e7b-60b1830c6ce8"/>
+			<box padding="8"/>
+		</element>
+		<element kind="staticText" uuid="54147e01-4221-43db-aee8-07fcb5e31c1b" mode="Opaque" x="700" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#030303" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Quantidade]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51f830f-ac53-4786-89af-ca9025ff575b"/>
+			<box padding="8"/>
+		</element>
+		<element kind="staticText" uuid="3d6654b1-3135-4be8-a35c-2ffd971db721" mode="Opaque" x="140" y="0" width="134" height="30" forecolor="#FFFFFF" backcolor="#030303" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Data Atendimento]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1e6f92ad-5403-4347-b356-d36dbaa3194c"/>
+			<box padding="8"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<element kind="textField" uuid="17126277-dc6a-4892-a8a2-fb5b20baeb37" x="140" y="0" width="130" height="30" pattern="dd/MM/yyyy" vTextAlign="Middle" style="Estilo_cores_alternadas">
+				<expression><![CDATA[$F{dia_mes}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e05273fa-b6ae-4fb3-9865-b047bf285f1c"/>
+				<box padding="5" style="Estilo_cores_alternadas">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="3590331b-85cf-4bf7-87d7-bb390ba772d3" x="699" y="0" width="100" height="30" hTextAlign="Center" vTextAlign="Middle" style="Estilo_cores_alternadas">
+				<expression><![CDATA[$F{quant_realizada}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51f830f-ac53-4786-89af-ca9025ff575b"/>
+				<box padding="5" style="Estilo_cores_alternadas">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="6ec8faef-cea5-4283-9da7-2a4b137d5d5c" x="270" y="0" width="428" height="30" vTextAlign="Middle" style="Estilo_cores_alternadas">
+				<expression><![CDATA[$F{nome_proc}.toUpperCase()]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="486f1996-1896-45a2-8e7b-60b1830c6ce8"/>
+				<box padding="5" style="Estilo_cores_alternadas">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+	<pageFooter height="30" splitType="Stretch">
+		<element kind="textField" uuid="06e62b80-ba8d-47c3-9d41-fdf9e40def86" x="620" y="0" width="100" height="30" hTextAlign="Right">
+			<expression><![CDATA["Página " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="35fc746a-2d7d-4662-b38e-35f0bc602e62" x="720" y="0" width="100" height="30" evaluationTime="Report" hTextAlign="Left">
+			<expression><![CDATA[" de " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+	</pageFooter>
+	<summary height="30">
+		<element kind="textField" uuid="79d1cd29-8169-4bb1-8886-59bb699bb76f" x="701" y="0" width="98" height="30" pattern="#,##0.###;#,##0.###-" bold="true" hTextAlign="Center" vTextAlign="Middle" style="Estilo_cores_alternadas">
+			<expression><![CDATA[$V{Total}]]></expression>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51f830f-ac53-4786-89af-ca9025ff575b"/>
+			<box padding="5" style="Estilo_cores_alternadas">
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="af7cbb07-8524-452e-b0f9-67de34f89ffa" x="344" y="0" width="355" height="30" fontName="Arial" fontSize="12.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<text><![CDATA[Total da produção mensal:]]></text>
+		</element>
+	</summary>
+</jasperReport>

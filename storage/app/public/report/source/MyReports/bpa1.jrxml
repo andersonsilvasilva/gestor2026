@@ -1,0 +1,267 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="bpa1" language="java" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="22" bottomMargin="54" whenResourceMissingType="Empty" uuid="c5afc206-5535-4c19-8fdd-84a2b0b2d92f" floatColumnFooter="true">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="230"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="763"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Jasperreport\DataAdapter1.jrdax"/>
+	<style name="Estilo_cores_alternadas" mode="Opaque" backcolor="#FFFFFF">
+		<conditionalStyle backcolor="#CCFFFF">
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2==0]]></conditionExpression>
+		</conditionalStyle>
+	</style>
+	<style name="Label" mode="Opaque" backcolor="#CCFFFF"/>
+	<parameter name="id_colaborador" class="java.lang.String"/>
+	<parameter name="dta_inicio" class="java.lang.String"/>
+	<parameter name="dta_fim" class="java.lang.String"/>
+	<query language="SQL"><![CDATA[SELECT 
+				eventos.id,
+				eventos.procediments_id, 
+				proc.codigo,
+				proc.codigo,
+				proc.name, 
+				eventos.user_id, 
+				col.name AS  col, 
+				col_det.cns AS cns_col,
+				col_det.cbo AS cbo_col,
+				eventos.client_id, 
+				cli.cns AS cns_pac, 
+				cli.nome AS nome_pac, 
+				eventos.start AS Inicio,	  
+				cli.sexo AS sexo_pac,
+				cli.data_nascimento AS data_nasc_pac,
+				cli.nacionalidade AS nacionalidade_pac,
+				cli.cor AS cor_pac,
+				cli.cep AS cep_pac,
+				 cli.logradouro AS logradouro_pac,
+				 cli.endereco AS endereco_pac,
+				 cli.numero AS numero_pac,
+				 cli.bairro AS bairro_pac,
+				 cli.telefone AS fone_pac,
+				 cli.email AS email_pac,
+				  eventos.status,
+				  eventos.deleted_at,
+				  eventos.created_at,
+				  eventos.updated_at,
+				  proc.tipo_relate  FROM eventos
+				INNER JOIN user_details  col_det ON  col_det.user_id=eventos.user_id
+ 				INNER JOIN procediments  proc  ON  proc.id=eventos.procediments_id
+ 				INNER JOIN clients cli ON cli.id=eventos.client_id
+				 INNER JOIN users col ON col.id=eventos.user_id
+				 WHERE (proc.tipo_relate='bpa') AND (eventos.user_id= $P{id_colaborador} )  AND
+				   (eventos.start  BETWEEN  CAST($P{dta_inicio} AS DATE) AND  CAST($P{dta_fim} AS DATE) )
+				 GROUP BY eventos.user_id]]></query>
+	<field name="id" class="java.math.BigInteger">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="procediments_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="procediments_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="procediments_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="codigo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.label" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="procediments"/>
+	</field>
+	<field name="COLUMN_4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.label" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="procediments"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="procediments"/>
+	</field>
+	<field name="user_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="user_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="user_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="col" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="col"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="cns_col" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cns"/>
+		<property name="com.jaspersoft.studio.field.label" value="cns_col"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="user_details"/>
+	</field>
+	<field name="cbo_col" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cbo"/>
+		<property name="com.jaspersoft.studio.field.label" value="cbo_col"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="user_details"/>
+	</field>
+	<field name="client_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="client_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="client_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="cns_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cns"/>
+		<property name="com.jaspersoft.studio.field.label" value="cns_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="nome_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="nome_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="Inicio" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="start"/>
+		<property name="com.jaspersoft.studio.field.label" value="Inicio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="sexo_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sexo"/>
+		<property name="com.jaspersoft.studio.field.label" value="sexo_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="data_nasc_pac" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="data_nascimento"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_nasc_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="nacionalidade_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nacionalidade"/>
+		<property name="com.jaspersoft.studio.field.label" value="nacionalidade_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="cor_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cor"/>
+		<property name="com.jaspersoft.studio.field.label" value="cor_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="cep_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cep"/>
+		<property name="com.jaspersoft.studio.field.label" value="cep_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="logradouro_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="logradouro"/>
+		<property name="com.jaspersoft.studio.field.label" value="logradouro_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="endereco_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="endereco"/>
+		<property name="com.jaspersoft.studio.field.label" value="endereco_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="numero_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="numero"/>
+		<property name="com.jaspersoft.studio.field.label" value="numero_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="bairro_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="bairro"/>
+		<property name="com.jaspersoft.studio.field.label" value="bairro_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="fone_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="telefone"/>
+		<property name="com.jaspersoft.studio.field.label" value="fone_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="email_pac" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="email"/>
+		<property name="com.jaspersoft.studio.field.label" value="email_pac"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
+	</field>
+	<field name="status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="status"/>
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="deleted_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="deleted_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="deleted_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="created_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="created_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="created_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="updated_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="updated_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="updated_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="eventos"/>
+	</field>
+	<field name="tipo_relate" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tipo_relate"/>
+		<property name="com.jaspersoft.studio.field.label" value="tipo_relate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="procediments"/>
+	</field>
+	<group name="Quabra_por_cliente" keepTogether="true">
+		<expression><![CDATA[$F{client_id}]]></expression>
+	</group>
+	<background splitType="Stretch"/>
+	<title height="6" splitType="Stretch"/>
+	<pageHeader splitType="Stretch"/>
+	<columnHeader height="163" splitType="Stretch">
+		<element kind="image" uuid="ea12259b-5bab-4e6d-9aa0-4622c3b40f4a" x="19" y="-5" width="549" height="168">
+			<expression><![CDATA["images/cabecallho_bpa.png"]]></expression>
+		</element>
+		<element kind="textField" uuid="dd3ac237-2915-4c7f-943b-e09d760c9342" x="299" y="111" width="239" height="20" backcolor="#CCFFFF" fontName="Arial" fontSize="8.0" bold="true" vTextAlign="Middle">
+			<expression><![CDATA[$F{col}.toUpperCase()]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box padding="5"/>
+		</element>
+		<element kind="textField" uuid="c3223d16-e0fb-4d35-8b73-1379cef9623b" x="49" y="112" width="239" height="20" backcolor="#CCFFFF" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
+			<expression><![CDATA[$F{cns_col}.toUpperCase()]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box padding="5"/>
+		</element>
+		<element kind="textField" uuid="442c081c-1a11-411f-b2a0-daf492ec9fc2" x="49" y="132" width="169" height="20" backcolor="#CCFFFF" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
+			<expression><![CDATA[$F{cbo_col}.toUpperCase()]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box padding="5"/>
+		</element>
+		<element kind="textField" uuid="59ced3ed-3775-4f4c-bef1-b314f616435e" x="223" y="132" width="59" height="20" backcolor="#CCFFFF" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
+			<expression><![CDATA[new java.text.SimpleDateFormat("M / yyyy").format($F{Inicio})]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box padding="5"/>
+		</element>
+		<element kind="textField" uuid="51f01f01-1fdb-441f-bb3f-dc8941579ab3" x="496" y="134" width="40" height="15" fontSize="8.0" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="76">
+			<element kind="subreport" uuid="5a3cd46c-48a9-48bd-8b8b-80a6283af4e9" x="19" y="-2" width="553" height="78" overflowType="Stretch" usingCache="false" removeLineWhenBlank="true">
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<expression><![CDATA["sub_bpa1.jasper"]]></expression>
+				<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				<parameter name="id_colaborador">
+					<expression><![CDATA[$F{user_id}]]></expression>
+				</parameter>
+				<parameter name="dta_inicio">
+					<expression><![CDATA[$P{dta_inicio}]]></expression>
+				</parameter>
+				<parameter name="dta_fim">
+					<expression><![CDATA[$P{dta_fim}]]></expression>
+				</parameter>
+			</element>
+		</band>
+	</detail>
+	<pageFooter height="61" splitType="Stretch">
+		<element kind="image" uuid="5a0f76ad-8fdc-48ab-96b0-2ef95b0f2af1" stretchType="ElementGroupHeight" x="19" y="-2" width="550" height="61" printWhenGroupChanges="Quabra_por_cliente" removeLineWhenBlank="true">
+			<expression><![CDATA["images/foot_bpa.png"]]></expression>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+	</pageFooter>
+	<summary splitType="Stretch"/>
+</jasperReport>

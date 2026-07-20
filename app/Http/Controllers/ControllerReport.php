@@ -2,185 +2,144 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Nette\Utils\Strings;
-use Ramsey\Uuid\Type\Integer;
-use App\Http\Controllers\JasperController;
-use Illuminate\Support\Facades\Date;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use PHPJasper\PHPJasper;
-use TCPDF;
+use Symfony\Component\Process\Process;
 
 define('driver_path', '/vendor/geekcom/phpjasper/bin/jasperstarter/jdbc');
 define('source_path', '/app/public/report/source/MyReports/gestor');
 define('compiled_path', '/app/public/report/compiled');
-define('output_path','/app/public/report/output');
+define('output_path', '/app/public/report/output');
 
 class ControllerReport extends Controller
 {
+    /**
+     * Relatórios disponíveis, gerados com a engine JasperReports 7.0.1
+     * (storage/app/jasperstarter7). O tipo de cada parâmetro precisa
+     * bater com o declarado no .jrxml de cada relatório.
+     */
+    private const REPORTS = [
+        'aveianm'              => 'aveianm',
+        'bpa1'                 => 'bpa1',
+        'mapa_producao'        => 'mapa_producao',
+        'mapa_producao_diario' => 'mapa_producao_diario',
+    ];
 
-  public function index()
-  {
-    $terapeutas =user::all();
+    public function index()
+    {
+        $terapeutas = User::all();
 
-    return view('relatorio.gerador', compact('terapeutas'));
+        return view('relatorio.gerador', compact('terapeutas'));
+    }
 
-  }
-
-  public function getDatabaseConfigMysql()
-  {
-
+    public function getDatabaseConfigMysql()
+    {
         $jdbc_dir = base_path(driver_path);
 
         return [
-                'driver'     => env("DB_CONNECTION"),
-                'host'       => env('DB_HOST','localhost'),
-                'port'       => env('DB_PORT','3306'),
-                'username'   => env('DB_USERNAME', 'root'),
-                'password'   => env('DB_PASSWORD', ''),
-                'database'   => env('DB_DATABASE', 'forge'),
-                'jdbc_driver'=> 'com.mysql.cj.jdbc.Driver',
-                'jdbc_url'   => 'jdbc:mysql://'.env('DB_HOST', 'localhost').':'.env('DB_PORT', '3306').';databaseName='.env('DB_DATABASE', 'forge').'&serverTimezone=UTC',
-                'jdbc_dir'   => $jdbc_dir
-                ];
-
-   }
-   public function generateReport(Request $request)
-   {
-        if(isset($_POST['q_relatorio'])){
-            if($_POST['q_relatorio'] == "aveianm"){
-
-                $report='ficha_acolhimento';              //ALTERE AQUI O NOME DO RELATORIO A GERAR
-                $path = storage_path(source_path);
-                $file = $report.".jasper";
-                $file = $path."/".$file;
-                $ext = "pdf";
-
-                $jasper = new PHPJasper();
-                $input = storage_path(source_path).'/'.$report.'.jrxml';
-                $output = storage_path(compiled_path)."/";
-
-
-                if (!file_exists(storage_path(compiled_path).'/'.$report.'.jasper')) {
-                    $jasper->compile($input,$output)->execute();
-                };
-
-                $input = storage_path(compiled_path).'/'.$report.'.jasper';
-
-                $user = Auth::user();
-
-                $user_id = $user->id;
-
-                $output = storage_path(output_path)."/user_".$user_id;
-
-                if (!file_exists(storage_path(output_path)."/user_".$user_id)) {
-                    mkdir($path, 0777, true);
-                }
-
-
-                $options = [
-                    'format'            => ['pdf'],
-                    'locale'            => 'pt_BR',
-                    'params'            => ["idcliente" => "37"],
-                   /*
-                   'params'            => ["id"            => isset($_POST["id_colaborador"])?$_POST["id_colaborador"]:NULL,
-                                            "dta_inicio"    => isset($_POST["data_inicio"])?$_POST["data_inicio"]:$request->dta_inicio,
-                                            "dta_fim"       => isset($_POST["data_fim"])?$_POST["data_fim"]:$request->dta_fim
-                                           ],
-                   */
-                    'db_connection'     => $this->getDatabaseConfigMysql()
-                ];
-
-            /*
-
-            echo $resp = $jasper->process(
-                    $input,
-                    $output,
-                    $options)->output();
-                    exit;
-
-                */
-
-                /*
-                echo $resp = $jasper->process(
-                            $input,
-                            $output,
-                            array("pdf"),
-                            array("id" => '2'),
-                            $this->getDatabaseConfigMysql(),
-                            true,
-                            true,
-                            'en')->output();
-                */
-
-
-                    $resp = $jasper->process(
-                        $input,
-                        $output,
-                        array("pdf"),
-                        array("idcliente" => '37'),
-                        $this->getDatabaseConfigMysql(),
-                        true,
-                        true,
-                        'pt_BR'
-                        )->execute();
-
-
-                $filename = $report.'.'.$ext;
-                if($resp == []){
-                    switch ($ext){
-                        case "pdf":
-                            return JasperController::pdf($output.'/'.$filename,$filename);
-                            break;
-                        case "xlsx":
-                            return JasperController::xlsx($output.'/'.$filename,$filename);
-                            break;
-                        case "csv":
-                            return JasperController::csv($output.'/'.$filename,$filename);
-                            break;
-                        case "html":
-                            return JasperController::html($output.'/'.$filename,$filename);
-                            break;
-                                     }
-                }
-                try {
-              } catch (\Exception $e) {
-                return redirect()->back()->with('error', $e->getMessage());
-            };
-
-            }
-        }
-        if(isset($_POST['q_relatorio'])){
-            if($_POST['q_relatorio'] == "bpa1"){
-                    echo 'Escolheu o Boletim de Produção Ambulatorial';
-                }
-        }
-        if(isset($_POST['q_relatorio'])){
-            if($_POST['q_relatorio'] == "mapa_producao"){
-                    echo 'Escolheu o Mapa de Produção';
-                }
-        }
-
+            'driver'      => env('DB_CONNECTION'),
+            'host'        => env('DB_HOST', 'localhost'),
+            'port'        => env('DB_PORT', '3306'),
+            'username'    => env('DB_USERNAME', 'root'),
+            'password'    => env('DB_PASSWORD', ''),
+            'database'    => env('DB_DATABASE', 'forge'),
+            'jdbc_driver' => 'com.mysql.cj.jdbc.Driver',
+            'jdbc_url'    => 'jdbc:mysql://' . env('DB_HOST', 'localhost') . ':' . env('DB_PORT', '3306') . ';databaseName=' . env('DB_DATABASE', 'forge') . '&serverTimezone=UTC',
+            'jdbc_dir'    => $jdbc_dir,
+        ];
     }
-    public function getParametros()
-	{
-        $report='testedb';
 
-        $input = storage_path(source_path).'/'.$report.'.jrxml';
+    public function generateReport(Request $request)
+    {
+        $validated = $request->validate([
+            'q_relatorio'     => 'required|string|in:' . implode(',', array_keys(self::REPORTS)),
+            'id_colaborador'  => 'required|exists:users,id',
+            'dta_inicio'      => 'required|date',
+            'dta_fim'         => 'required|date|after_or_equal:dta_inicio',
+        ]);
+
+        $report = self::REPORTS[$validated['q_relatorio']];
+
+        $jrxmlPath = storage_path('app/public/report/source/MyReports/' . $report . '.jrxml');
+        $jasperPath = storage_path('app/public/report/compiled/' . $report . '.jasper');
+        $binDir = storage_path('app/jasperstarter7/bin');
+
+        if (!file_exists($jasperPath) && file_exists($jrxmlPath)) {
+            $compile = new Process([$binDir . '/jasperstarter.bat', 'compile', $jrxmlPath, '-o', dirname($jasperPath)], $binDir);
+            $compile->setTimeout(60);
+            $compile->run();
+        }
+
+        if (!file_exists($jasperPath)) {
+            return redirect()->back()->with('error', 'Relatório não encontrado: ' . $report);
+        }
+
+        $outputDir = storage_path('app/public/report/output');
+        if (!is_dir($outputDir)) {
+            mkdir($outputDir, 0777, true);
+        }
+        $outputBasename = $report . '_' . uniqid();
+        $outputPath = $outputDir . '/' . $outputBasename;
+
+        $dbUrl = sprintf(
+            "jdbc:mysql://%s:%s/%s?sessionVariables=sql_mode=''",
+            env('DB_HOST', '127.0.0.1'),
+            env('DB_PORT', '3306'),
+            env('DB_DATABASE', 'gestor')
+        );
+
+        $args = [
+            $binDir . '/jasperstarter.bat',
+            'process',
+            $jasperPath,
+            '-o', $outputPath,
+            '-f', 'pdf',
+            '-P',
+            'id_colaborador=' . $validated['id_colaborador'],
+            'dta_inicio=' . $validated['dta_inicio'],
+            'dta_fim=' . $validated['dta_fim'],
+            '-t', 'generic',
+            '--db-driver', 'com.mysql.cj.jdbc.Driver',
+            '--db-url', $dbUrl,
+            '-u', env('DB_USERNAME', 'root'),
+        ];
+        if (env('DB_PASSWORD')) {
+            $args[] = '-p';
+            $args[] = env('DB_PASSWORD');
+        }
+
+        $process = new Process($args, $binDir);
+        $process->setTimeout(120);
+        $process->run();
+
+        if (!$process->isSuccessful() || !file_exists($outputPath . '.pdf')) {
+            \Log::error('Falha ao gerar relatório ' . $report . ': ' . $process->getOutput() . $process->getErrorOutput());
+
+            return redirect()->back()->with('error', 'Não foi possível gerar o relatório. Verifique os parâmetros e tente novamente.');
+        }
+
+        return Response::make(file_get_contents($outputPath . '.pdf'), 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $report . '.pdf"',
+        ]);
+    }
+
+    public function getParametros()
+    {
+        $report = 'testedb';
+
+        $input = storage_path(source_path) . '/' . $report . '.jrxml';
 
         $jasper = new PHPJasper;
         $output = $jasper->listParameters($input)->execute();
 
-        foreach($output as $parameter_description)
-        {
+        foreach ($output as $parameter_description) {
             $parameter_description = trim($parameter_description);
-            //echo $parameter_description . '<br>' ;
-            $dados = explode(" ", trim($parameter_description), 3 );
-            echo '<strong>Parametro:</strong>  ' .  $dados[1] .
+            $dados = explode(' ', trim($parameter_description), 3);
+            echo '<strong>Parametro:</strong>  ' . $dados[1] .
                 ' <strong>Tipo de Dados:</strong>  ' . $dados[2] . '<br>';
         }
-	}
+    }
 }

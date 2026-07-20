@@ -1,2 +1,7 @@
 *
 !.gitignore
+!report/
+!report/source/
+!report/source/MyReports/
+report/source/MyReports/*
+!report/source/MyReports/*.jrxml

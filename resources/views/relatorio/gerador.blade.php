@@ -5,6 +5,12 @@
 
         <hr>
 
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <form action="{{ route('gerar') }}" method="post">
 
             @csrf
@@ -44,6 +50,7 @@
                     <option value="aveianm">Relatório AVEIANM</option>
                     <option value="bpa1">Relatório BPA-I</option>
                     <option value="mapa_producao">Relatório Mapa de Produção Mensal</option>
+                    <option value="mapa_producao_diario">Relatório Mapa de Produção Diário</option>
                 </select>
                 @error('q_relatorio')
                     <div class="text-danger">{{ $message }}</div>
