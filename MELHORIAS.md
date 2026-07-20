@@ -25,7 +25,7 @@ Levantamento inicial feito a partir de leitura do código (models, controllers, 
 ## 🟡 Qualidade de código / dívida técnica
 
 - [ ] **Zero testes reais** — só existem os `ExampleTest.php` padrão do Laravel (`tests/Feature`, `tests/Unit`). Nenhuma cobertura para clientes, agenda, colaboradores, relatórios.
-- [ ] Duplicação grande em `DashboardController::index` — os dois branches (admin vs usuário comum) repetem ~90 linhas quase idênticas (loop de nomes de mês, formatação). Dá pra extrair em métodos privados.
+- [x] Duplicação grande em `DashboardController::index` — resolvido ao implementar os controles de período/tipo de gráfico do dashboard: os dois branches agora usam um único `buildChartData()` privado parametrizado por `user_id`.
 - [ ] Uso de `client::` (minúsculo) em vez de `Client::` em vários lugares (`ClienteController.php:92`, `DashboardController.php:21`) — funciona no PHP (case-insensitive para nomes de classe), mas é inconsistente e confunde leitura/autocomplete.
 - [ ] Uso de `$_POST` diretamente em `ControllerReport::generateReport` em vez do `Request` injetado (`$request` está disponível mas ignorado) — quebra a testabilidade e foge do padrão Laravel.
 - [ ] Vários blocos de código comentado (relatórios BPA1/mapa de produção, autorizações, chamadas alternativas ao PHPJasper) — limpar ou implementar.
