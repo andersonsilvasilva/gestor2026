@@ -2,216 +2,109 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Client;
-use App\Models\UserDetail;
 use App\Models\eventos;
-use App\Models\Procediment;
-use Illuminate\Contracts\Database\Query\Builder;
-use Illuminate\Database\Query\JoinClause;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
- 
-    public function index() {
-        //conta numero de usuarios no sistema
-        $clientes = client::all()->count();
-        
-        $user_id =  Auth::user()->id;
+    private const PERIODOS_EM_DIAS = [
+        '7d' => 7,
+        '1m' => 30,
+        '6m' => 182,
+        '1a' => 365,
+    ];
 
-        if ($user_id=='1'){    //Ele é administrador
+    private const MESES_PT = [
+        '01' => 'Jan', '02' => 'Fev', '03' => 'Mar', '04' => 'Abr',
+        '05' => 'Mai', '06' => 'Jun', '07' => 'Jul', '08' => 'Ago',
+        '09' => 'Set', '10' => 'Out', '11' => 'Nov', '12' => 'Dez',
+    ];
 
-                //conta o numero de atendimentos no ano para o usuario atual        
-                $atendidoAno = eventos::whereYear('start',date('Y'))->count();
-                
+    public function index()
+    {
+        $clientes = Client::count();
+        $userId = Auth::user()->id;
+        $isAdmin = $userId == 1;
 
-                //conta o mumero de atendimentos no mês para o usuaior atual
-                $atendidoMes = eventos::whereMonth('start',date('m'))->count();
+        $atendidoAno = eventos::when(!$isAdmin, fn ($q) => $q->where('user_id', $userId))
+            ->whereYear('start', date('Y'))
+            ->count();
 
+        $atendidoMes = eventos::when(!$isAdmin, fn ($q) => $q->where('user_id', $userId))
+            ->whereYear('start', date('Y'))
+            ->whereMonth('start', date('m'))
+            ->count();
 
-                //retorna o array do grafico 1 - usuarios
-                $clientesMes = eventos::select([
-                        //DB::raw("MONTH(start) as mes"),
-                        DB::raw("DATE_FORMAT(start,'%m/%Y') as mes"),
-                        DB::raw("COUNT(*) as total")
-                ])
-                //->whereYear('created_at',date('Y'))
-                ->groupBy('mes')
-                ->orderBy('mes', 'asc')
-                ->get();
+        $chartData = $this->buildChartData($isAdmin ? null : $userId, '1m');
 
-                $mes = [];
-                $mes_nomes = [];
-                $total = [];
-                foreach($clientesMes as $mese){
-                    
-                    $mes_num = substr($mese->mes, 0, 2);
-                    $ano_num = substr($mese->mes, 3, 4);
-                    
-                    if($mes_num == 01){
-                        $mes_nome = "Jan";
-                        }elseif($mes_num == '02'){
-                        $mes_nome = "Fev";
-                        }elseif($mes_num == '03'){
-                        $mes_nome = "Mar";
-                        }elseif($mes_num == '04'){
-                        $mes_nome = "Abr";
-                        }elseif($mes_num == '05'){
-                        $mes_nome = "Mai";
-                        }elseif($mes_num == '06'){
-                        $mes_nome = "Jun";
-                        }elseif($mes_num == '07'){
-                        $mes_nome = "Jul";
-                        }elseif($mes_num == '08'){
-                        $mes_nome = "Ago";
-                        }elseif($mes_num == '09'){
-                        $mes_nome = "Set";
-                        }elseif($mes_num == '10'){
-                        $mes_nome = "Out";
-                        }elseif($mes_num == '11'){
-                        $mes_nome = 'Nov';
-                        }else{
-                        $mes_nome = 'Dez';
-                        };
-
-                    $mes[] = $mese->mes;
-                    $mes_nomes[] = $mes_nome.'/'.$ano_num;
-                    $total[] = $mese->total;
-                }    
-                $clienteNomeMes =[];
-
-                //Formatar para o padrao array Chart.js do grafico 1
-                $clienteNomeMes = $mes_nomes;
-                $clienteMes = implode(',', $mes);
-                $clienteTotal = $total;
-
-                //retorna o array do grafico 2 - Procedimentos
-                $AnoProcedimento = DB::table('eventos')
-                    ->select(DB::raw('procediments.name, eventos.procediments_id ,eventos.status, eventos.created_at'))
-                    ->where('status','1')
-                    ->whereYear('eventos.start',date('Y'))
-                    ->join('procediments', function( JoinClause $join){
-                        $join->on('procediments.id','=','eventos.procediments_id');
-                    })
-                    ->select(DB::raw('count(eventos.procediments_id) as ptotal, procediments.name'))
-                    ->groupBy('procediments.name')
-                    ->get();
-                    $proc_nomes = [];
-                    $ptotal = [];
-                    foreach($AnoProcedimento as $proc){
-
-                        $proc_nomes[] = $proc->name;
-                        $ptotal[] = $proc->ptotal;
-                    }
-                    //Formatar para o padrao array Chart.js do grafico 2
-                    $ProcedimentoAno = $proc_nomes;
-                    $ProcediementoTotal = $ptotal;
-        
-                return view('home', compact('clientes','atendidoAno','atendidoMes','clienteNomeMes','clienteMes','clienteTotal','ProcedimentoAno','ProcediementoTotal'));
-        }
-         else     
-        {
-                     //Ele é usuario comum
-                    //conta o numero de atendimentos no ano para o usuario atual        
-                    $atendidoAno = eventos::where('user_id',$user_id)
-                    ->whereYear('start',date('Y'))
-                    ->count();
-                    
-
-                    //conta o mumero de atendimentos no mês para o usuaior atual
-                    $atendidoMes = eventos::where('user_id',$user_id)
-                    ->whereMonth('start',date('m'))->count();
-
-                    //retorna o array do grafico 1 - usuarios
-                    $clientesMes = eventos::select([
-                            //DB::raw("MONTH(start) as mes"),
-                            DB::raw("DATE_FORMAT(start,'%m/%Y') as mes"),
-                            DB::raw("COUNT(*) as total")
-                    ])
-                    ->where('user_id',$user_id)
-                    //->whereYear('created_at',date('Y'))
-                    ->groupBy('mes')
-                    ->orderBy('mes', 'asc')
-                    ->get();
-
-                    $mes = [];
-                    $mes_nomes = [];
-                    $total = [];
-                    foreach($clientesMes as $mese){
-                        
-                        $mes_num = substr($mese->mes, 0, 2);
-                        $ano_num = substr($mese->mes, 3, 4);
-                        
-                        if($mes_num == 01){
-                            $mes_nome = "Jan";
-                            }elseif($mes_num == '02'){
-                            $mes_nome = "Fev";
-                            }elseif($mes_num == '03'){
-                            $mes_nome = "Mar";
-                            }elseif($mes_num == '04'){
-                            $mes_nome = "Abr";
-                            }elseif($mes_num == '05'){
-                            $mes_nome = "Mai";
-                            }elseif($mes_num == '06'){
-                            $mes_nome = "Jun";
-                            }elseif($mes_num == '07'){
-                            $mes_nome = "Jul";
-                            }elseif($mes_num == '08'){
-                            $mes_nome = "Ago";
-                            }elseif($mes_num == '09'){
-                            $mes_nome = "Set";
-                            }elseif($mes_num == '10'){
-                            $mes_nome = "Out";
-                            }elseif($mes_num == '11'){
-                            $mes_nome = 'Nov';
-                            }else{
-                            $mes_nome = 'Dez';
-                            };
-
-                        $mes[] = $mese->mes;
-                        $mes_nomes[] = $mes_nome.'/'.$ano_num;
-                        $total[] = $mese->total;
-                    }    
-                    $clienteNomeMes =[];
-
-                    //Formatar para o padrao array Chart.js do grafico 1
-                    $clienteNomeMes = $mes_nomes;
-                    $clienteMes = implode(',', $mes);
-                    $clienteTotal = $total;
-
-                    //retorna o array do grafico 2 - Procedimentos
-                    $AnoProcedimento = DB::table('eventos')
-                        ->select(DB::raw('procediments.name, eventos.procediments_id ,eventos.status, eventos.created_at'))
-                        ->where('status','1')
-                        ->whereYear('eventos.start',date('Y'))
-                        ->where('user_id',$user_id)
-                        ->join('procediments', function( JoinClause $join){
-                            $join->on('procediments.id','=','eventos.procediments_id');
-                        })
-                        ->select(DB::raw('count(eventos.procediments_id) as ptotal, procediments.name'))
-                        ->groupBy('procediments.name')
-                        ->get();
-                        $proc_nomes = [];
-                        $ptotal = [];
-                        foreach($AnoProcedimento as $proc){
-
-                            $proc_nomes[] = $proc->name;
-                            $ptotal[] = $proc->ptotal;
-                        }
-                        //Formatar para o padrao array Chart.js do grafico 2
-                        $ProcedimentoAno = $proc_nomes;
-                        $ProcediementoTotal = $ptotal;
-            
-                    return view('home', compact('clientes','atendidoAno','atendidoMes','clienteNomeMes','clienteMes','clienteTotal','ProcedimentoAno','ProcediementoTotal'));
-        }
+        return view('home', array_merge(
+            compact('clientes', 'atendidoAno', 'atendidoMes'),
+            $chartData
+        ));
     }
-    
-  
-  
 
+    /**
+     * Endpoint AJAX usado pelo dashboard para trocar o período dos gráficos
+     * sem recarregar a página.
+     */
+    public function chartData(Request $request)
+    {
+        $validated = $request->validate([
+            'periodo' => 'required|string|in:' . implode(',', array_keys(self::PERIODOS_EM_DIAS)),
+        ]);
+
+        $userId = Auth::user()->id;
+        $isAdmin = $userId == 1;
+
+        return response()->json($this->buildChartData($isAdmin ? null : $userId, $validated['periodo']));
+    }
+
+    private function buildChartData(?int $userId, string $periodo): array
+    {
+        $dias = self::PERIODOS_EM_DIAS[$periodo] ?? self::PERIODOS_EM_DIAS['1m'];
+        $desde = Carbon::now()->subDays($dias)->startOfDay();
+        $porMes = $dias > 31;
+        $formatoSql = $porMes ? '%Y-%m-01' : '%Y-%m-%d';
+
+        $atendimentos = eventos::select([
+                DB::raw("DATE_FORMAT(start, '{$formatoSql}') as periodo_agrupado"),
+                DB::raw('COUNT(*) as total'),
+            ])
+            ->where('start', '>=', $desde)
+            ->when($userId, fn ($q) => $q->where('user_id', $userId))
+            ->groupBy('periodo_agrupado')
+            ->orderBy('periodo_agrupado')
+            ->get();
+
+        $atendimentosLabels = [];
+        $atendimentosTotais = [];
+        foreach ($atendimentos as $linha) {
+            $data = Carbon::parse($linha->periodo_agrupado);
+            $atendimentosLabels[] = $porMes
+                ? self::MESES_PT[$data->format('m')] . '/' . $data->format('Y')
+                : $data->format('d/m');
+            $atendimentosTotais[] = $linha->total;
+        }
+
+        $procedimentos = DB::table('eventos')
+            ->join('procediments', 'procediments.id', '=', 'eventos.procediments_id')
+            ->where('eventos.status', '1')
+            ->where('eventos.start', '>=', $desde)
+            ->when($userId, fn ($q) => $q->where('eventos.user_id', $userId))
+            ->select('procediments.name', DB::raw('COUNT(*) as total'))
+            ->groupBy('procediments.name')
+            ->orderByDesc('total')
+            ->get();
+
+        return [
+            'atendimentosLabels'   => $atendimentosLabels,
+            'atendimentosTotais'   => $atendimentosTotais,
+            'procedimentosLabels'  => $procedimentos->pluck('name'),
+            'procedimentosTotais'  => $procedimentos->pluck('total'),
+        ];
+    }
 }
-
-

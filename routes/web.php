@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function(){
     Route::redirect('/', 'home');
     // Route::view('/home', 'home')->name('home');
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
+    Route::get('/home/chart-data', [DashboardController::class, 'chartData'])->name('home.chart-data');
 
     // Perfil de Usuario
     Route::get('/user/profile', [ProfileController::class,'index'])->name('user.profile');
