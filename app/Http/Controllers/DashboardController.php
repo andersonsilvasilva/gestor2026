@@ -43,6 +43,9 @@ class DashboardController extends Controller
                 ->orderBy('mes', 'asc')
                 ->get();
 
+                $mes = [];
+                $mes_nomes = [];
+                $total = [];
                 foreach($clientesMes as $mese){
                     
                     $mes_num = substr($mese->mes, 0, 2);
@@ -96,11 +99,13 @@ class DashboardController extends Controller
                     ->select(DB::raw('count(eventos.procediments_id) as ptotal, procediments.name'))
                     ->groupBy('procediments.name')
                     ->get();
+                    $proc_nomes = [];
+                    $ptotal = [];
                     foreach($AnoProcedimento as $proc){
-            
+
                         $proc_nomes[] = $proc->name;
                         $ptotal[] = $proc->ptotal;
-                    }     
+                    }
                     //Formatar para o padrao array Chart.js do grafico 2
                     $ProcedimentoAno = $proc_nomes;
                     $ProcediementoTotal = $ptotal;
@@ -132,6 +137,9 @@ class DashboardController extends Controller
                     ->orderBy('mes', 'asc')
                     ->get();
 
+                    $mes = [];
+                    $mes_nomes = [];
+                    $total = [];
                     foreach($clientesMes as $mese){
                         
                         $mes_num = substr($mese->mes, 0, 2);
@@ -186,11 +194,13 @@ class DashboardController extends Controller
                         ->select(DB::raw('count(eventos.procediments_id) as ptotal, procediments.name'))
                         ->groupBy('procediments.name')
                         ->get();
+                        $proc_nomes = [];
+                        $ptotal = [];
                         foreach($AnoProcedimento as $proc){
-                
+
                             $proc_nomes[] = $proc->name;
                             $ptotal[] = $proc->ptotal;
-                        }     
+                        }
                         //Formatar para o padrao array Chart.js do grafico 2
                         $ProcedimentoAno = $proc_nomes;
                         $ProcediementoTotal = $ptotal;
