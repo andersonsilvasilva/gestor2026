@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 use PHPJasper\PHPJasper;
 use Symfony\Component\Process\Process;
 
@@ -26,6 +27,16 @@ class ControllerReport extends Controller
         'bpa1'                 => 'bpa1',
         'mapa_producao'        => 'mapa_producao',
         'mapa_producao_diario' => 'mapa_producao_diario',
+    ];
+
+    /**
+     * Nomes amigáveis usados para montar o nome do arquivo baixado.
+     */
+    private const REPORT_LABELS = [
+        'aveianm'              => 'AVEIANM',
+        'bpa1'                 => 'BPA-I',
+        'mapa_producao'        => 'Mapa de Producao Mensal',
+        'mapa_producao_diario' => 'Mapa de Producao Diario',
     ];
 
     public function index()
@@ -129,9 +140,18 @@ class ControllerReport extends Controller
             return redirect()->back()->with('error', 'Não foi possível gerar o relatório. Verifique os parâmetros e tente novamente.');
         }
 
+        $colaborador = User::find($validated['id_colaborador']);
+        $periodo = \Carbon\Carbon::parse($validated['dta_inicio'])->format('d-m-Y')
+            . '_a_' . \Carbon\Carbon::parse($validated['dta_fim'])->format('d-m-Y');
+
+        $filename = Str::slug(self::REPORT_LABELS[$validated['q_relatorio']])
+            . '_' . $periodo
+            . '_' . Str::slug($colaborador->name ?? 'colaborador')
+            . '.pdf';
+
         return Response::make(file_get_contents($outputPath . '.pdf'), 200, [
             'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $report . '.pdf"',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
     }
 
