@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\eventos;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,42 +40,70 @@ class DashboardController extends Controller
             ->whereMonth('start', date('m'))
             ->count();
 
-        $chartData = $this->buildChartData($isAdmin ? null : $userId, '1m');
+        $desde = Carbon::now()->subDays(self::PERIODOS_EM_DIAS['1m'])->startOfDay();
+        $ate = Carbon::now()->endOfDay();
+        $chartData = $this->buildChartData($isAdmin ? null : $userId, $desde, $ate, false);
+
+        $colaboradores = $isAdmin
+            ? User::where('id', '<>', 1)->orderBy('name')->get()
+            : collect();
 
         return view('home', array_merge(
-            compact('clientes', 'atendidoAno', 'atendidoMes'),
+            compact('clientes', 'atendidoAno', 'atendidoMes', 'isAdmin', 'colaboradores'),
             $chartData
         ));
     }
 
     /**
-     * Endpoint AJAX usado pelo dashboard para trocar o período dos gráficos
-     * sem recarregar a página.
+     * Endpoint AJAX usado pelo dashboard para trocar o período/colaborador
+     * dos gráficos sem recarregar a página.
+     *
+     * Usuário comum: sempre vê só os próprios dados.
+     * Administrador: pode ver todos (padrão) ou filtrar por um colaborador
+     * específico via `colaborador_id`, e pode usar um período pronto
+     * (`periodo`) ou um intervalo de datas customizado
+     * (`data_inicio` + `data_fim`).
      */
     public function chartData(Request $request)
     {
+        $isAdmin = Auth::user()->id == 1;
+
         $validated = $request->validate([
-            'periodo' => 'required|string|in:' . implode(',', array_keys(self::PERIODOS_EM_DIAS)),
+            'periodo'        => 'nullable|string|in:' . implode(',', array_keys(self::PERIODOS_EM_DIAS)),
+            'data_inicio'    => 'nullable|date|required_with:data_fim',
+            'data_fim'       => 'nullable|date|after_or_equal:data_inicio|required_with:data_inicio',
+            'colaborador_id' => 'nullable|integer|exists:users,id',
         ]);
 
-        $userId = Auth::user()->id;
-        $isAdmin = $userId == 1;
+        if ($isAdmin) {
+            $userId = !empty($validated['colaborador_id']) ? (int) $validated['colaborador_id'] : null;
+        } else {
+            $userId = Auth::user()->id;
+        }
 
-        return response()->json($this->buildChartData($isAdmin ? null : $userId, $validated['periodo']));
+        if (!empty($validated['data_inicio'])) {
+            $desde = Carbon::parse($validated['data_inicio'])->startOfDay();
+            $ate = Carbon::parse($validated['data_fim'])->endOfDay();
+        } else {
+            $dias = self::PERIODOS_EM_DIAS[$validated['periodo'] ?? '1m'] ?? self::PERIODOS_EM_DIAS['1m'];
+            $desde = Carbon::now()->subDays($dias)->startOfDay();
+            $ate = Carbon::now()->endOfDay();
+        }
+
+        $porMes = $desde->diffInDays($ate) > 31;
+
+        return response()->json($this->buildChartData($userId, $desde, $ate, $porMes));
     }
 
-    private function buildChartData(?int $userId, string $periodo): array
+    private function buildChartData(?int $userId, Carbon $desde, Carbon $ate, bool $porMes): array
     {
-        $dias = self::PERIODOS_EM_DIAS[$periodo] ?? self::PERIODOS_EM_DIAS['1m'];
-        $desde = Carbon::now()->subDays($dias)->startOfDay();
-        $porMes = $dias > 31;
         $formatoSql = $porMes ? '%Y-%m-01' : '%Y-%m-%d';
 
         $atendimentos = eventos::select([
                 DB::raw("DATE_FORMAT(start, '{$formatoSql}') as periodo_agrupado"),
                 DB::raw('COUNT(*) as total'),
             ])
-            ->where('start', '>=', $desde)
+            ->whereBetween('start', [$desde, $ate])
             ->when($userId, fn ($q) => $q->where('user_id', $userId))
             ->groupBy('periodo_agrupado')
             ->orderBy('periodo_agrupado')
@@ -93,7 +122,7 @@ class DashboardController extends Controller
         $procedimentos = DB::table('eventos')
             ->join('procediments', 'procediments.id', '=', 'eventos.procediments_id')
             ->where('eventos.status', '1')
-            ->where('eventos.start', '>=', $desde)
+            ->whereBetween('eventos.start', [$desde, $ate])
             ->when($userId, fn ($q) => $q->where('eventos.user_id', $userId))
             ->select('procediments.name', DB::raw('COUNT(*) as total'))
             ->groupBy('procediments.name')
