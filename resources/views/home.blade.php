@@ -37,14 +37,28 @@
           </div>
 
           <div class="row container">
-              <div class="col s12 periodo-selector">
+              <div class="col s12 periodo-selector no-print">
                   <span class="periodo-label">Período:</span>
                   <div class="btn-group" role="group" aria-label="Período do gráfico">
-                      <button type="button" class="btn btn-sm btn-outline-primary periodo-btn" data-periodo="7d">7 dias</button>
-                      <button type="button" class="btn btn-sm btn-outline-primary periodo-btn active" data-periodo="1m">1 mês</button>
-                      <button type="button" class="btn btn-sm btn-outline-primary periodo-btn" data-periodo="6m">6 meses</button>
-                      <button type="button" class="btn btn-sm btn-outline-primary periodo-btn" data-periodo="1a">1 ano</button>
+                      <button type="button" class="btn btn-sm btn-outline-primary periodo-btn" data-periodo="7d" data-label="Últimos 7 dias">7 dias</button>
+                      <button type="button" class="btn btn-sm btn-outline-primary periodo-btn active" data-periodo="1m" data-label="Último mês">1 mês</button>
+                      <button type="button" class="btn btn-sm btn-outline-primary periodo-btn" data-periodo="6m" data-label="Últimos 6 meses">6 meses</button>
+                      <button type="button" class="btn btn-sm btn-outline-primary periodo-btn" data-periodo="1a" data-label="Último ano">1 ano</button>
                   </div>
+                  <button type="button" id="btnImprimir" class="btn btn-sm btn-outline-dark ms-auto">
+                      <i class="material-icons" style="font-size: 1rem; vertical-align: text-bottom;">print</i>
+                      Imprimir Relatório
+                  </button>
+              </div>
+
+              <div class="col s12 print-header d-print-block">
+                  <h4>{{ env('APP_NAME') }} — Relatório do Dashboard</h4>
+                  <p>
+                      Colaborador: <strong>{{ auth()->user()->name }}</strong> &nbsp;|&nbsp;
+                      Período: <strong id="print-periodo-label">Último mês</strong> &nbsp;|&nbsp;
+                      Gerado em: <strong>{{ now()->format('d/m/Y H:i') }}</strong>
+                  </p>
+                  <hr>
               </div>
           </div>
 
@@ -53,7 +67,7 @@
                     <div class="grafico card z-depth-4">
                         <div class="grafico-header">
                             <h5 class="center"> Total de Atendimentos</h5>
-                            <div class="btn-group tipo-grafico-group" role="group" aria-label="Tipo do gráfico de atendimentos">
+                            <div class="btn-group tipo-grafico-group no-print" role="group" aria-label="Tipo do gráfico de atendimentos">
                                 <button type="button" class="btn btn-sm btn-outline-secondary tipo-btn active" data-chart="atendimentos" data-tipo="bar">Barra</button>
                                 <button type="button" class="btn btn-sm btn-outline-secondary tipo-btn" data-chart="atendimentos" data-tipo="line">Linha</button>
                                 <button type="button" class="btn btn-sm btn-outline-secondary tipo-btn" data-chart="atendimentos" data-tipo="pie">Pizza</button>
@@ -67,7 +81,7 @@
                       <div class="grafico card z-depth-4">
                           <div class="grafico-header">
                               <h5 class="center"> Total de Procedimentos </h5>
-                              <div class="btn-group tipo-grafico-group" role="group" aria-label="Tipo do gráfico de procedimentos">
+                              <div class="btn-group tipo-grafico-group no-print" role="group" aria-label="Tipo do gráfico de procedimentos">
                                   <button type="button" class="btn btn-sm btn-outline-secondary tipo-btn" data-chart="procedimentos" data-tipo="bar">Barra</button>
                                   <button type="button" class="btn btn-sm btn-outline-secondary tipo-btn" data-chart="procedimentos" data-tipo="line">Linha</button>
                                   <button type="button" class="btn btn-sm btn-outline-secondary tipo-btn active" data-chart="procedimentos" data-tipo="pie">Pizza</button>
@@ -91,6 +105,11 @@
         .periodo-label { font-weight: 600; }
         .grafico-header { display: flex; flex-direction: column; align-items: center; gap: .5rem; margin-bottom: .5rem; }
         .tipo-grafico-group .btn { font-size: .75rem; }
+        .print-header { display: none; }
+        @media print {
+            .grafico { box-shadow: none !important; border: 1px solid #ddd; page-break-inside: avoid; }
+            .graficos { width: 50% !important; float: left; }
+        }
     </style>
 
     <script>
@@ -166,8 +185,13 @@
             btn.addEventListener('click', function () {
                 document.querySelectorAll('.periodo-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
+                document.getElementById('print-periodo-label').textContent = this.dataset.label;
                 atualizarPeriodo(this.dataset.periodo);
             });
+        });
+
+        document.getElementById('btnImprimir').addEventListener('click', function () {
+            window.print();
         });
 
         document.querySelectorAll('.tipo-btn').forEach(btn => {

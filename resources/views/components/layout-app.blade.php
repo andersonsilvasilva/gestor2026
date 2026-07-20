@@ -24,24 +24,33 @@
 
         <!-- custom -->
         
-        <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}"> 
+        <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
         {{--@vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
-   
+
         <title>{{ env('APP_NAME')}} @isset($pageTitle) - {{ $pageTitle }} @endisset</title>
-      
+
+        <style>
+            @media print {
+                .no-print { display: none !important; }
+                .col-10 { width: 100% !important; flex: 0 0 100% !important; max-width: 100% !important; }
+            }
+        </style>
+
     </head>
 
     <body>
-        <x-user-bar />
+        <div class="no-print">
+            <x-user-bar />
+        </div>
 
         <div class="d-flex pt-2">
-            <div class="col-0">
+            <div class="col-0 no-print">
                 <x-side-bar/>
             </div>
             <div class="col-10">
                 {{ $slot }}
             </div>
-            
+
         </div-d-flex>
     </body>
 
