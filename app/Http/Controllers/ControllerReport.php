@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use PHPJasper\PHPJasper;
 use Symfony\Component\Process\Process;
@@ -29,9 +30,12 @@ class ControllerReport extends Controller
 
     public function index()
     {
-        $terapeutas = User::all();
+        $isAdmin = Auth::user()->id == 1;
+        $terapeutas = $isAdmin
+            ? User::where('id', '<>', 1)->orderBy('name')->get()
+            : User::where('id', Auth::user()->id)->get();
 
-        return view('relatorio.gerador', compact('terapeutas'));
+        return view('relatorio.gerador', compact('terapeutas', 'isAdmin'));
     }
 
     public function getDatabaseConfigMysql()
@@ -59,6 +63,11 @@ class ControllerReport extends Controller
             'dta_inicio'      => 'required|date',
             'dta_fim'         => 'required|date|after_or_equal:dta_inicio',
         ]);
+
+        $isAdmin = Auth::user()->id == 1;
+        if (!$isAdmin && (int) $validated['id_colaborador'] !== (int) Auth::user()->id) {
+            abort(403, 'Você só pode gerar relatórios dos seus próprios atendimentos.');
+        }
 
         $report = self::REPORTS[$validated['q_relatorio']];
 
