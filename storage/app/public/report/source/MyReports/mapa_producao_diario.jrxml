@@ -24,6 +24,7 @@
 	<parameter name="LOGO_PATH" class="java.lang.String"/>
 	<parameter name="NOME_INSTITUICAO" class="java.lang.String"/>
 	<parameter name="NOME_SECRETARIA" class="java.lang.String"/>
+	<parameter name="UNIDADE_SAUDE" class="java.lang.String"/>
 	<query language="SQL"><![CDATA[SELECT	
     DATE(eventos.start) AS dia_mes,
     procedimento.tipo_relate,
@@ -137,8 +138,8 @@ ORDER BY
 		<element kind="staticText" uuid="ccfff195-e1e0-4c93-a36c-5a203b44507b" x="1" y="36" width="129" height="30" fontName="Arial" fontSize="12.0" bold="true" vTextAlign="Middle">
 			<text><![CDATA[Unidade de Saúde: ]]></text>
 		</element>
-		<element kind="staticText" uuid="09ad3954-1a8a-410a-beaf-0eed1e1ec2ee" x="135" y="35" width="548" height="30" fontName="Arial" fontSize="11.0" bold="true" vTextAlign="Middle">
-			<text><![CDATA[URPICS- UNIDADE DE REFERÊNCIA EM PRÁTICAS INTEGRATIVAS E COMPLEMENTARES EM SAUDE]]></text>
+		<element kind="textField" uuid="09ad3954-1a8a-410a-beaf-0eed1e1ec2ee" x="135" y="35" width="548" height="30" fontName="Arial" fontSize="11.0" bold="true" vTextAlign="Middle">
+			<expression><![CDATA[$P{UNIDADE_SAUDE}]]></expression>
 		</element>
 		<element kind="textField" uuid="2a9c43fa-fb26-4c5f-9d48-481606c5a861" x="681" y="64" width="116" height="30" fontSize="12.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
 			<expression><![CDATA[new java.text.SimpleDateFormat("M / yyyy").format($F{dia_mes})]]></expression>

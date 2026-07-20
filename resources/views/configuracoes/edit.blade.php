@@ -37,6 +37,16 @@
             </div>
 
             <div class="mb-3">
+                <label for="unidade_saude" class="form-label">Unidade de Saúde</label>
+                <input type="text" class="form-control" id="unidade_saude" name="unidade_saude" required
+                       value="{{ old('unidade_saude', $configuracao->unidade_saude) }}">
+                <div class="form-text">Aparece no campo "Unidade de Saúde:" do cabeçalho do relatório.</div>
+                @error('unidade_saude')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
                 <label for="logo" class="form-label">Logomarca</label>
                 @if($configuracao->logo_path)
                     <div class="mb-2">

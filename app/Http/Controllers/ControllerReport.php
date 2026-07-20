@@ -132,6 +132,7 @@ class ControllerReport extends Controller
             $parametros[] = 'LOGO_PATH=' . $logoPath;
             $parametros[] = 'NOME_INSTITUICAO=' . $configuracao->nome_instituicao;
             $parametros[] = 'NOME_SECRETARIA=' . $configuracao->nome_secretaria;
+            $parametros[] = 'UNIDADE_SAUDE=' . $configuracao->unidade_saude;
         }
 
         $args = [

@@ -24,6 +24,7 @@ class ConfiguracaoController extends Controller
         $validated = $request->validate([
             'nome_instituicao' => 'required|string|max:255',
             'nome_secretaria'  => 'required|string|max:255',
+            'unidade_saude'    => 'required|string|max:255',
             'logo'             => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ]);
 
@@ -38,6 +39,7 @@ class ConfiguracaoController extends Controller
         $configuracao->update([
             'nome_instituicao' => $validated['nome_instituicao'],
             'nome_secretaria'  => $validated['nome_secretaria'],
+            'unidade_saude'    => $validated['unidade_saude'],
             'logo_path'        => $logoPath,
         ]);
 
