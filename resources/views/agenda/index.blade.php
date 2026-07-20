@@ -270,12 +270,13 @@
         //Aqui começa as rotinas de controle da Agenda
         const cadastrarModal = new bootstrap.Modal(document.getElementById("cModal"));
         //Rotina para Abrir o Modal
-        const abrirModal = (info) => {  
-            let newStartDate    = info.start;
-            let newEndDate      = info.end || newStartDate;
-            document.getElementById("start").value  = moment(newStartDate).format('YYYY-MM-DDT07:00');
-            document.getElementById("end").value    = moment(newEndDate).format('YYYY-MM-DDT17:00');
-        }            
+        const abrirModal = (info) => {
+            let newStartDate = info.date;
+            let newEndDate   = moment(newStartDate).add(1, 'hour').toDate();
+            document.getElementById("start").value  = moment(newStartDate).format('YYYY-MM-DDTHH:mm');
+            document.getElementById("end").value    = moment(newEndDate).format('YYYY-MM-DDTHH:mm');
+            cadastrarModal.show();
+        }
         //Rotina para Visualizar os dados do Evento
         const abrirVisual = (info) => {
            
@@ -295,70 +296,13 @@
             VisualizarModal.show();
 
         }     
-        //Rotina para Criar Evento
+        //Rotina para Criar Evento a partir de um intervalo selecionado (arraste)
         const criarModal = (info) => {
-            $('#cModal').modal('toggle');
-            $('#saveBtn').click(function () {
-                var newStartDate    = info.event.start;
-                var newEndDate      = info.event.end || newStartDate;
-                //var newStartDateUTC = newStartDate.toISOString().slice(0, 20);
-                //var newEndDateUTC   = newEndDate.toISOString().slice(0, 20);
-                let start_date =  moment(newStartDate ).format('YYYY-MM-DDTHH:MM');
-                let end_date   =  moment(newEndDate).format('YYYY-MM-DDTHH:MM');                
-                let title = $('#title').val();
-                let client_id = client_id;
-                let user_id = user_id;
-                let descricao = CKEDITOR.instances.descricao.getDate();
-                let color = color;
-                let procediments_id = procediments_id;         
-                $.ajax({
-                    url: "{{ route('agenda.store') }}",
-                    method: `POST`,
-                    dataType: `json`,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {title, start_date, end_date, client_id, procediments_id, user_id, descricao, color
-                    },
-                    success: function (response) {
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "Evento criado com sucesso.",
-                            showConfirmButton: false,
-                            timer: 2500
-                        });
-                        $('#cModal').modal('hide');
-                        $('#calendar').fullCalendar('renderEvent', {
-                            'client_id':        response.client_id,
-                            'procediments_id':  response.procediments_id,
-                            'user_id':          response.user_id,
-                            'title':            response.title,
-                            'start':            response.start_date,
-                            'end':              response.end_date,
-                            'descricao':        response.descricao,
-                            'color':            response.color
-                        });
-                        calendar.refetchEvents();
-                        console.log('Evento criado com sucesso.');
-                    },
-                    error: function (error) {
-                        if (error.responseJSON.errors) {
-                            $('#titleError').html(error.responseJSON.errors.title);
-                        }
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "error",
-                            title: "Erro ao cadastrar o evento.",
-                            showConfirmButton: false,
-                            timer: 2500
-                        });
-                        calendar.refetchEvents();
-                        console.error('Erro ao criar o evento.');
-                    },
-                    
-                });
-            });
+            let newStartDate = info.start;
+            let newEndDate   = info.end || moment(newStartDate).add(1, 'hour').toDate();
+            document.getElementById("start").value = moment(newStartDate).format('YYYY-MM-DDTHH:mm');
+            document.getElementById("end").value   = moment(newEndDate).format('YYYY-MM-DDTHH:mm');
+            cadastrarModal.show();
         };
         //Rotina para apagar Evento
         const moverEvento = (info) => {

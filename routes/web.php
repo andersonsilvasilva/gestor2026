@@ -79,7 +79,6 @@ Route::middleware('auth')->group(function(){
     // Calendario routes
     Route::get('agenda/index/{id}', [AgendaController::class, 'index'])->name('agenda.index');
     Route::get('/events', [AgendaController::class, 'getEvents']);
-    Route::post('/salvar', [AgendaController::class, 'store'])->name('agenda.store');
     Route::post('/agenda/mover/{id}', [AgendaController::class, 'update'])->name('agenda.update');
     Route::get('/agenda/delete/{id}', [AgendaController::class, 'deleteEvent']);
     Route::post('/create-agenda', [AgendaController::class, 'create'])->name('agenda.criar');

@@ -71,42 +71,20 @@ class AgendaController extends Controller
 
     public function create(Request $request)
     {
-        $eventos = $request->all();
-    
-        $eventos = eventos::create($eventos);
-       
-       return  redirect()->route('clientes')->with('sucesso', 'Evento criado com sucesso!');
-       //return response()->json('Eventos Cadastrado com sucesso');
-
-    } 
-
-    public function store(Request $request)
-    {
-        $request->validate([
-
-            'title'         => 'required|string',
-            'start'         => 'required',
-            'end'           => 'required',
-            'terapeuta'     => 'required|string',
-            'procedimento'  => 'required|string',
-            'color'         => 'required',
-            'descricao'     => 'required|string|max:255'
+        $validated = $request->validate([
+            'title'           => 'required|string|max:100',
+            'start'           => 'required|date',
+            'end'             => 'required|date|after:start',
+            'client_id'       => 'required|exists:clients,id',
+            'user_id'         => 'required|exists:users,id',
+            'procediments_id' => 'required|exists:procediments,id',
+            'color'           => 'required|string',
+            'descricao'       => 'required|string|max:255',
         ]);
-        
-        eventos::create([
-            'client_id'             => $request->client_id,
-            'procediments_id'       => $request->procediments_id,
-            'user_id'               => $request->user_id,
-            'title'                 => $request->title,
-            'start'                 => $request->start_date,
-            'end'                   => $request->end_date,
-            'descricao'             => $request->descricao,
-            'color'                 => $request->color,
-        ]);
-        
-        return response()->json('Eventos Cadastrado com sucesso');
-       // return  redirect()->route('clientes')->with('sucesso', 'Evento criado com sucesso!');
-        
+
+        eventos::create($validated);
+
+        return redirect()->route('clientes')->with('sucesso', 'Evento criado com sucesso!');
     }
 
     public function update(Request $request, $id)
