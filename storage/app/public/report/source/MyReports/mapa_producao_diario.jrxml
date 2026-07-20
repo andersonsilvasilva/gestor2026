@@ -21,6 +21,9 @@
 	<parameter name="id_colaborador" class="java.lang.Integer"/>
 	<parameter name="dta_inicio" class="java.lang.String"/>
 	<parameter name="dta_fim" class="java.lang.String"/>
+	<parameter name="LOGO_PATH" class="java.lang.String"/>
+	<parameter name="NOME_INSTITUICAO" class="java.lang.String"/>
+	<parameter name="NOME_SECRETARIA" class="java.lang.String"/>
 	<query language="SQL"><![CDATA[SELECT	
     DATE(eventos.start) AS dia_mes,
     procedimento.tipo_relate,
@@ -107,14 +110,14 @@ ORDER BY
 	<background splitType="Stretch"/>
 	<title height="93" splitType="Stretch">
 		<element kind="image" uuid="cf713853-3ce3-4f75-abba-331d4dbe1c45" x="2" y="7" width="190" height="79">
-			<expression><![CDATA["images/logo_prefeitura.png"]]></expression>
+			<expression><![CDATA[$P{LOGO_PATH}]]></expression>
 		</element>
-		<element kind="staticText" uuid="30da2b68-c354-4714-9fc9-4962cfc3efe5" x="200" y="5" width="591" height="43" fontName="Arial" fontSize="21.0" bold="true" hTextAlign="Left" vTextAlign="Bottom">
-			<text><![CDATA[SECRETÁRIA MUNICIPAL DE SAÚDE DE CUIABÁ]]></text>
+		<element kind="textField" uuid="30da2b68-c354-4714-9fc9-4962cfc3efe5" x="200" y="5" width="591" height="43" fontName="Arial" fontSize="21.0" bold="true" hTextAlign="Left" vTextAlign="Bottom">
+			<expression><![CDATA[$P{NOME_INSTITUICAO}]]></expression>
 			<box padding="5"/>
 		</element>
-		<element kind="staticText" uuid="87e97373-6331-458c-bd8c-291e99630412" x="200" y="50" width="460" height="28" fontName="Arial" fontSize="13.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
-			<text><![CDATA[COORDENADORIA DE ATENÇÃO SECUNDÁRIA]]></text>
+		<element kind="textField" uuid="87e97373-6331-458c-bd8c-291e99630412" x="200" y="50" width="460" height="28" fontName="Arial" fontSize="13.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA[$P{NOME_SECRETARIA}]]></expression>
 			<box padding="5"/>
 		</element>
 	</title>

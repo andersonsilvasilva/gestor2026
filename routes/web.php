@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\ConfirmAccountController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProcedimentoControl;
@@ -91,5 +92,9 @@ Route::middleware('auth')->group(function(){
     Route::get('gerador', [ControllerReport::class,'index'])->name('gerador');
     Route::post('/gerar', [ControllerReport::class,'generateReport'])->name('gerar');
     Route::get('/parametros' , [ControllerReport::class,'getParametros']) ->name('parametros');
+
+    // Configurações dos relatórios (só admin)
+    Route::get('/configuracoes', [ConfiguracaoController::class, 'edit'])->name('configuracoes.edit');
+    Route::post('/configuracoes', [ConfiguracaoController::class, 'update'])->name('configuracoes.update');
 
 });

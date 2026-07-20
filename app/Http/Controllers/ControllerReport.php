@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuracao;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,12 @@ class ControllerReport extends Controller
         'mapa_producao'        => 'mapa_producao',
         'mapa_producao_diario' => 'mapa_producao_diario',
     ];
+
+    /**
+     * BPA-I usa o cabeçalho oficial fixo do SUS (uma única imagem) e não
+     * declara os parâmetros de logo/instituição/secretaria.
+     */
+    private const REPORTS_COM_CABECALHO_CONFIGURAVEL = ['aveianm', 'mapa_producao', 'mapa_producao_diario'];
 
     /**
      * Nomes amigáveis usados para montar o nome do arquivo baixado.
@@ -110,6 +117,23 @@ class ControllerReport extends Controller
             env('DB_DATABASE', 'gestor')
         );
 
+        $parametros = [
+            'id_colaborador=' . $validated['id_colaborador'],
+            'dta_inicio=' . $validated['dta_inicio'],
+            'dta_fim=' . $validated['dta_fim'],
+        ];
+
+        if (in_array($report, self::REPORTS_COM_CABECALHO_CONFIGURAVEL, true)) {
+            $configuracao = Configuracao::atual();
+            $logoPath = $configuracao->logo_path
+                ? storage_path('app/public/' . $configuracao->logo_path)
+                : storage_path('app/jasperstarter7/bin/images/logo_prefeitura.png');
+
+            $parametros[] = 'LOGO_PATH=' . $logoPath;
+            $parametros[] = 'NOME_INSTITUICAO=' . $configuracao->nome_instituicao;
+            $parametros[] = 'NOME_SECRETARIA=' . $configuracao->nome_secretaria;
+        }
+
         $args = [
             $binDir . '/jasperstarter.bat',
             'process',
@@ -117,9 +141,7 @@ class ControllerReport extends Controller
             '-o', $outputPath,
             '-f', 'pdf',
             '-P',
-            'id_colaborador=' . $validated['id_colaborador'],
-            'dta_inicio=' . $validated['dta_inicio'],
-            'dta_fim=' . $validated['dta_fim'],
+            ...$parametros,
             '-t', 'generic',
             '--db-driver', 'com.mysql.cj.jdbc.Driver',
             '--db-url', $dbUrl,
