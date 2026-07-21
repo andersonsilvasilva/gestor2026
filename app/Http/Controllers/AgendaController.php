@@ -26,7 +26,7 @@ class AgendaController extends Controller
         
         $cliente=Client::find($id);
         
-        $procedimentos = Procediment::all();
+        $procedimentos = Procediment::where('ativo', true)->orderBy('name')->get();
 
         $terapeutas = user::where('id',Auth::user()->id)->first();
 
@@ -37,7 +37,7 @@ class AgendaController extends Controller
     {
         $cliente=Client::find($id);
 
-        $procedimentos = Procediment::all();
+        $procedimentos = Procediment::where('ativo', true)->orderBy('name')->get();
 
         $terapeutas = user::where('ativo', true)->get();
     

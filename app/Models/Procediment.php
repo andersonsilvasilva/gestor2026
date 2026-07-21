@@ -11,6 +11,10 @@ class Procediment extends Model
     use HasFactory;
     use Notifiable;
 
+    protected $casts = [
+        'ativo' => 'boolean',
+    ];
+
     protected $fillable = [
       'codigo',
       'name',

@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function(){
         Route::post('/procedimento/update-procedimento',[ProcedimentoControl::class, 'updateProcedimento'])->name('procedimentos.update-Procedimento');
         Route::get('/procedimento/delete-procedimento/{id}',[ProcedimentoControl::class, 'deleteProcedimento'])->name('procedimentos.delete-Procedimento');
         Route::post('/procedimento/delete-procedimento-confirm/{id}',[ProcedimentoControl::class, 'deleteProcedimentoConfirm'])->name('procedimentos.delete-Procedimento-confirm');
+        Route::post('/procedimento/toggle-status/{id}',[ProcedimentoControl::class, 'toggleStatus'])->name('procedimentos.toggle-status');
     });
 
     //clientes

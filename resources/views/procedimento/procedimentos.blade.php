@@ -36,10 +36,18 @@
                             </td>
                             <td>
                                 <div class="d-flex gap-3 justify-content-end">
-                                    @if(in_array($procedimento->id, [1]))
+                                    @if(in_array($procedimento->id, [1, 2]))
                                         <i class="fa-solid fa-lock"></i>
                                     @else
                                     <a href="{{ route('procedimentos.edit-procedimento',['id'=>$procedimento->id]) }}" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-pen-to-square me-2"></i>Editar</a>
+                                    <form action="{{ route('procedimentos.toggle-status', ['id' => $procedimento->id]) }}" method="post" class="m-0">
+                                        @csrf
+                                        @if($procedimento->ativo)
+                                            <button type="submit" class="btn btn-sm btn-outline-warning"><i class="fa-regular fa-circle-xmark me-2"></i>Inativar</button>
+                                        @else
+                                            <button type="submit" class="btn btn-sm btn-outline-success"><i class="fa-regular fa-circle-check me-2"></i>Ativar</button>
+                                        @endif
+                                    </form>
                                     <a href="{{ route('procedimentos.delete-Procedimento',['id'=>$procedimento->id]) }}" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-trash-can me-2"></i>Deletar</a>
                                 @endif
                             </td>

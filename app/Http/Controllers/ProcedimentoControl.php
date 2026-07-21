@@ -107,16 +107,35 @@ class ProcedimentoControl extends Controller
     public function deleteProcedimentoConfirm($id)
     {
       //Auth::user()->can('admin') ?: abort(403, "Você não tem acesso a essa página!");
-      
+
+      if($this->isProcedimentoBlocked($id)){
+           return redirect()->route('procedimentos');
+      }
+
       $procedimento= Procediment::findOrFail($id);
- 
+
       $procedimento->delete();
- 
+
       return redirect()->route('procedimentos')->with('success', 'Deletado com sucesso!');
- 
+
     }
- 
-  
+
+    public function toggleStatus($id)
+    {
+      if ($this->isProcedimentoBlocked($id)) {
+        return redirect()->route('procedimentos');
+      }
+
+      $procedimento = Procediment::findOrFail($id);
+      $procedimento->ativo = !$procedimento->ativo;
+      $procedimento->save();
+
+      return redirect()->route('procedimentos')->with(
+        'success',
+        $procedimento->ativo ? 'Procedimento ativado com sucesso!' : 'Procedimento inativado com sucesso!'
+      );
+    }
+
     private function isProcedimentoBlocked($id)
     {
       return in_array(intval($id), [1,2]);
