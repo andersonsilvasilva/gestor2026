@@ -30,7 +30,7 @@ class AgendaTest extends TestCase
         $cliente = Client::factory()->create();
         $procedimento = Procediment::factory()->create();
 
-        $this->actingAs($user)->post('/create-agenda', [
+        $response = $this->actingAs($user)->post('/create-agenda', [
             'title'           => 'Atendimento Teste',
             'start'           => '2026-08-01 08:00:00',
             'end'             => '2026-08-01 09:00:00',
@@ -39,7 +39,14 @@ class AgendaTest extends TestCase
             'procediments_id' => $procedimento->id,
             'color'           => '#FF0000',
             'descricao'       => 'Descrição do atendimento',
-        ])->assertRedirect(route('clientes'));
+        ]);
+
+        // O id na URL de redirecionamento vai criptografado (IV aleatório a
+        // cada chamada), então não dá pra comparar a string exata — só
+        // decriptar de volta e conferir que aponta pro cliente certo.
+        $response->assertRedirect();
+        $redirectId = str($response->headers->get('Location'))->afterLast('/agenda/index/')->value();
+        $this->assertEquals($cliente->id, (int) Crypt::decrypt($redirectId));
 
         $this->assertDatabaseHas('eventos', [
             'title'     => 'Atendimento Teste',

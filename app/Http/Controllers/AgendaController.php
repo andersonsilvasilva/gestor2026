@@ -85,7 +85,9 @@ class AgendaController extends Controller
 
         eventos::create($validated);
 
-        return redirect()->route('clientes')->with('sucesso', 'Evento criado com sucesso!');
+        return redirect()
+            ->route('agenda.index', ['id' => Crypt::encrypt($validated['client_id'])])
+            ->with('sucesso', 'Evento criado com sucesso!');
     }
 
     public function update(Request $request, $id)
