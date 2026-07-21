@@ -12,7 +12,10 @@
             <p>Data de Nascimento: <strong>{{ \Carbon\Carbon::parse($clientes->data_nascimento)->format('d/m/Y')}}</strongs></p>
             <p></p>    
             <a href="{{route('clientes')}}" class="btn btn-secondary px-5">Não</a>
-            <a href="{{route('cliente.delete-cliente_confirm',['id' =>Crypt::encrypt( $clientes->id)])}}" class="btn btn-danger px-5">Sim</a>
+            <form action="{{route('cliente.delete-cliente_confirm',['id' =>Crypt::encrypt( $clientes->id)])}}" method="post" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-danger px-5">Sim</button>
+            </form>
         </div>
 
     </div>

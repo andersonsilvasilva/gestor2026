@@ -66,9 +66,11 @@
                             <td class="d-md-flex justify-content-center">
                                 <div class="d-flex gap-3 justify-content-end">
                                     @if(empty(!$cliente->deleted_at))
-                                    <a href="{{ route('cliente.restore-cliente', ['id' => Crypt::encrypt($cliente->id)])}}"
-                                        class="btn btn-sm btn-outline-dark"><i
-                                            class="fa-solid fa-trash-arrow-up me-1"></i>Restaurar</a>
+                                    <form action="{{ route('cliente.restore-cliente', ['id' => Crypt::encrypt($cliente->id)])}}" method="post" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-outline-dark"><i
+                                            class="fa-solid fa-trash-arrow-up me-1"></i>Restaurar</button>
+                                    </form>
                                     @else
                                     
                                     <a href="{{ route('agenda.index',['id' => Crypt::encrypt($cliente->id)])}}" 

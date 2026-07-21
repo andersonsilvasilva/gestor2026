@@ -7,7 +7,10 @@
         <div class="text-center">
             <h5 class="my-5">{{ $colaborator->name }}</h5>
             <a href="{{ route('colaborators.rh-users') }}" class="btn btn-secondary px-5">Não</a>
-            <a href="{{ route('colaborators.rh.delete-confirm', ['id' => $colaborator->id]) }}" class="btn btn-danger px-5">Sim</a>
+            <form action="{{ route('colaborators.rh.delete-confirm', ['id' => $colaborator->id]) }}" method="post" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-danger px-5">Sim</button>
+            </form>
         </div>
     </div>
 </x-layout-app>

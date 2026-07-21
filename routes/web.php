@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function(){
         Route::get('/department/edit-department/{id}',[DepartmentController::class, 'editDepartment'])->name('departments.edit-department');
         Route::post('/department/update-department',[DepartmentController::class, 'updateDepartment'])->name('departments.update-department');
         Route::get('/department/delete-department/{id}',[DepartmentController::class, 'deleteDepartment'])->name('departments.deleteDepartment');
-        Route::get('/department/delete-department-confirm/{id}',[DepartmentController::class, 'deleteDepartmentConfirm'])->name('departments.delete-Department-confirm');
+        Route::post('/department/delete-department-confirm/{id}',[DepartmentController::class, 'deleteDepartmentConfirm'])->name('departments.delete-Department-confirm');
 
         // Rh Colaboradores
         Route::get('/rh-users',[RhUserController::class, 'index'])->name('colaborators.rh-users');
@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function(){
         Route::post('/rh-users/create-colaborator',[RhUserController::class, 'createRhColaborator'])->name('colaborators.rh.create-colaborator');
         Route::get('/rh-users/edita-colaborator/{id}',[RhUserController::class, 'editRhColaborator'])->name('colaborators.rh.edita-colaborator');
         Route::get('/rh-users/delete/{id}',[RhUserController::class, 'deleteRhColaborator'])->name('colaborators.rh.delete-colaborator');
-        Route::get('/rh-users/delete-confirm/{id}',[RhUserController::class, 'deleteRhColaboratorConfirm'])->name('colaborators.rh.delete-confirm');
+        Route::post('/rh-users/delete-confirm/{id}',[RhUserController::class, 'deleteRhColaboratorConfirm'])->name('colaborators.rh.delete-confirm');
         Route::post('/rh-users/edita-colaborator}',[RhUserController::class, 'updateRhColaborator'])->name('colaborators.rh.update-colaborator');
         Route::post('/rh-users/toggle-status/{id}',[RhUserController::class, 'toggleStatus'])->name('colaborators.rh.toggle-status');
 
@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function(){
         Route::get('/procedimento/edit-procedimento/{id}',[ProcedimentoControl::class, 'editProcedimento'])->name('procedimentos.edit-procedimento');
         Route::post('/procedimento/update-procedimento',[ProcedimentoControl::class, 'updateProcedimento'])->name('procedimentos.update-Procedimento');
         Route::get('/procedimento/delete-procedimento/{id}',[ProcedimentoControl::class, 'deleteProcedimento'])->name('procedimentos.delete-Procedimento');
-        Route::get('/procedimento/delete-procedimento-confirm/{id}',[ProcedimentoControl::class, 'deleteProcedimentoConfirm'])->name('procedimentos.delete-Procedimento-confirm');
+        Route::post('/procedimento/delete-procedimento-confirm/{id}',[ProcedimentoControl::class, 'deleteProcedimentoConfirm'])->name('procedimentos.delete-Procedimento-confirm');
     });
 
     //clientes
@@ -77,8 +77,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/clientes/edita-cliente/{id}',[ClienteController::class, 'editCliente'])->name('cliente.edita-cliente');
     Route::post('/clientes/update-cliente',[ClienteController::class, 'updateCliente'])->name('cliente.update-cliente');
     Route::get('/clientes/delete-cliente/{id}',[ClienteController::class, 'deleteCliente'])->name('cliente.delete-cliente');
-    Route::get('/clientes/delete-cliente_confirm/{id}',[ClienteController::class, 'deleteClienteConfirm'])->name('cliente.delete-cliente_confirm');
-    Route::get('/clientes/restore/{id}', [ClienteController::class, 'restoreClient'])->name('cliente.restore-cliente');
+    Route::post('/clientes/delete-cliente_confirm/{id}',[ClienteController::class, 'deleteClienteConfirm'])->name('cliente.delete-cliente_confirm');
+    Route::post('/clientes/restore/{id}', [ClienteController::class, 'restoreClient'])->name('cliente.restore-cliente');
     Route::get('/clientes/details/{id}',[ClienteController::class, 'showDetails'])->name('cliente.details');
 
 
@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function(){
     Route::get('agenda/index/{id}', [AgendaController::class, 'index'])->name('agenda.index');
     Route::get('/events', [AgendaController::class, 'getEvents']);
     Route::post('/agenda/mover/{id}', [AgendaController::class, 'update'])->name('agenda.update');
-    Route::get('/agenda/delete/{id}', [AgendaController::class, 'deleteEvent']);
+    Route::post('/agenda/delete/{id}', [AgendaController::class, 'deleteEvent']);
     Route::post('/create-agenda', [AgendaController::class, 'create'])->name('agenda.criar');
 
 

@@ -10,7 +10,10 @@
         <div class="text-center">
             <h3 class="my-5">{{ $procedimento->name}}</h3>
             <a href="{{ route('procedimentos') }}" class="btn btn-secondary px-5">Não</a>
-            <a href="{{ route('procedimentos.delete-Procedimento-confirm', ['id'=>$procedimento->id]) }}" class="btn btn-danger px-5">Sim</a>
+            <form action="{{ route('procedimentos.delete-Procedimento-confirm', ['id'=>$procedimento->id]) }}" method="post" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-danger px-5">Sim</button>
+            </form>
         </div>
 
     </div>

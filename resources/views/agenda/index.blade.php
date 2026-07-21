@@ -217,7 +217,7 @@
                         if (confirm("Você tem certeza que deseja apagar este evento?")) {
                             var eventId = info.event.id;
                             $.ajax({
-                                method: 'get',
+                                method: 'post',
                                 url: '/agenda/delete/' + eventId,
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
