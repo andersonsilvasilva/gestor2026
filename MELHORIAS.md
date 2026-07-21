@@ -23,7 +23,7 @@ Levantamento inicial feito a partir de leitura do código (models, controllers, 
 
 ## 🟡 Qualidade de código / dívida técnica
 
-- [ ] **Zero testes reais** — só existem os `ExampleTest.php` padrão do Laravel (`tests/Feature`, `tests/Unit`). Nenhuma cobertura para clientes, agenda, colaboradores, relatórios.
+- [x] **Testes automatizados — começando pelo sistema de permissões.** Banco de testes dedicado (`gestor_test`, `.env.testing`, nunca o `gestor` de desenvolvimento), `UserFactory` com states por papel (`admin()`/`rt()`/`sec()`/`rh()`/`inativo()`). 17 testes em 3 arquivos (`RolePermissionsTest`, `UserManagementTest`, `ColaboradorInactivationTest`) cobrindo a matriz de Gates, o CRUD de Gestão de Usuários e a inativação de colaborador. Descobriu e corrigiu um bug real no processo: `User` não tinha cast `boolean` para `ativo` (voltava `1`/`0` em vez de `true`/`false`). Removidos os `ExampleTest.php` padrão do Laravel (testavam um comportamento que este app nunca teve). Cobertura de Clientes/Agenda/Relatórios ainda não feita — próximo passo natural.
 - [x] Duplicação grande em `DashboardController::index` — resolvido ao implementar os controles de período/tipo de gráfico do dashboard: os dois branches agora usam um único `buildChartData()` privado parametrizado por `user_id`.
 - [ ] Uso de `client::` (minúsculo) em vez de `Client::` em `ClienteController.php:92` — funciona no PHP (case-insensitive para nomes de classe), mas é inconsistente e confunde leitura/autocomplete.
 - [x] Uso de `$_POST` diretamente em `ControllerReport::generateReport` — resolvido na reescrita do controller para o novo sistema de relatórios (agora usa `Request::validate()`).

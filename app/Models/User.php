@@ -11,6 +11,10 @@ class User extends Authenticable
     use HasFactory;
     use Notifiable;
 
+    protected $casts = [
+        'ativo' => 'boolean',
+    ];
+
     public function detail()
     {
         return $this->hasOne(UserDetail::class);
