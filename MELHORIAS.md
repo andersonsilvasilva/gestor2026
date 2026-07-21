@@ -26,8 +26,8 @@ Levantamento inicial feito a partir de leitura do código (models, controllers, 
 
 - [ ] **Zero testes reais** — só existem os `ExampleTest.php` padrão do Laravel (`tests/Feature`, `tests/Unit`). Nenhuma cobertura para clientes, agenda, colaboradores, relatórios.
 - [x] Duplicação grande em `DashboardController::index` — resolvido ao implementar os controles de período/tipo de gráfico do dashboard: os dois branches agora usam um único `buildChartData()` privado parametrizado por `user_id`.
-- [ ] Uso de `client::` (minúsculo) em vez de `Client::` em vários lugares (`ClienteController.php:92`, `DashboardController.php:21`) — funciona no PHP (case-insensitive para nomes de classe), mas é inconsistente e confunde leitura/autocomplete.
-- [ ] Uso de `$_POST` diretamente em `ControllerReport::generateReport` em vez do `Request` injetado (`$request` está disponível mas ignorado) — quebra a testabilidade e foge do padrão Laravel.
+- [ ] Uso de `client::` (minúsculo) em vez de `Client::` em `ClienteController.php:92` — funciona no PHP (case-insensitive para nomes de classe), mas é inconsistente e confunde leitura/autocomplete.
+- [x] Uso de `$_POST` diretamente em `ControllerReport::generateReport` — resolvido na reescrita do controller para o novo sistema de relatórios (agora usa `Request::validate()`).
 - [ ] Vários blocos de código comentado (relatórios BPA1/mapa de produção, autorizações, chamadas alternativas ao PHPJasper) — limpar ou implementar.
 - [ ] Rotas sem padronização: mistura `snake-case`, nomes inconsistentes. `routes/web.php:56` tem uma chave sobrando na URL: `/rh-users/edita-colaborator}` — barra de fechamento `}` foi commitada por engano.
 - [ ] `ProfileController::updatePassword` usa `password_verify` direto em vez do `Hash::check` do Laravel (funciona, mas foge do padrão/facade usado no resto do projeto).
@@ -41,7 +41,6 @@ Levantamento inicial feito a partir de leitura do código (models, controllers, 
 
 ## 🟢 Produto / funcionalidades a considerar
 
-- [ ] Tela de administração (`AdminController`/dashboard de indicadores) está incompleta — decidir escopo e refazer.
-- [ ] Import de planilha de clientes/pacientes (`BookController` + `BookImport`) parece uma feature iniciada e abandonada — vale decidir se entra no roadmap.
-- [ ] Módulo de relatórios Jasper (`ControllerReport`, `JasperController`, `JasperReportsController`) tem bastante código parcialmente implementado (BPA1, Mapa de Produção citados mas não gerados) — bom candidato para próxima entrega se relatórios forem prioridade.
+- [x] Módulo de relatórios Jasper — BPA-I, Mapa de Produção (mensal e diário) e AVEIANM implementados de ponta a ponta (engine JasperReports 7, ver `[[project_reports_jasper7_engine]]`), com filtro por colaborador/admin, nome de arquivo padronizado e configuração de instituição/secretaria/logo/unidade de saúde pelo admin.
+- [ ] Import de planilha de clientes/pacientes (`BookController` foi removido por ser código morto) — ainda não definimos o formato/dados; retomar se virar prioridade.
 - [ ] Nenhuma tela de auditoria/log de quem alterou o quê (prontuário de paciente é dado sensível — LGPD relevante para um sistema de saúde).
