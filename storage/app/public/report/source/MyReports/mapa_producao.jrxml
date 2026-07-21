@@ -44,6 +44,7 @@ INNER JOIN users colaborador ON
 	 eventos.user_id=	colaborador.id
 WHERE 	  ( eventos.user_id =  $P{id_colaborador} ) AND
 				   (eventos.start  BETWEEN  CAST($P{dta_inicio} AS DATE) AND  CAST($P{dta_fim} AS DATE) )
+				   AND eventos.deleted_at IS NULL
 GROUP BY procedimento.name
 ORDER BY  procedimento.name ASC]]></query>
 	<field name="dia_mes" class="java.sql.Timestamp">

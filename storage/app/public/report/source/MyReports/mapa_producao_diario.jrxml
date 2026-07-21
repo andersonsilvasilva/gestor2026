@@ -42,10 +42,11 @@ INNER JOIN procediments AS procedimento
         ON eventos.procediments_id = procedimento.id 
 INNER JOIN users AS colaborador 
         ON eventos.user_id = colaborador.id
-WHERE 
+WHERE
       eventos.user_id = $P{id_colaborador}
   AND eventos.start BETWEEN CAST($P{dta_inicio} AS DATE) AND CAST($P{dta_fim} AS DATE)
-GROUP BY 
+  AND eventos.deleted_at IS NULL
+GROUP BY
     dia_mes,
     nome_proc
 ORDER BY  

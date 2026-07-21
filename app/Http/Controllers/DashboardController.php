@@ -123,6 +123,7 @@ class DashboardController extends Controller
             ->join('procediments', 'procediments.id', '=', 'eventos.procediments_id')
             ->where('eventos.status', '1')
             ->whereBetween('eventos.start', [$desde, $ate])
+            ->whereNull('eventos.deleted_at')
             ->when($userId, fn ($q) => $q->where('eventos.user_id', $userId))
             ->select('procediments.name', DB::raw('COUNT(*) as total'))
             ->groupBy('procediments.name')

@@ -53,6 +53,7 @@ class AgendaController extends Controller
             ->select('eventos.*','procediments.name as procedimento','clients.cns as codigo','clients.nome as nomecliente','clients.telefone','users.name as terapeuta')
             ->where('status','1')
             ->where('users.id',Auth::user()->id)
+            ->whereNull('eventos.deleted_at')
             ->get();
 
         return response()->json($eventos);

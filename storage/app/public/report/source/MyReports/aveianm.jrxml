@@ -52,9 +52,10 @@ FROM clients AS clientes
 	 detalhe_colaborador.user_id = colaborador.id
 	WHERE    (procedimento.tipo_relate='ave')  
 			AND  (eventos.user_id= $P{id_colaborador} ) 
-		 	AND (eventos.start  BETWEEN  CAST($P{dta_inicio} AS DATE) 
+		 	AND (eventos.start  BETWEEN  CAST($P{dta_inicio} AS DATE)
 		 	AND  CAST($P{dta_fim} AS DATE)
 		 	)
+			AND eventos.deleted_at IS NULL
 	ORDER BY  eventos.start ASC]]></query>
 	<field name="cns_colaborador" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="cns"/>

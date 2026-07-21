@@ -59,6 +59,7 @@
 				 INNER JOIN users col ON col.id=eventos.user_id
 				 WHERE (proc.tipo_relate='bpa') AND (eventos.user_id= $P{id_colaborador} )  AND
 				   (eventos.start  BETWEEN  CAST($P{dta_inicio} AS DATE) AND  CAST($P{dta_fim} AS DATE) )
+				   AND eventos.deleted_at IS NULL
 				 GROUP BY eventos.user_id]]></query>
 	<field name="id" class="java.math.BigInteger">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>

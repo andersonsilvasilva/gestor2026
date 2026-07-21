@@ -13,8 +13,13 @@ class eventos extends Model
 
     use HasFactory;
     use Notifiable;
-    //use SoftDeletes;
-    
+    use SoftDeletes;
+
+    protected $casts = [
+        'start' => 'datetime',
+        'end' => 'datetime',
+    ];
+
     protected $fillable = [
         'client_id',
         'user_id',
