@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Validation\Rules\Password;
 use League\CommonMark\Extension\Footnote\Event\GatherFootnotesListener;
 use App\Models\User;
 
@@ -25,6 +26,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+
+        // Política de senha única para todo o app (convite de conta, "esqueci
+        // minha senha" do Fortify e troca de senha no Perfil): mínimo 8
+        // caracteres, com maiúscula, minúscula e número. Sem máximo artificial.
+        Password::defaults(function () {
+            return Password::min(8)->mixedCase()->numbers();
+        });
+
         //-------------
         // GATES
         //-------------

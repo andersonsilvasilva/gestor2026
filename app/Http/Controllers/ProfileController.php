@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Fortify\PasswordValidationRules;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    use PasswordValidationRules;
+
     public function index():View
     {
         return view('user.profile');
@@ -15,14 +19,13 @@ class ProfileController extends Controller
     {
         //for validation
         $request->validate([
-            'current_password'=> 'required|min:8|max:16',
-            'new_password'=> 'required|min:8|max:16|different:current_password',
-            'new_password_confirmation'=>'required|same:new_password'
+            'current_password'=> 'required|string',
+            'new_password'=> array_merge($this->passwordRules(), ['different:current_password']),
         ]);
 
         $user = auth()->user();
-        
-        if(!password_verify($request->current_password, $user->password)){
+
+        if(!Hash::check($request->current_password, $user->password)){
             return redirect()->back()->with('error', 'A senha atual está errada!');
         }
         //update passwaord in database

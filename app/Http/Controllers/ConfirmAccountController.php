@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Fortify\PasswordValidationRules;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class ConfirmAccountController extends Controller
 {
+    use PasswordValidationRules;
+
     public function ConfirmAccount($token)
     {
         //chech if the token is valid
@@ -23,7 +26,7 @@ class ConfirmAccountController extends Controller
         //form validation
         $request->validate([
             'token' => 'required|string|size:60',
-            'password' => 'required|confirmed|min:8|max:16|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+            'password' => $this->passwordRules(),
         ]);
 
         $user = User::where('confirmation_token',  $request->token)->first();
