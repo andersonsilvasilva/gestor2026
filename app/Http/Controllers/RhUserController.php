@@ -152,7 +152,7 @@ class RhUserController extends Controller
     public function deleteRhColaboratorConfirm($id)
     {
         //Auth::user()->can('admin') ?: abort(403, "Você não tem acesso a essa página!");
-        
+
         $colaborator = User::findOrFail($id);
         $colaborator->detail->delete();
         $colaborator->delete();
@@ -160,6 +160,24 @@ class RhUserController extends Controller
         return redirect()->route('colaborators.rh-users')->with('success', 'Deletado com sucesso!');
 
 
+    }
+
+    public function toggleStatus($id)
+    {
+        abort_unless(Auth::user()->can('admin'), 403, 'Você não tem acesso a essa ação.');
+
+        if ((int) $id === (int) Auth::user()->id) {
+            return redirect()->route('colaborators.rh-users')->with('error', 'Você não pode inativar a si mesmo.');
+        }
+
+        $colaborator = User::findOrFail($id);
+        $colaborator->ativo = !$colaborator->ativo;
+        $colaborator->save();
+
+        return redirect()->route('colaborators.rh-users')->with(
+            'success',
+            $colaborator->ativo ? 'Colaborador ativado com sucesso!' : 'Colaborador inativado com sucesso!'
+        );
     }
 
 }

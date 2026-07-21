@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/rh-users/delete/{id}',[RhUserController::class, 'deleteRhColaborator'])->name('colaborators.rh.delete-colaborator');
     Route::get('/rh-users/delete-confirm/{id}',[RhUserController::class, 'deleteRhColaboratorConfirm'])->name('colaborators.rh.delete-confirm');
     Route::post('/rh-users/edita-colaborator}',[RhUserController::class, 'updateRhColaborator'])->name('colaborators.rh.update-colaborator');
+    Route::post('/rh-users/toggle-status/{id}',[RhUserController::class, 'toggleStatus'])->name('colaborators.rh.toggle-status');
 
     //Procediementos
     Route::get('/procedimento', [ProcedimentoControl::class, 'index'])->name('procedimentos');

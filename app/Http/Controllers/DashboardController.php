@@ -45,7 +45,7 @@ class DashboardController extends Controller
         $chartData = $this->buildChartData($isAdmin ? null : $userId, $desde, $ate, false);
 
         $colaboradores = $isAdmin
-            ? User::where('id', '<>', 1)->orderBy('name')->get()
+            ? User::where('id', '<>', 1)->where('ativo', true)->orderBy('name')->get()
             : collect();
 
         return view('home', array_merge(

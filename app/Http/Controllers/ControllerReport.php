@@ -50,7 +50,7 @@ class ControllerReport extends Controller
     {
         $isAdmin = Auth::user()->id == 1;
         $terapeutas = $isAdmin
-            ? User::where('id', '<>', 1)->orderBy('name')->get()
+            ? User::where('id', '<>', 1)->where('ativo', true)->orderBy('name')->get()
             : User::where('id', Auth::user()->id)->get();
 
         return view('relatorio.gerador', compact('terapeutas', 'isAdmin'));

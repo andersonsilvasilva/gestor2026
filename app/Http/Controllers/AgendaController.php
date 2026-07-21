@@ -39,7 +39,7 @@ class AgendaController extends Controller
 
         $procedimentos = Procediment::all();
 
-        $terapeutas =user::all();
+        $terapeutas = user::where('ativo', true)->get();
     
         return view('agenda.add', compact('cliente','terapeutas','procedimentos'));    
     }
