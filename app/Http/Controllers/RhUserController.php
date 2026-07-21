@@ -164,7 +164,7 @@ class RhUserController extends Controller
 
     public function toggleStatus($id)
     {
-        abort_unless(Auth::user()->can('admin'), 403, 'Você não tem acesso a essa ação.');
+        abort_unless(Auth::user()->can('manage-catalog'), 403, 'Você não tem acesso a essa ação.');
 
         if ((int) $id === (int) Auth::user()->id) {
             return redirect()->route('colaborators.rh-users')->with('error', 'Você não pode inativar a si mesmo.');

@@ -8,6 +8,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProcedimentoControl;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RhUserController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ControllerReport;
 use App\Http\Controllers\JasperController;
@@ -38,33 +39,36 @@ Route::middleware('auth')->group(function(){
     Route::post('user/profile/update-password', [ProfileController::class,'updatePassword'])->name('user.profile.update-password');
     Route::post('user/profile/update-user-data', [ProfileController::class,'updateUserData'])->name('user.profile.update-user-data');
 
-    // departamentos
-    Route::get('/department', [DepartmentController::class, 'index'])->name('departments');
-    Route::get('/department/new-department',[DepartmentController::class, 'newDepartment'])->name('departments.new-department');
-    Route::post('/department/create-department',[DepartmentController::class, 'createDepartment'])->name('departments.create-department');
-    Route::get('/department/edit-department/{id}',[DepartmentController::class, 'editDepartment'])->name('departments.edit-department');
-    Route::post('/department/update-department',[DepartmentController::class, 'updateDepartment'])->name('departments.update-department');
-    Route::get('/department/delete-department/{id}',[DepartmentController::class, 'deleteDepartment'])->name('departments.deleteDepartment');
-    Route::get('/department/delete-department-confirm/{id}',[DepartmentController::class, 'deleteDepartmentConfirm'])->name('departments.delete-Department-confirm');
+    // departamentos, procedimentos e colaboradores: admin e Responsável Técnico
+    Route::middleware('can:manage-catalog')->group(function () {
+        // departamentos
+        Route::get('/department', [DepartmentController::class, 'index'])->name('departments');
+        Route::get('/department/new-department',[DepartmentController::class, 'newDepartment'])->name('departments.new-department');
+        Route::post('/department/create-department',[DepartmentController::class, 'createDepartment'])->name('departments.create-department');
+        Route::get('/department/edit-department/{id}',[DepartmentController::class, 'editDepartment'])->name('departments.edit-department');
+        Route::post('/department/update-department',[DepartmentController::class, 'updateDepartment'])->name('departments.update-department');
+        Route::get('/department/delete-department/{id}',[DepartmentController::class, 'deleteDepartment'])->name('departments.deleteDepartment');
+        Route::get('/department/delete-department-confirm/{id}',[DepartmentController::class, 'deleteDepartmentConfirm'])->name('departments.delete-Department-confirm');
 
-    // Rh Colaboradores
-    Route::get('/rh-users',[RhUserController::class, 'index'])->name('colaborators.rh-users');
-    Route::get('/rh-users/new-colaborator',[RhUserController::class, 'newColaborator'])->name('colaborators.rh.new-colaborator');
-    Route::post('/rh-users/create-colaborator',[RhUserController::class, 'createRhColaborator'])->name('colaborators.rh.create-colaborator');
-    Route::get('/rh-users/edita-colaborator/{id}',[RhUserController::class, 'editRhColaborator'])->name('colaborators.rh.edita-colaborator');
-    Route::get('/rh-users/delete/{id}',[RhUserController::class, 'deleteRhColaborator'])->name('colaborators.rh.delete-colaborator');
-    Route::get('/rh-users/delete-confirm/{id}',[RhUserController::class, 'deleteRhColaboratorConfirm'])->name('colaborators.rh.delete-confirm');
-    Route::post('/rh-users/edita-colaborator}',[RhUserController::class, 'updateRhColaborator'])->name('colaborators.rh.update-colaborator');
-    Route::post('/rh-users/toggle-status/{id}',[RhUserController::class, 'toggleStatus'])->name('colaborators.rh.toggle-status');
+        // Rh Colaboradores
+        Route::get('/rh-users',[RhUserController::class, 'index'])->name('colaborators.rh-users');
+        Route::get('/rh-users/new-colaborator',[RhUserController::class, 'newColaborator'])->name('colaborators.rh.new-colaborator');
+        Route::post('/rh-users/create-colaborator',[RhUserController::class, 'createRhColaborator'])->name('colaborators.rh.create-colaborator');
+        Route::get('/rh-users/edita-colaborator/{id}',[RhUserController::class, 'editRhColaborator'])->name('colaborators.rh.edita-colaborator');
+        Route::get('/rh-users/delete/{id}',[RhUserController::class, 'deleteRhColaborator'])->name('colaborators.rh.delete-colaborator');
+        Route::get('/rh-users/delete-confirm/{id}',[RhUserController::class, 'deleteRhColaboratorConfirm'])->name('colaborators.rh.delete-confirm');
+        Route::post('/rh-users/edita-colaborator}',[RhUserController::class, 'updateRhColaborator'])->name('colaborators.rh.update-colaborator');
+        Route::post('/rh-users/toggle-status/{id}',[RhUserController::class, 'toggleStatus'])->name('colaborators.rh.toggle-status');
 
-    //Procediementos
-    Route::get('/procedimento', [ProcedimentoControl::class, 'index'])->name('procedimentos');
-    Route::get('/procedimento/new-procedimento',[ProcedimentoControl::class, 'newProcediemento'])->name('procedimentos.new-procedimento');
-    Route::post('/procedimento/create-procedimento',[ProcedimentoControl::class, 'createProcedimento'])->name('procedimentos.create-procedimento');
-    Route::get('/procedimento/edit-procedimento/{id}',[ProcedimentoControl::class, 'editProcedimento'])->name('procedimentos.edit-procedimento');
-    Route::post('/procedimento/update-procedimento',[ProcedimentoControl::class, 'updateProcedimento'])->name('procedimentos.update-Procedimento');
-    Route::get('/procedimento/delete-procedimento/{id}',[ProcedimentoControl::class, 'deleteProcedimento'])->name('procedimentos.delete-Procedimento');
-    Route::get('/procedimento/delete-procedimento-confirm/{id}',[ProcedimentoControl::class, 'deleteProcedimentoConfirm'])->name('procedimentos.delete-Procedimento-confirm');
+        //Procediementos
+        Route::get('/procedimento', [ProcedimentoControl::class, 'index'])->name('procedimentos');
+        Route::get('/procedimento/new-procedimento',[ProcedimentoControl::class, 'newProcediemento'])->name('procedimentos.new-procedimento');
+        Route::post('/procedimento/create-procedimento',[ProcedimentoControl::class, 'createProcedimento'])->name('procedimentos.create-procedimento');
+        Route::get('/procedimento/edit-procedimento/{id}',[ProcedimentoControl::class, 'editProcedimento'])->name('procedimentos.edit-procedimento');
+        Route::post('/procedimento/update-procedimento',[ProcedimentoControl::class, 'updateProcedimento'])->name('procedimentos.update-Procedimento');
+        Route::get('/procedimento/delete-procedimento/{id}',[ProcedimentoControl::class, 'deleteProcedimento'])->name('procedimentos.delete-Procedimento');
+        Route::get('/procedimento/delete-procedimento-confirm/{id}',[ProcedimentoControl::class, 'deleteProcedimentoConfirm'])->name('procedimentos.delete-Procedimento-confirm');
+    });
 
     //clientes
     Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes');
@@ -97,5 +101,15 @@ Route::middleware('auth')->group(function(){
     // Configurações dos relatórios (só admin)
     Route::get('/configuracoes', [ConfiguracaoController::class, 'edit'])->name('configuracoes.edit');
     Route::post('/configuracoes', [ConfiguracaoController::class, 'update'])->name('configuracoes.update');
+
+    // Gestão de Usuários - contas de acesso (admin, RT, secretaria); só admin
+    Route::middleware('can:admin')->group(function () {
+        Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+        Route::get('/usuarios/novo', [UserController::class, 'create'])->name('usuarios.create');
+        Route::post('/usuarios/criar', [UserController::class, 'store'])->name('usuarios.store');
+        Route::get('/usuarios/editar/{id}', [UserController::class, 'edit'])->name('usuarios.edit');
+        Route::post('/usuarios/atualizar', [UserController::class, 'update'])->name('usuarios.update');
+        Route::post('/usuarios/toggle-status/{id}', [UserController::class, 'toggleStatus'])->name('usuarios.toggle-status');
+    });
 
 });

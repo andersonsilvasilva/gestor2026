@@ -1,10 +1,13 @@
 <div class="d-flex flex-column sidebar pt-2">
         <a href="{{ route('home')}}"><i class="fas fa-home me-2"></i>Home</a>
         <a href="{{ route('clientes')}}"><i class="fas fa-solid fa-id-card me-2"></i>Clientes</a>
-        @can('admin')
+        @can('manage-catalog')
             <a href="{{ route('departments')}}"><i class="fas fa-industry me-2"></i>Departamentos</a>
             <a href="{{ route('procedimentos')}}"><i class="fas fa-solid fa-mortar-pestle me-2"></i>Procedimentos</a>
             <a href="{{ route('colaborators.rh-users')}}"><i class="fas fa-user-gear me-2"></i>Colaboradores</a>
+        @endcan
+        @can('admin')
+            <a href="{{ route('usuarios.index')}}"><i class="fas fa-users-gear me-2"></i>Gestão de Usuários</a>
             <a href="{{ route('configuracoes.edit')}}"><i class="fas fa-sliders me-2"></i>Configurações</a>
         @endcan
             <a href="{{ route('gerador')}}"><i class="fa-regular fa-newspaper me-2"></i>Relatórios</a>                                 

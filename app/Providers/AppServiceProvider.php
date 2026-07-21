@@ -28,8 +28,8 @@ class AppServiceProvider extends ServiceProvider
         //-------------
         // GATES
         //-------------
-        Gate::define('admin', function(){
-          return auth()->user()->role === 'admin'; 
+        Gate::define('admin', function($user){
+          return $user->role === 'admin';
         });
 
         Gate::define('rh', function(){
@@ -37,7 +37,18 @@ class AppServiceProvider extends ServiceProvider
           });
         
          Gate::define('tp', function(){
-            return auth()->user()->role === 'tp'; 
-          });  
+            return auth()->user()->role === 'tp';
+          });
+
+        // Departamentos, Procedimentos e Colaboradores: admin e Responsável Técnico
+        Gate::define('manage-catalog', function ($user) {
+            return in_array($user->role, ['admin', 'rt']);
+        });
+
+        // Ver dados de todos os colaboradores no Dashboard e escolher
+        // qualquer colaborador no gerador de relatórios
+        Gate::define('view-all-data', function ($user) {
+            return in_array($user->role, ['admin', 'rt', 'sec']);
+        });
     }
 }

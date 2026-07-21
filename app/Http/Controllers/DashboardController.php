@@ -29,27 +29,27 @@ class DashboardController extends Controller
     {
         $clientes = Client::count();
         $userId = Auth::user()->id;
-        $isAdmin = $userId == 1;
+        $verTudo = Auth::user()->can('view-all-data');
 
-        $atendidoAno = eventos::when(!$isAdmin, fn ($q) => $q->where('user_id', $userId))
+        $atendidoAno = eventos::when(!$verTudo, fn ($q) => $q->where('user_id', $userId))
             ->whereYear('start', date('Y'))
             ->count();
 
-        $atendidoMes = eventos::when(!$isAdmin, fn ($q) => $q->where('user_id', $userId))
+        $atendidoMes = eventos::when(!$verTudo, fn ($q) => $q->where('user_id', $userId))
             ->whereYear('start', date('Y'))
             ->whereMonth('start', date('m'))
             ->count();
 
         $desde = Carbon::now()->subDays(self::PERIODOS_EM_DIAS['1m'])->startOfDay();
         $ate = Carbon::now()->endOfDay();
-        $chartData = $this->buildChartData($isAdmin ? null : $userId, $desde, $ate, false);
+        $chartData = $this->buildChartData($verTudo ? null : $userId, $desde, $ate, false);
 
-        $colaboradores = $isAdmin
-            ? User::where('id', '<>', 1)->where('ativo', true)->orderBy('name')->get()
+        $colaboradores = $verTudo
+            ? User::where('role', 'rh')->where('ativo', true)->orderBy('name')->get()
             : collect();
 
         return view('home', array_merge(
-            compact('clientes', 'atendidoAno', 'atendidoMes', 'isAdmin', 'colaboradores'),
+            compact('clientes', 'atendidoAno', 'atendidoMes', 'colaboradores', 'verTudo'),
             $chartData
         ));
     }
@@ -66,7 +66,7 @@ class DashboardController extends Controller
      */
     public function chartData(Request $request)
     {
-        $isAdmin = Auth::user()->id == 1;
+        $verTudo = Auth::user()->can('view-all-data');
 
         $validated = $request->validate([
             'periodo'        => 'nullable|string|in:' . implode(',', array_keys(self::PERIODOS_EM_DIAS)),
@@ -75,7 +75,7 @@ class DashboardController extends Controller
             'colaborador_id' => 'nullable|integer|exists:users,id',
         ]);
 
-        if ($isAdmin) {
+        if ($verTudo) {
             $userId = !empty($validated['colaborador_id']) ? (int) $validated['colaborador_id'] : null;
         } else {
             $userId = Auth::user()->id;

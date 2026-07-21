@@ -10,7 +10,7 @@
             <div class="col s12">
                 <h4>{{ env('APP_NAME') }} — Relatório do Dashboard</h4>
                 <p>
-                    Colaborador: <strong id="print-colaborador-label">{{ $isAdmin ? 'Todos os colaboradores' : auth()->user()->name }}</strong> &nbsp;|&nbsp;
+                    Colaborador: <strong id="print-colaborador-label">{{ $verTudo ? 'Todos os colaboradores' : auth()->user()->name }}</strong> &nbsp;|&nbsp;
                     Período: <strong id="print-periodo-label">Último mês</strong> &nbsp;|&nbsp;
                     Gerado em: <strong>{{ now()->format('d/m/Y H:i') }}</strong>
                 </p>
@@ -50,7 +50,7 @@
 
           <div class="row container">
               <div class="col s12 periodo-selector no-print">
-                  @if($isAdmin)
+                  @if($verTudo)
                       <span class="periodo-label">Colaborador:</span>
                       <select id="colaboradorSelect" class="form-select form-select-sm" style="width: auto;">
                           <option value="">Todos os colaboradores</option>
@@ -258,7 +258,7 @@
             atualizarGraficos();
         });
 
-        @if($isAdmin)
+        @if($verTudo)
         document.getElementById('colaboradorSelect').addEventListener('change', function () {
             filtro.colaboradorId = this.value;
             document.getElementById('print-colaborador-label').textContent =

@@ -48,12 +48,12 @@ class ControllerReport extends Controller
 
     public function index()
     {
-        $isAdmin = Auth::user()->id == 1;
-        $terapeutas = $isAdmin
-            ? User::where('id', '<>', 1)->where('ativo', true)->orderBy('name')->get()
+        $verTudo = Auth::user()->can('view-all-data');
+        $terapeutas = $verTudo
+            ? User::where('role', 'rh')->where('ativo', true)->orderBy('name')->get()
             : User::where('id', Auth::user()->id)->get();
 
-        return view('relatorio.gerador', compact('terapeutas', 'isAdmin'));
+        return view('relatorio.gerador', compact('terapeutas', 'verTudo'));
     }
 
     public function getDatabaseConfigMysql()
@@ -82,8 +82,8 @@ class ControllerReport extends Controller
             'dta_fim'         => 'required|date|after_or_equal:dta_inicio',
         ]);
 
-        $isAdmin = Auth::user()->id == 1;
-        if (!$isAdmin && (int) $validated['id_colaborador'] !== (int) Auth::user()->id) {
+        $verTudo = Auth::user()->can('view-all-data');
+        if (!$verTudo && (int) $validated['id_colaborador'] !== (int) Auth::user()->id) {
             abort(403, 'Você só pode gerar relatórios dos seus próprios atendimentos.');
         }
 

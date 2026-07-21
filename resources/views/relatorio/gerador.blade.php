@@ -31,7 +31,7 @@
             </div>
             <div class="col-auto mt-1">
                 <label for="id_colaborador" class="form-label">Nome do colaborador</label>
-                @if($isAdmin)
+                @if($verTudo)
                     <select class="form-select form-select-md me-2 mb-2" id='id_colaborador' name='id_colaborador'>
                         <option value="">Escolha o terapeuta</option>
                         @foreach ($terapeutas as $terapeuta)
