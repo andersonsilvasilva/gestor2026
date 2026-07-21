@@ -44,3 +44,8 @@ Levantamento inicial feito a partir de leitura do código (models, controllers, 
 - [x] Módulo de relatórios Jasper — BPA-I, Mapa de Produção (mensal e diário) e AVEIANM implementados de ponta a ponta (engine JasperReports 7, ver `[[project_reports_jasper7_engine]]`), com filtro por colaborador/admin, nome de arquivo padronizado e configuração de instituição/secretaria/logo/unidade de saúde pelo admin.
 - [ ] Import de planilha de clientes/pacientes (`BookController` foi removido por ser código morto) — ainda não definimos o formato/dados; retomar se virar prioridade.
 - [ ] Nenhuma tela de auditoria/log de quem alterou o quê (prontuário de paciente é dado sensível — LGPD relevante para um sistema de saúde).
+- [ ] **Inativação de colaborador** (em vez de exclusão definitiva): adicionar um estado ativo/inativo ao colaborador (`RhUserController` hoje só tem exclusão dura). Colaborador inativo não deve:
+  - Aparecer no seletor de colaborador do Dashboard (filtro do admin)
+  - Aparecer no seletor de colaborador do gerador de relatórios
+  - Aparecer como opção de terapeuta ao criar/editar agendamento na Agenda
+  - Continuar aparecendo normalmente: histórico de atendimentos/relatórios já gerados para ele (não é para sumir dado passado, só bloquear novo uso)
