@@ -123,8 +123,7 @@ Não rode `php artisan migrate` direto em produção — sem terminal confiável
 - `resources/views/clientes/listar.blade.php`
 
 ### 2d. Não enviar / não mexer
-- Os 7 `.jrxml` dos relatórios novos (Jasper 7) — não fazem sentido em produção ainda, pois **Java não está disponível na Hostinger** (confirmado). Ficam pendentes até o VPS de relatórios existir.
-- `storage/app/jasperstarter7/` — mesma razão.
+- `storage/app/public/report/source/MyReports/*.jrxml` e `storage/app/jasperstarter7/` — a geração desses 4 relatórios roda num microsserviço separado no VPS (`relatorios.urpics-cuiaba.net`), não na Hostinger. Ver `[[project_reports_vps_microservice]]` na memória e `reports-service/` na raiz do repo. Se um relatório mudar, o `.jrxml`/`.jasper` precisa ser atualizado *lá*, não aqui.
 - Qualquer coisa em `.env` — nunca sobrescrever o `.env` real de produção.
 
 ## 3. Depois do upload
@@ -135,5 +134,4 @@ Não rode `php artisan migrate` direto em produção — sem terminal confiável
 
 ## 4. Depois do deploy (não urgente)
 
-- Relatórios Jasper 7 (BPA-I, Mapa de Produção, AVEIANM) e VPS de Java — sessão separada, DNS/subdomínio apontando pro VPS existente, conectando no mesmo banco da Hostinger.
 - Limpar o `env_copia` que existe hoje na pasta real do app em produção (não é acessível pela web, mas tem senhas em texto puro).
