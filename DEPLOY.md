@@ -18,6 +18,7 @@ As migrations deste projeto se dividem em dois grupos. **Só o grupo A precisa r
 - `create_configuracoes_table`
 - `add_unidade_saude_to_configuracoes_table`
 - `add_ativo_to_users_table`
+- `add_deleted_at_to_procediments_table` *(soft delete de Procedimento — ver MELHORIAS.md)*
 
 **Grupo B — apenas "catch-up", já refletem o schema real de produção, NÃO rodar:**
 - `add_cpf_and_estado_civil_to_clients_table`
@@ -51,11 +52,15 @@ VALUES ('SECRETÁRIA MUNICIPAL DE SAÚDE DE CUIABÁ', 'COORDENADORIA DE ATENÇÃ
 -- 2) coluna ativo em users (colaborador inativo deixa de aparecer nos seletores)
 ALTER TABLE `users` ADD COLUMN `ativo` TINYINT(1) NOT NULL DEFAULT 1 AFTER `role`;
 
--- 3) registrar as 3 migrations como já aplicadas (troque {N+1} pelo valor anotado acima)
+-- 3) coluna deleted_at em procediments (soft delete de Procedimento)
+ALTER TABLE `procediments` ADD COLUMN `deleted_at` TIMESTAMP NULL DEFAULT NULL;
+
+-- 4) registrar as 4 migrations como já aplicadas (troque {N+1} pelo valor anotado acima)
 INSERT INTO `migrations` (`migration`, `batch`) VALUES
 ('2026_07_20_204140_create_configuracoes_table', {N+1}),
 ('2026_07_20_212002_add_unidade_saude_to_configuracoes_table', {N+1}),
-('2026_07_21_141025_add_ativo_to_users_table', {N+1});
+('2026_07_21_141025_add_ativo_to_users_table', {N+1}),
+('2026_07_22_130601_add_deleted_at_to_procediments_table', {N+1});
 ```
 
 Não rode `php artisan migrate` direto em produção — sem terminal confiável, é mais seguro aplicar o SQL equivalente manualmente e só registrar no `migrations` que já rodou.
@@ -71,13 +76,16 @@ Não rode `php artisan migrate` direto em produção — sem terminal confiável
 - `database/migrations/2026_07_20_204140_create_configuracoes_table.php`
 - `database/migrations/2026_07_20_212002_add_unidade_saude_to_configuracoes_table.php`
 - `database/migrations/2026_07_21_141025_add_ativo_to_users_table.php`
+- `database/migrations/2026_07_22_130601_add_deleted_at_to_procediments_table.php`
 - `public/assets/js/custom2.js` (usado pelo novo `agenda/index.blade.php`)
 
 ### 2b. Substituir (arquivos que já existem em produção — sobrescrever)
 - `routes/web.php`
 - `app/Http/Controllers/AgendaController.php`
 - `app/Http/Controllers/ListarAtender.php` *(só o fix de `whereNull('eventos.deleted_at')`; produção já tem o arquivo, mas sem esse fix)*
-- `app/Http/Controllers/ProcedimentoControl.php`
+- `app/Http/Controllers/ProcedimentoControl.php` *(soft delete: `withTrashed()` no index, `restoreProcedimento`)*
+- `app/Models/Procediment.php` *(SoftDeletes)*
+- `resources/views/procedimento/procedimentos.blade.php` *(botão Restaurar)*
 - `app/Http/Controllers/RhUserController.php`
 - `app/Http/Controllers/ProfileController.php`
 - `app/Http/Controllers/ConfirmAccountController.php`

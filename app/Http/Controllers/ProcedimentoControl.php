@@ -16,8 +16,9 @@ class ProcedimentoControl extends Controller
         //Auth::user()->can('admin') ?: abort(403, "Você não tem acesso a essa página!");
 
         $procedimentos = Procediment::orderBy('name','asc')
+            ->withTrashed()
             ->paginate(10)
-            ->withQueryString();      
+            ->withQueryString();
      
      
         return view('procedimento.procedimentos', compact('procedimentos'));
@@ -118,6 +119,15 @@ class ProcedimentoControl extends Controller
 
       return redirect()->route('procedimentos')->with('success', 'Deletado com sucesso!');
 
+    }
+
+    public function restoreProcedimento($id)
+    {
+      $procedimento = Procediment::withTrashed()->findOrFail($id);
+
+      $procedimento->restore();
+
+      return redirect()->route('procedimentos')->with('success', 'Procedimento recuperado com sucesso!');
     }
 
     public function toggleStatus($id)

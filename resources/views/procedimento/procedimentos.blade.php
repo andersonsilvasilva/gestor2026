@@ -36,7 +36,12 @@
                             </td>
                             <td>
                                 <div class="d-flex gap-3 justify-content-end">
-                                    @if(in_array($procedimento->id, [1, 2]))
+                                    @if($procedimento->trashed())
+                                        <form action="{{ route('procedimentos.restore-procedimento', ['id' => $procedimento->id]) }}" method="post" class="m-0">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-outline-dark"><i class="fa-solid fa-trash-arrow-up me-1"></i>Restaurar</button>
+                                        </form>
+                                    @elseif(in_array($procedimento->id, [1, 2]))
                                         <i class="fa-solid fa-lock"></i>
                                     @else
                                     <a href="{{ route('procedimentos.edit-procedimento',['id'=>$procedimento->id]) }}" class="btn btn-sm btn-outline-dark"><i class="fa-regular fa-pen-to-square me-2"></i>Editar</a>

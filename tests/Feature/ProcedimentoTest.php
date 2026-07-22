@@ -49,7 +49,7 @@ class ProcedimentoTest extends TestCase
         $this->assertDatabaseHas('procediments', ['id' => $procedimento->id, 'name' => 'Nome Novo']);
     }
 
-    public function test_deleting_a_procedimento_requires_post(): void
+    public function test_deleting_a_procedimento_is_a_soft_delete_via_post(): void
     {
         $admin = User::factory()->admin()->create();
         $procedimento = Procediment::factory()->create();
@@ -59,9 +59,21 @@ class ProcedimentoTest extends TestCase
         $this->actingAs($admin)->post("/procedimento/delete-procedimento-confirm/{$procedimento->id}")
             ->assertRedirect(route('procedimentos'));
 
-        // procediments não tem soft delete (a migration nunca criou deleted_at
-        // nessa tabela) — é exclusão definitiva mesmo.
-        $this->assertDatabaseMissing('procediments', ['id' => $procedimento->id]);
+        $this->assertSoftDeleted('procediments', ['id' => $procedimento->id]);
+    }
+
+    public function test_admin_can_restore_a_soft_deleted_procedimento(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $procedimento = Procediment::factory()->create();
+        $procedimento->delete();
+
+        $this->actingAs($admin)->get("/procedimento/restore/{$procedimento->id}")->assertMethodNotAllowed();
+
+        $this->actingAs($admin)->post("/procedimento/restore/{$procedimento->id}")
+            ->assertRedirect(route('procedimentos'));
+
+        $this->assertDatabaseHas('procediments', ['id' => $procedimento->id, 'deleted_at' => null]);
     }
 
     /**
