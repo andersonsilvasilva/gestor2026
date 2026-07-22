@@ -15,6 +15,7 @@ use App\Http\Requests\ContaRequest;
 use DateTime;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Validation\Rule;
 
 class ClienteController extends Controller
 {
@@ -88,8 +89,8 @@ class ClienteController extends Controller
         $id = $this->decryptId($id);        
               
         $request->validate([
-                    'cns'               => 'required',
-                    //'cpf'               => 'required',
+                    'cpf'               => ['required', 'string', 'max:14', Rule::unique('clients', 'cpf')->ignore($id)],
+                    'cns'               => ['nullable', 'string', 'max:20', Rule::unique('clients', 'cns')->ignore($id)],
                     'cor'               => 'required',
                     'nome'              => 'required',
                     'sexo'              => 'required',

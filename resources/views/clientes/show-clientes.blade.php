@@ -7,6 +7,7 @@
                 <div class="col border border-light p-2">
                     <h5>Visualizar os dados do Cliente:</h5>
                     <hr>
+                    <p>CPF: <strong>{{$clientes->cpf}}</strong></p>
                     <p>C.N.S.: <strong>{{$clientes->cns}}</strong></p>
                     <p>Nome do Cliente: <strong>{{$clientes->nome}}</strong></p>
                     <p>Email: <strong>{{$clientes->email}}</strong></p>

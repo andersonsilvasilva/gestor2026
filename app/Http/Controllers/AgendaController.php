@@ -50,7 +50,7 @@ class AgendaController extends Controller
             ->join('procediments','eventos.procediments_id','=','procediments.id' )
             ->join('users','eventos.user_id','=','users.id' )
             ->join('clients','eventos.client_id','=','clients.id' )
-            ->select('eventos.*','procediments.name as procedimento','clients.cns as codigo','clients.nome as nomecliente','clients.telefone','users.name as terapeuta')
+            ->select('eventos.*','procediments.name as procedimento','clients.cpf as codigo','clients.nome as nomecliente','clients.telefone','users.name as terapeuta')
             ->where('status','1')
             ->where('users.id',Auth::user()->id)
             ->whereNull('eventos.deleted_at')

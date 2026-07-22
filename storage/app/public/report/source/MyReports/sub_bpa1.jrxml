@@ -9,7 +9,7 @@
 	<parameter name="dta_fim" class="java.lang.String"/>
 	<query language="SQL"><![CDATA[SELECT
  distinct
- 	 clients.cns,
+ 	 clients.cpf,
 	clients.nome,
 	clients.sexo,
 	clients.data_nascimento,
@@ -45,9 +45,9 @@ WHERE
 GROUP BY eventos.client_id,
 	procedimento.codigo
 ORDER BY clients.nome DESC]]></query>
-	<field name="cns" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="cns"/>
-		<property name="com.jaspersoft.studio.field.label" value="cns"/>
+	<field name="cpf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cpf"/>
+		<property name="com.jaspersoft.studio.field.label" value="cpf"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="clients"/>
 	</field>
 	<field name="nome" class="java.lang.String">
@@ -182,7 +182,7 @@ ORDER BY clients.nome DESC]]></query>
 				<expression><![CDATA["images/body_bpa.png"]]></expression>
 			</element>
 			<element kind="textField" uuid="2d346cb7-92a5-4ba5-8cd5-d108ed150b09" x="33" y="27" width="237" height="24" backcolor="#CCFFFF" fontName="Arial" fontSize="9.0" bold="true" vTextAlign="Middle">
-				<expression><![CDATA[$F{cns}.toUpperCase()]]></expression>
+				<expression><![CDATA[$F{cpf}.toUpperCase()]]></expression>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<box padding="5"/>
 			</element>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class RhUserController extends Controller
 {
@@ -51,7 +52,8 @@ class RhUserController extends Controller
             'cep' => 'required|string|max:10',
             'cidade' => 'required|string|max:50',
             'telefone' => 'required|string|max:20',
-            'cns' => 'required|string|max:20',
+            'cpf' => ['required', 'string', 'max:14', Rule::unique('user_details', 'cpf')],
+            'cns' => 'nullable|string|max:20',
            'cbo' => 'required|string|max:6',
             'data_nascimento' => 'required|date_format:Y-m-d',
         ]);
@@ -76,6 +78,7 @@ class RhUserController extends Controller
             'cep' => $request->cep,
             'cidade' => $request->cidade,
             'telefone' => $request->telefone,
+            'cpf' => $request->cpf,
             'cns' => $request->cns,
             'cbo' => $request->cbo,
             'data_nascimento' => \Carbon\Carbon::parse($request->data_nascimento)->format('Y/m/d'),
@@ -113,7 +116,8 @@ class RhUserController extends Controller
             'telefone' => 'required|string|max:20',
             'salario'=> 'required|decimal:2',
             'data_nascimento'=> 'required|date_format:Y-m-d',
-            'cns'=> 'required|string|max:20',
+            'cpf'=> ['required', 'string', 'max:14', Rule::unique('user_details', 'cpf')->ignore($request->id, 'user_id')],
+            'cns'=> 'nullable|string|max:20',
             'cbo'=> 'required|string|max:6',
             'admission_date'=> 'required|date_format:Y-m-d'
         ]);
@@ -122,6 +126,7 @@ class RhUserController extends Controller
             'telefone' => $request->telefone,
             'salario' => $request->salario,
             'data_nascimento' =>  \Carbon\Carbon::parse($request->data_nascimento)->format('Y/m/d'),
+            'cpf' => $request->cpf,
             'cns' => $request->cns,
             'cbo' => $request->cbo,
             'admission_date' => \Carbon\Carbon::parse($request->admission_date)->format('Y/m/d')

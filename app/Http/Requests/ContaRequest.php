@@ -23,11 +23,11 @@ class ContaRequest extends FormRequest
     public function rules(): array
     {
         $regras= [
-            'cns'               => 'unique:clients,cns|required|string|max:20',
+            'cpf'               => 'required|string|max:14|unique:clients,cpf',
+            'cns'               => 'nullable|string|max:20|unique:clients,cns',
             'nome'              => 'required|string|max:255',
             'sexo'              => 'required|string|max:15',
             'data_nascimento'   => 'required|date_format:Y-m-d',
-            //'cpf'               => 'unique:clients,cpf|required|string|max:14',
             'cep'               => 'required|string|max:10',
             'logradouro'        => 'required|string|max:10',
             'endereco'          => 'required|string|max:200',
@@ -46,12 +46,11 @@ class ContaRequest extends FormRequest
     public function messages():array
     {
             return[
-                'cns.required'              => 'Campo cartão do SUS é obrigatório',
                 'cns.unique'                => 'Já existe um cliente com esse Cartão CNS',
                 'nome.required'             => 'Campo nome é obrigatório',
                 'sexo.required'             => 'Campo sexo é obrigatório',
                 'data_nascimento.required'  => 'Campo data de nascimento é obrigatório',
-                //'cpf.required'              => 'Campo CPF é obrigatório',
+                'cpf.required'              => 'Campo CPF é obrigatório',
                 'cpf.unique'                => 'Já existe um cliente com esse número de CPF',
                 'logradouro.required'       => 'Campo logradouro é obrigatório',
                 'endereco.required'         => 'Campo endereço é obrigatório',

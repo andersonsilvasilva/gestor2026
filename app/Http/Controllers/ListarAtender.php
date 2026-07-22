@@ -33,7 +33,7 @@ class ListarAtender extends Controller
            ->join('users','eventos.user_id','=','users.id' )
            ->join('clients','eventos.client_id','=','clients.id' )
            ->select('eventos.*','eventos.user_id as userid','eventos.id as ordem','procediments.name as procedimento',
-           'clients.id','clients.cns as codigo','clients.nome as nomecliente','clients.telefone','users.name as terapeuta')
+           'clients.id','clients.cpf as codigo','clients.nome as nomecliente','clients.telefone','users.name as terapeuta')
            ->where('eventos.client_id',$id)
            ->whereNull('eventos.deleted_at')
            ->orderBy('eventos.start', 'asc')

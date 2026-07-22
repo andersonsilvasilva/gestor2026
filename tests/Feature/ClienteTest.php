@@ -63,6 +63,16 @@ class ClienteTest extends TestCase
         $this->assertDatabaseHas('clients', ['nome' => 'Fulano de Tal']);
     }
 
+    public function test_cannot_create_a_cliente_with_a_duplicate_cpf(): void
+    {
+        $user = User::factory()->rh()->create();
+        $existente = Client::factory()->create();
+
+        $this->actingAs($user)
+            ->post('/clientes/create-cliente', $this->dadosCliente(['cpf' => $existente->cpf]))
+            ->assertSessionHasErrors('cpf');
+    }
+
     public function test_cannot_create_a_cliente_with_a_duplicate_cns(): void
     {
         $user = User::factory()->rh()->create();
@@ -71,6 +81,15 @@ class ClienteTest extends TestCase
         $this->actingAs($user)
             ->post('/clientes/create-cliente', $this->dadosCliente(['cns' => $existente->cns]))
             ->assertSessionHasErrors('cns');
+    }
+
+    public function test_can_create_a_cliente_without_a_cns(): void
+    {
+        $user = User::factory()->rh()->create();
+
+        $this->actingAs($user)
+            ->post('/clientes/create-cliente', $this->dadosCliente(['cns' => null]))
+            ->assertRedirect(route('clientes'));
     }
 
     public function test_can_update_a_cliente(): void

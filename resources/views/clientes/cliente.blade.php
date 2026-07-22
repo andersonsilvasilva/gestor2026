@@ -44,7 +44,7 @@
             <div class="card-body">
                 <table class="table table-striped table-success" id="table">
                     <thead class="table-dark text-left">
-                        <th>Cartão SUS</th>
+                        <th>CPF</th>
                         <th>Nome do cliente</th>
                         <th>Idade</th>
                         <th>Telefone</th>
@@ -54,7 +54,7 @@
                     <tbody>
                         @foreach ($clientes as $cliente)
                         <tr>
-                            <td>{{$cliente->cns}}</td>
+                            <td>{{$cliente->cpf}}</td>
                             <td>{{$cliente->nome}}</td>
                             <td>{{ \Carbon\Carbon::parse($cliente->data_nascimento)->age}}</td>
                             <td>{{$cliente->telefone}}</td>

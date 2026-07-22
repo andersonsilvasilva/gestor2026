@@ -26,17 +26,17 @@
                     <div class="col" >
                         <div  class="row">
                             <div class="col-md-2 col-sm-12 mb-2">
-                                <label for="cns" class="form-label">Número do cartão do SUS</label>
-                                <input type="text" class="form-control" id="cns"
-                                        name="cns" maxlength="20" size=20 data-mask="000.0000.0000.0000" value="{{ old('cns', $clientes->cns) }}">
-                                @error('cns')
+                                <label for="cpf" class="form-label">CPF</label>
+                                <input type="text" class="form-control" id="cpf" name="cpf" required maxlength="14" size=14 data-mask="000.000.000-00" value="{{ old('cpf',$clientes->cpf) }}">
+                                @error('cpf')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-2 col-sm-12 mb-2">
-                                <label for="cpf" class="form-label">CPF</label>
-                                <input type="text" class="form-control" id="cpf" name="cpf" maxlength="14" size=14 data-mask="000.000.000-00" value="{{ old('cpf',$clientes->cpf) }}">
-                                @error('cpf')
+                                <label for="cns" class="form-label">Número do cartão do SUS (opcional)</label>
+                                <input type="text" class="form-control" id="cns"
+                                        name="cns" maxlength="20" size=20 data-mask="000.0000.0000.0000" value="{{ old('cns', $clientes->cns) }}">
+                                @error('cns')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>

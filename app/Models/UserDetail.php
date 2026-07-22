@@ -18,6 +18,7 @@ class UserDetail extends Model
         'cidade',
         'telefone',
         'cns',
+        'cpf',
         'cbo',
         'data_nascimento',
         'comentario',

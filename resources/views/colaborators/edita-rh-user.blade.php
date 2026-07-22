@@ -56,7 +56,16 @@
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <label for="cns" class="form-label">Cartão do SUS</label>
+                                    <label for="cpf" class="form-label">CPF</label>
+                                    <input type="text" class="form-control" id="cpf" name="cpf" required placeholder="000.000.000-00" value="{{ old('cpf', $colaborator->detail->cpf) }}">
+                                    @error('cpf')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="cns" class="form-label">Cartão do SUS (opcional)</label>
                                     <input type="text" class="form-control" id="cns" name="cns" placeholder="000.0000.0000.0000" value="{{ old('cns', $colaborator->detail->cns) }}">
                                     @error('cns')
                                         <div class="text-danger">{{ $message }}</div>
