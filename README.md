@@ -1,162 +1,60 @@
-## Sistema Gestor de Prontuários de Atendimentos Ambulatoriais
-# Autor: Anderson Antônio Barros e Silva
-# URPICS Cuiabá - versão 1.1 - Ano 2025
+## Gestor de Prontuários de Atendimentos Ambulatoriais
 
-## Requsitos para instalação da aplicação
+**Autor:** Anderson Antônio Barros e Silva
+**URPICS Cuiabá — versão 2.0.2026**
 
-* PHP 8.2 ou superior - conferir a versão: php -v
-* composer - Conferir a implantação: composer --version
-* Node.js 20 ou Superior - conferir a versão - node -v
-* MySQL 8 ou Superior  - Conferir a versão: mysql --version
-* Reports for PHP and Laravel 5.*, with JasperReports.
-* Repositório: https://github.com/devmaster10/phpjasper-geekcom
+Sistema de gestão de prontuários e agendamentos para uma unidade de saúde (URPICS), usado por administradores, responsáveis técnicos, secretaria e colaboradores (terapeutas) via papéis de acesso distintos.
 
-## Sequecia para criar o projeto
+## Funcionalidades
 
+- **Clientes/pacientes** — cadastro, edição, exclusão (soft delete) e restauração.
+- **Agenda** — criação/edição de atendimentos por colaborador, com histórico de atendimentos por cliente ("Listar Atendimentos").
+- **Departamentos, Procedimentos e Colaboradores** — CRUD com soft delete, inativação (sem apagar histórico) e proteção de registros de referência.
+- **Gestão de Usuários** — contas de acesso (Admin, Responsável Técnico, Secretaria), separada da tela de Colaboradores (papel RH).
+- **Papéis e permissões** — 4 papéis (`admin`, `rt`, `sec`, `rh`), cada um com visibilidade e ações distintas (ver Gates em `AppServiceProvider`).
+- **Configurações** — nome da instituição/secretaria/unidade de saúde e logo, usados no cabeçalho dos relatórios oficiais.
+- **Relatórios** — BPA-I, Mapa de Produção (mensal e diário) e AVEIANM, gerados com JasperReports 7 por um microsserviço externo (ver [Relatórios](#relatórios) abaixo).
 
-## Como rodar o projeto baixado
-Instalar as dependências do PHP
-```
+## Requisitos
+
+- PHP 8.2 ou superior
+- Composer
+- Node.js 20 ou superior
+- MySQL 8 / MariaDB (produção usa MariaDB 11.8 na Hostinger)
+
+## Instalação local
+
+```bash
 composer install
-```
-
-Instalar as dependências do Node.js
-```
 npm install
-```
-
-Duplicar o arquivo ".env.example" e renomear para ".env"
-Alterar no arquivo .env o nome da base de dados para "celke". Exemplo: DB_DATABASE=celke
-
-Gerar a chave
-```
+cp .env.example .env
 php artisan key:generate
 ```
 
-Executar as migration
-```
+Configure `DB_*` no `.env` apontando para um banco local (crie o banco antes, ex. `gestor`), depois:
+
+```bash
 php artisan migrate
-```
-
-Executar as seed
-```
 php artisan db:seed
+npm run build
 ```
 
-Iniciar o projeto criado com Laravel
-```
-php artisan serve
+**Importante:** rode o projeto via Apache (`http://gestor.test` ou equivalente no Laragon/XAMPP), **não** `php artisan serve` — funcionalidades que dependem de sessão/cookies e de chamadas ao serviço de relatórios se comportam diferente sob o servidor embutido.
+
+### Testes automatizados
+
+Use um banco dedicado (nunca o de desenvolvimento), configurado em `.env.testing`:
+
+```bash
+php artisan test
 ```
 
-Executar as bibliotecas Node.js
-```
-npm run dev
-```
+## Relatórios
 
-Acessar o conteúdo padrão do Laravel
-```
-http://127.0.0.1:8000/
-```
+Os 4 relatórios em JasperReports 7 (BPA-I, Mapa de Produção mensal/diário, AVEIANM) dependem de Java, que **não está disponível no ambiente de produção (Hostinger)**. A geração roda num microsserviço Node/Express separado (`reports-service/`), hospedado num VPS, chamado via HTTP autenticado por segredo compartilhado (`REPORTS_SERVICE_URL` / `REPORTS_SERVICE_SECRET` no `.env`). Localmente, em desenvolvimento, o motor Java roda direto na máquina (ver `storage/app/jasperstarter7/`, não versionado).
 
-Sequencia para criar o projeto
-Criar o projeto com Laravel
-```
-composer create-project laravel/laravel laravel-meu-projeto
-```
+Para detalhes de configuração do motor JasperReports 7 e do microsserviço do VPS (instalação de Java, fontes, deploy do serviço), ver a documentação interna do projeto.
 
-Acessar op diretório onde está o projeto
-```
-cd laravel-meu-projeto
-```
+## Deploy em produção
 
-Iniciar o projeto criado com Laravel
-```
-php artisan serve
-```
-
-Acessar o conteúdo padrão do Laravel
-```
-http://127.0.0.1:8000/
-```
-
-Criar Controller
-```
-php artisan make:controller NomeDaController
-```
-```
-php artisan make:controller ContaController
-```
-
-Criar a VIEW
-```
-php artisan make:view nomeDaView
-```
-```
-php artisan make:view contas/create
-```
-
-Criar a migration
-```
-php artisan make:migration create_contas_table
-```
-
-Executar as migration
-```
-php artisan migrate
-```
-
-Criar a model
-```
-php artisan make:model Conta
-```
-
-Criar o arquivo Request com validações
-```
-php artisan make:request ContaRequest
-```
-
-Criar seed
-```
-php artisan make:seeder ContaSeeder
-```
-
-Executar as seed para todos
-```
-php artisan db:seed
-```
-Executar  seed especifica
-...
-php artisan db:seed --class=AdminSeeder
-
-Instalar o Vite
-```
-npm install
-```
-
-Instalar o framework Bootstrap
-```
-npm i --save bootstrap @popperjs/core
-```
-
-Instalar o sass
-```
-npm i --save-dev sass
-```
-
-Executar as bibliotecas Node.js
-```
-npm run dev
-```
-
-Instalar o  Bootstrap v4.1
-```
-composer require twbs/bootstrap:4.1.3
-```
-
-Instalando o repostorio do Vite
-```
-npm create vite@latest
-npm install
-npm run dev
-```
-
+Deploy manual via FTP/Gerenciador de Arquivos (Hostinger não oferece SSH confiável). O passo a passo completo — arquivos a enviar, migrations a rodar via phpMyAdmin, e o serviço de relatórios no VPS — está em `DEPLOY.md`.
