@@ -12,6 +12,7 @@ use Illuminate\Pagination\Paginator;
 use App\Models\User;
 use Mockery\Matcher\Contains;
 use App\Http\Requests\ContaRequest;
+use DateTime;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 
@@ -77,46 +78,65 @@ class ClienteController extends Controller
         $id = $this->decryptId($id);
 
         $clientes = Client::findOrFail($id);
-      
 
         return view('clientes.edita-clientes', compact('clientes'));
 
     }
 
-    public function updateCliente(ContaRequest $request)
+    public function updateCliente(Request $request, $id)
     {
-        //Auth::user()->can('admin', 'rh') ?: abort(403, "Você não tem acesso a essa página!");
- 
-        $request->validated();
+        $id = $this->decryptId($id);        
+              
+        $request->validate([
+                    'cns'               => 'required',
+                    //'cpf'               => 'required',
+                    'cor'               => 'required',
+                    'nome'              => 'required',
+                    'sexo'              => 'required',
+                    'data_nascimento'   => 'required',
+                    'cep'               => 'required',
+                    'logradouro'        => 'required',
+                    'endereco'          => 'required',
+                    'numero'            => 'required',
+                    'telefone'          => 'required',
+                    'estado_civil'      => 'required',
+                    'bairro'            => 'required',
+                    'cidade'            => 'required',
+                    'uf'                => 'required',
+                    'telefone'          => 'required',
+                    'tipo_sangue'       => 'required'
 
-        $clientes = client::findOrFail($request->id);
+        ]);
+       // dd($request->nacionalidade);
+        
+        $clientes = Client::findOrFail($id); 
 
         $clientes->update([
-            'cns'               => $request->cns,
-            'nome'              => $request->nome,
-            'sexo'              => $request->sexo,
-            'data_nascimento'   => \Carbon\Carbon::parse($request->data_nascimento)->format('Y/m/d'),
-            'nacionalidade'     => $request->nacionalidade,
-            'cpf'               => $request->cpf,
-            'cor'               => $request->cor,
-            'etnia'             => $request->etnia,
-            'cep'               => $request->cep,
-            'logradouro'        => $request->logradouro,
-            'endereco'          => $request->endereco,
-            'numero'            => $request->numero,
-            'estado_civil'      => $request->estado_civil,
-            'bairro'            => $request->bairro,
-            'cidade'            => $request->cidade,
-            'uf'                => $request->uf,
-            'telefone'          => $request->telefone,
-            'email'             => $request->email,
-            'tipo_sangue'       => $request->tipo_sangue,
-            'ativ_laboral'      => $request->ativ_laboral,
-            'observacao'        => $request->observacao 
+                    'cns'               => $request->cns,
+                    'cpf'               => $request->cpf,
+                    'cor'               => $request->cor,
+                    'etnia'             => $request->etnia,
+                    'nome'              => $request->nome,
+                    'sexo'              => $request->sexo,
+                    'data_nascimento'   => \Carbon\Carbon::parse($request->data_nascimento)->format('Y/m/d'),
+                    'nacionalidade'     => $request->nacionalidade,
+                    'cep'               => $request->cep,
+                    'logradouro'        => $request->logradouro,
+                    'endereco'          => $request->endereco,
+                    'numero'            => $request->numero,
+                    'telefone'          => $request->telefone,
+                    'estado_civil'      => $request->estado_civil,
+                    'bairro'            => $request->bairro,
+                    'cidade'            => $request->cidade,
+                    'uf'                => $request->uf,
+                    'telefone'          => $request->telefone,
+                    'email'             => $request->email,
+                    'tipo_sangue'       => $request->tipo_sangue,
+                    'ativ_laboral'      => $request->ativ_laboral,
+                    'observacao'        => $request->observacao
         ]);
 
-
-        return redirect()->route('clientes')->with('success', 'Alterado com sucesso!');
+    return redirect()->route('clientes')->with('success', 'Alterado com sucesso!');
 
     }
     public function showDetails($id)
@@ -166,6 +186,5 @@ class ClienteController extends Controller
         return $id;
     }
 
-  
 
 }

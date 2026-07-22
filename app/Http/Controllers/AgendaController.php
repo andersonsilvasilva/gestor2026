@@ -81,6 +81,13 @@ class AgendaController extends Controller
             'procediments_id' => 'required|exists:procediments,id',
             'color'           => 'required|string',
             'descricao'       => 'required|string|max:255',
+        ], [
+            'title.required'           => 'Campo título é obrigatório',
+            'start.required'           => 'Campo início é obrigatório',
+            'end.required'             => 'Campo fim é obrigatório',
+            'end.after'                => 'O fim deve ser depois do início',
+            'procediments_id.required' => 'Selecione um procedimento',
+            'descricao.required'       => 'Campo sobre o atendimento é obrigatório',
         ]);
 
         eventos::create($validated);

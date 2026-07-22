@@ -50,7 +50,7 @@
                 <label for="logo" class="form-label">Logomarca</label>
                 @if($configuracao->logo_path)
                     <div class="mb-2">
-                        <img src="{{ asset('storage/' . $configuracao->logo_path) }}" alt="Logo atual" style="max-height: 100px; max-width: 200px;" class="border p-1">
+                        <img src="{{ asset($configuracao->logo_path) }}" alt="Logo atual" style="max-height: 100px; max-width: 200px;" class="border p-1">
                     </div>
                 @endif
                 <input type="file" class="form-control" id="logo" name="logo" accept="image/png,image/jpeg">

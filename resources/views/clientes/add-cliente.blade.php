@@ -17,7 +17,7 @@
                         <div  class="row">
                             <div class="col-md-2 col-sm-12 mb-2">
                                 <label for="cns" class="form-label">Número do cartão do SUS</label>
-                                <input type="text" class="form-control" id="cns" 
+                                <input type="text" class="form-control" id="cns"
                                         name="cns" maxlength="18" size=18 data-mask="000.0000.0000.0000" value="{{ old('cns') }}">
                                 @error('cns')
                                     <div class="text-danger">{{ $message }}</div>
@@ -30,7 +30,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="col-md-6 col-sm-12 mb-2">
                                 <label for="nome" class="form-label">Nome Completo do Cliente</label>
                                 <input type="text" class="form-control" id="nome" name="nome" oninput="this.value = this.value.toUpperCase()"  value="{{ old('nome') }}">
@@ -51,30 +51,30 @@
                                         <label for="sexo" class="form-label">Sexo</label>
                                         <select class="form-select" id="sexo" name="sexo" value="{{ old('sexo') }}" >
                                             <option value="">           Selecione</option>
-                                            <option value="MASCULINO">  Masculino</option>
-                                            <option value="FEMININO">   Feminino</option>
+                                            <option value="MASCULINO">  MASCULINO</option>
+                                            <option value="FEMININO">   FEMININO</option>
                                         </select>
                                         @error('sexo')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
-  
+
                                 </div>
-    
+
                                 <div class="col-md-2 col-sm-12 mb-2">
                                     <div class="form-group">
-                                        <label for="nacionalidade" class="form-label">Nacionalidade</label>                   
+                                        <label for="nacionalidade" class="form-label">Nacionalidade</label>
                                         <select class="form-select" id="nacionalidade" name="nacionalidade" value="{{ old('nacionalidade') }}">
                                             <option value="">           Selecione</option>
-                                            <option value="BRASILEIRA"> Brasileira</option>
-                                            <option value="ESTRANGEIRA">Estrangeira</option>
+                                            <option value="BRASILEIRA"> BRASILEIRA</option>
+                                            <option value="ESTRANGEIRA">ESTRANGEIRA</option>
                                         </select>
                                         @error('nacionalidade')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
-                                    </div>        
+                                    </div>
                                 </div>
                                 <div class="col-md-2 col-sm-12 mb-2">
-                                    <label for="cor" class="form-label">Cor</label>                  
+                                    <label for="cor" class="form-label">Cor</label>
                                     <select class="form-select" id="cor" name="cor" value="{{ old('cor') }}">
                                         <option value="">Selecione</option>
                                         <option value="BRANCA">     BRANCA</option>
@@ -82,7 +82,7 @@
                                         <option value="AMARELA">    AMARELA</option>
                                         <option value="PARDA">      PARDA</option>
                                         <option value="INDIGINA">   INDÍGENA</option>
-                                    </select>    
+                                    </select>
                                     @error('cor')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -94,17 +94,17 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                
+
                             <div class="col-md-2 col-sm-12 mb-2">
                                 <div class="form-group">
                                     <label for="estado_civil" class="form-label">Estado Civil</label>
                                     <select class="form-select" id="estado_civil" name="estado_civil" value="{{old('estado_civil') }}" >
                                         <option value=" ">Selecione</option>
-                                        <option value="SOLTEIRO(A)">    Solteiro(a)</option>
-                                        <option value="CASADO(A)">      Casado(a)</option>
-                                        <option value="VIÚVO(A)">       Viúvo(a)</option>
-                                        <option value="DIVORCIADO(A)">  Divorciado(a)</option>
-                                        <option value="UNIÃO ESTÁVEL">  União Estável</option>
+                                        <option value="SOLTEIRO(A)">    SOLTEIRO(A)</option>
+                                        <option value="CASADO(A)">      CASADO(A)</option>
+                                        <option value="VIÚVO(A)">       VIÚVO(A)</option>
+                                        <option value="DIVORCIADO(A)">  DIVORCIADO(A)</option>
+                                        <option value="UNIÃO ESTÁVEL">  UNIÃO ESTÁVEL</option>
                                     </select>
                                     @error('estado_civil')
                                         <div class="text-danger">{{ $message }}</div>
@@ -114,25 +114,32 @@
                         </div>
                         <hr>
                         <div class="row">
+                            <div class="col-md-2 col-sm-12">
+                                <label for="cep" class="form-label">Cep</label>
+                                <input type="text" class="form-control" id="cep" name="cep" data-mask="00000-000"  size=8 value="{{ old('cep') }}">
+                                @error('cep')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                             <div class="col-md-2 col-sm-2">
                                 <div class="form-group">
                                     <label for="logradouro" class="form-label">Logradouro</label>
                                     <select class="form-select" id="logradouro" name="logradouro" value="{{ old('logradouro') }}">
                                         <option value="">           Selecione</option>
-                                        <option value="RUA">        Rua</option>
-                                        <option value="AVENIDA">    Avenida</option>
-                                        <option value="TRAVESSA">   Travessa</option>
-                                        <option value="VIELA">      Viela</option>
-                                        <option value="TRECHO">     Trecho</option>
-                                        <option value="ALAMEDA">    Alameda</option>
-                                        <option value="CHÁCARA">    Chácara</option>
-                                        <option value="FAZENDA">    Fazenda</option>
-                                        <option value="LOTEAMENTO"> Loteamento</option>
-                                        <option value="SITIO">      Sítio</option>
-                                        <option value="COLONIA">    Colônia</option>
-                                        <option value="CONDOMINIO"> Condomínio</option>
-                                        <option value="ESTRADA">    Estrada</option>
-                                        <option value="BECO">       Beco</option>
+                                        <option value="RUA">        RUA</option>
+                                        <option value="AVENIDA">    AVENIDA</option>
+                                        <option value="TRAVESSA">   TRAVESSA</option>
+                                        <option value="VIELA">      VIELA</option>
+                                        <option value="TRECHO">     TRECHO</option>
+                                        <option value="ALAMEDA">    ALAMEDA</option>
+                                        <option value="CHÁCARA">    CHÁCARA</option>
+                                        <option value="FAZENDA">    FAZENDA</option>
+                                        <option value="LOTEAMENTO"> LOTEAMENTO</option>
+                                        <option value="SITIO">      SITIO</option>
+                                        <option value="COLONIA">    COLONIA</option>
+                                        <option value="CONDOMINIO"> CONDOMINIO</option>
+                                        <option value="ESTRADA">    ESTRADA</option>
+                                        <option value="BECO">       BECO</option>
                                     </select>
                                     @error('logradouro')
                                         <div class="text-danger">{{ $message }}</div>
@@ -153,13 +160,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-md-2 col-sm-12">
-                                <label for="cep" class="form-label">Cep</label>
-                                <input type="text" class="form-control" id="cep" name="cep" data-mask="00000-000"  size=9 value="{{ old('cep') }}">
-                                @error('cep')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-md-4 col-sm-12 m">
@@ -171,44 +172,44 @@
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <label for="cidade" class="form-label">Cidade</label>
-                                <input type="text" class="form-control" id="cidade" name="cidade" oninput="this.value = this.value.toUpperCase()" value="{{ old('cidade') }}">
+                                <input type="text" class="form-control" id="cidade" name="cidade" oninput="this.value = this.value.toUpperCase()"  value="{{ old('cidade', "CUIABÁ" ) }}">
                                 @error('cidade')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-2 col-sm-12">
                                 <div class="form-group">
-                                    <label for="uf" class="form-label">Estado</label>                    
+                                    <label for="uf" class="form-label">Estado</label>
                                     <select class="form-select" id="uf" name="uf" value="{{ old('uf'),'uf'}}">
                                         <option value="">   Selecione</option>
-                                        <option value="AC"> Acre</option>
-                                        <option value="AL"> Alagoas</option>
-                                        <option value="AP"> Amapá</option>
-                                        <option value="AM"> Amazonas</option>
-                                        <option value="BA"> Bahia</option>
-                                        <option value="CE"> Ceará</option>
-                                        <option value="DF"> Distrito Federal</option>
-                                        <option value="ES"> Espírito Santo</option>
-                                        <option value="GO"> Goiás</option>
-                                        <option value="MA"> Maranhão</option>
-                                        <option value="MT"> Mato Grosso</option>
-                                        <option value="MS"> Mato Grosso do Sul</option>
-                                        <option value="MG"> Minas Gerais</option>
-                                        <option value="PA"> Pará</option>
-                                        <option value="PB"> Paraíba</option>
-                                        <option value="PR"> Paraná</option>
-                                        <option value="PE"> Pernambuco</option>
-                                        <option value="PI"> Piauí</option>
-                                        <option value="RJ"> Rio de Janeiro</option>
-                                        <option value="RN"> Rio Grande do Norte</option>
-                                        <option value="RS"> Rio Grande do Sul</option>
-                                        <option value="RO"> Rondônia</option>
-                                        <option value="RR"> Roraima</option>
-                                        <option value="SC"> Santa Catarina</option>
-                                        <option value="SP"> São Paulo</option>
-                                        <option value="SE"> Sergipe</option>
-                                        <option value="TO"> Tocantins</option>
-                                        <option value="EX"> Estrangeiro</option>
+                                        <option value="AC"> ACRE</option>
+                                        <option value="AL"> ALAGOAS</option>
+                                        <option value="AP"> AMAPÁ</option>
+                                        <option value="AM"> AMAZONAS</option>
+                                        <option value="BA"> BAHIA</option>
+                                        <option value="CE"> CEARÁ</option>
+                                        <option value="DF"> DISTRITO FEDERAL</option>
+                                        <option value="ES"> ESPÍRITO SANTO</option>
+                                        <option value="GO"> GOIÁS</option>
+                                        <option value="MA"> MARANHÃO</option>
+                                        <option value="MT"> MATO GROSSO</option>
+                                        <option value="MS"> MATO GROSSO DO SUL</option>
+                                        <option value="MG"> MINAS GERAIS</option>
+                                        <option value="PA"> PARÁ</option>
+                                        <option value="PB"> PARAÍBA</option>
+                                        <option value="PR"> PARANÁ</option>
+                                        <option value="PE"> PERNAMBUCO</option>
+                                        <option value="PI"> PIAUÍ</option>
+                                        <option value="RJ"> RIO DE JANEIRO</option>
+                                        <option value="RN"> RIO GRANDE DO NORTE</option>
+                                        <option value="RS"> RIO GRANDE DO SUL</option>
+                                        <option value="RO"> RONDÔNIA</option>
+                                        <option value="RR"> RORAIMA</option>
+                                        <option value="SC"> SANTA CATARINA</option>
+                                        <option value="SP"> SÃO PAULO</option>
+                                        <option value="SE"> SERGIPE</option>
+                                        <option value="TO"> TOCANTINS</option>
+                                        <option value="EX"> ESTRANGEIRO</option>
                                     </select>
                                     @error('uf')
                                         <div class="text-danger">{{ $message }}</div>
@@ -227,13 +228,13 @@
                             </div>
                             <div class="col-md-8 col-sm-12 mb-2">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="email" name="email" oninput="this.value = this.value.toUpperCase()" value="{{ old('email') }}">
+                                <input type="text" class="form-control" id="email" name="email" oninput="this.value = this.value.toUpperCase()" value="{{ old('email', "NÃO INFORMADO") }}">
                                 @error('email')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-2 col-sm-12 mb-2">
-                                <label for="tipo_sangue" class="form-label">Tipo Sanguineo</label>                   
+                                <label for="tipo_sangue" class="form-label">Tipo Sanguineo</label>
                                 <select name="tipo_sangue" id="tipo_sangue" class="form-select" value={{old('tipo_sangue')}}>
                                     <option value="">Selecione</option>
                                     <option value="NS"> Não Sabe</option>
@@ -276,11 +277,105 @@
         </form>
 
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>   
-    
-    <script>
+
+    {{--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>--}}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+
+    <!-- Adicionando Javascript -->
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            function limpa_formulário_cep() {
+                // Limpa valores do formulário de cep.
+                $("#cep").val("");
+                $("#logradouro").val("");
+                $("#endereco").val("");
+                $("#bairro").val("");
+                $("#cidade").val("");
+                $("#uf").val("");
+                $("#cep").focus();
+                //$("#ibge").val("");
+            }
+
+            //Quando o campo cep perde o foco.
+            $("#cep").blur(function() {
+
+                //Nova variável "cep" somente com dígitos.
+                var cep = $(this).val().replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if(validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+                        $("#endereco").val("...");
+                        $("#bairro").val("...");
+                        $("#cidade").val("...");
+                        $("#uf").val("...");
+                        //$("#ibge").val("...");
+
+                        //Consulta o webservice viacep.com.br/
+                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+
+                            if (!("erro" in dados)) {
+                                //Atualiza os campos com os valores da consulta.
+                                rua= dados.logradouro.toUpperCase();
+                                bairro = dados.bairro.toUpperCase();
+                                logradouro= rua.substring(0, rua.indexOf(" ") + 0).toUpperCase();
+                                rua= rua.substring(rua.indexOf(" ") + 1, 60);
+                                cidade = dados.localidade.toUpperCase();
+                                uf = dados.uf.toUpperCase();
+                                $("#logradouro").val(logradouro);
+                                $("#endereco").val(rua);
+                                $("#bairro").val(bairro);
+                                $("#cidade").val(cidade);
+                                $("#uf").val(uf);
+                                $("#numero").focus();
+                                //$("#ibge").val(dados.ibge);
+                            } //end if.
+                            else {
+                                //CEP pesquisado não foi encontrado.
+                                limpa_formulário_cep();
+                                Swal.fire({
+                                        position: "top-center",
+                                        icon: "error",
+                                        title: "CEP não encontrado!",
+                                        showConfirmButton: false,
+                                        timer: 2500
+                                });
+                            }
+                        });
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário_cep();
+                        Swal.fire({
+                            position: "top-center",
+                            icon: "error",
+                            title: "CEP não encontrado!",
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                    limpa_formulário_cep();
+                }
+            });
+        });
+    </script>
+       <script>
            $(document).ready(function(){
               $('.date').mask('00/00/0000');
               $('.time').mask('00:00:00');
@@ -317,9 +412,8 @@
                 });
               $('.selectonfocus').mask("00/00/0000", {selectOnFocus: true});
             });
-        
+
     </script>
-    
 
 </x-layout-app>
 

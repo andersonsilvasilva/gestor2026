@@ -56,10 +56,6 @@ class RhUserController extends Controller
             'data_nascimento' => 'required|date_format:Y-m-d',
         ]);
 
-        //check departament
-        if($request->select_department != 2){
-            return redirect()->route('home');
-        }
         // Create confirmation token
         $token = Str::random(60);
 

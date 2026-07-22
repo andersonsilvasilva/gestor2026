@@ -5,17 +5,14 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\ConfirmAccountController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ListarAtender;
 use App\Http\Controllers\ProcedimentoControl;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RhUserController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ControllerReport;
-use App\Http\Controllers\JasperController;
-use App\Mail\ConfirmAccountEmail;
-use App\Models\Department;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Mail\Mailable;
 
 
 use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController;
@@ -76,12 +73,15 @@ Route::middleware('auth')->group(function(){
     Route::get('/clientes/new-cliente',[ClienteController::class, 'newCliente'])->name('clientes.new-cliente');
     Route::post('/clientes/create-cliente',[ClienteController::class, 'createCliente'])->name('cliente.create-cliente');
     Route::get('/clientes/edita-cliente/{id}',[ClienteController::class, 'editCliente'])->name('cliente.edita-cliente');
-    Route::post('/clientes/update-cliente',[ClienteController::class, 'updateCliente'])->name('cliente.update-cliente');
+    Route::post('/clientes/update-cliente/{id}',[ClienteController::class, 'updateCliente'])->name('cliente.update-cliente');
     Route::get('/clientes/delete-cliente/{id}',[ClienteController::class, 'deleteCliente'])->name('cliente.delete-cliente');
     Route::post('/clientes/delete-cliente_confirm/{id}',[ClienteController::class, 'deleteClienteConfirm'])->name('cliente.delete-cliente_confirm');
     Route::post('/clientes/restore/{id}', [ClienteController::class, 'restoreClient'])->name('cliente.restore-cliente');
     Route::get('/clientes/details/{id}',[ClienteController::class, 'showDetails'])->name('cliente.details');
 
+    //ListarAtendimentos
+    Route::get('/listar/{id}', [ListarAtender::class, 'index'])->name('atendimento.listar');
+    Route::post('/eventos/update', [ListarAtender::class, 'update'])->name('eventos.update');
 
     // Calendario routes
     Route::get('agenda/index/{id}', [AgendaController::class, 'index'])->name('agenda.index');

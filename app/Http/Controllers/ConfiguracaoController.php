@@ -33,7 +33,11 @@ class ConfiguracaoController extends Controller
 
         if ($request->hasFile('logo')) {
             $extensao = $request->file('logo')->extension();
-            $logoPath = $request->file('logo')->storeAs('logos', 'logo_instituicao.' . $extensao, 'public');
+            $nomeArquivo = 'logo_instituicao.' . $extensao;
+            // Salvo direto na raiz web (não em storage/app/public) porque a
+            // hospedagem não tem acesso a terminal pra rodar `storage:link`.
+            $request->file('logo')->move(Configuracao::webRootPath() . '/logos', $nomeArquivo);
+            $logoPath = 'logos/' . $nomeArquivo;
         }
 
         $configuracao->update([

@@ -22,4 +22,17 @@ class Configuracao extends Model
     {
         return static::first() ?? static::create([]);
     }
+
+    /**
+     * Raiz realmente servida na web. Em produção (Hostinger), `public_html`
+     * é uma pasta IRMÃ da raiz do app, não a `public/` do Laravel — por isso
+     * `public_path()` sozinho aponta pro lugar errado lá (embora funcione
+     * normalmente em ambiente local, onde essa pasta irmã não existe).
+     */
+    public static function webRootPath(): string
+    {
+        $publicHtmlIrmao = dirname(base_path()) . '/public_html';
+
+        return is_dir($publicHtmlIrmao) ? $publicHtmlIrmao : public_path();
+    }
 }

@@ -27,7 +27,7 @@
                     <p>Cor: <strong>{{$clientes->cor}}</strong><p>
                     <p>Etnia: <strong>{{$clientes->etnia}}</strong></p>
                     <hr>
-                    <h6>Última consulta: <strong>{{ \Carbon\Carbon::parse($clientes->ultima_consulta)->format('d/m/Y')}}</strong></h6>
+                    <h6>Última atualização: <strong>{{ \Carbon\Carbon::parse($clientes->updated_at)->format('d/m/Y')}}</strong></h6>
                     <hr>
                     <p>Observações: <strong>{{$clientes->observacao}}</strong></p>
 

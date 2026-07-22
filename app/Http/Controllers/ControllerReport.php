@@ -126,7 +126,7 @@ class ControllerReport extends Controller
         if (in_array($report, self::REPORTS_COM_CABECALHO_CONFIGURAVEL, true)) {
             $configuracao = Configuracao::atual();
             $logoPath = $configuracao->logo_path
-                ? storage_path('app/public/' . $configuracao->logo_path)
+                ? Configuracao::webRootPath() . '/' . $configuracao->logo_path
                 : storage_path('app/jasperstarter7/bin/images/logo_prefeitura.png');
 
             $parametros[] = 'LOGO_PATH=' . $logoPath;

@@ -92,13 +92,13 @@
                             @enderror
                             
                             <label for="start"><b>{{__('Inicio')}}></b></label>
-                            <input type='datetime-local' class='bg-info text-dark form-control' id='start' name='start'>
+                            <input type='datetime-local' class='bg-info text-dark form-control' id='start' name='start' value="{{ old('start') }}">
                             @error('start')
                                 <div class="text-danger"><b>{{ $message }}</b></div>
                             @enderror
 
                             <label for="end"><b>{{__('Fim')}}</b></label>
-                            <input type='datetime-local' class='bg-info text-dark form-control' id='end' name='end'>
+                            <input type='datetime-local' class='bg-info text-dark form-control' id='end' name='end' value="{{ old('end') }}">
                             @error('end')
                                 <div class="text-danger"><b>{{ $message }}</b></div>
                             @enderror
@@ -124,8 +124,8 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                                                     
-                            <label for='descricao'><b>{{ __('Sobre o Atendimento') }}</b></label>
-                            <textarea class="bg-info text-dark form-control" id="descricao" name="descricao" rows="7" cols="30" maxlength="1000" placeholder="Informe o atendimento" value='{{ old('descricao')}}'></textarea>
+                            <label for='descricao'><b>{{ __('Sobre o Atendimento') }} <span class="text-danger">*</span></b></label>
+                            <textarea class="bg-info text-dark form-control" id="descricao" name="descricao" rows="7" cols="30" maxlength="1000" placeholder="Informe o atendimento (obrigatório)" required>{{ old('descricao') }}</textarea>
                             @error('descricao')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -269,6 +269,14 @@
 
         //Aqui começa as rotinas de controle da Agenda
         const cadastrarModal = new bootstrap.Modal(document.getElementById("cModal"));
+
+        @if ($errors->any())
+            // Se o formulário de "Cadastrar o atendimento" falhou na validação
+            // (ex.: descrição em branco), o redirect volta pra essa mesma tela
+            // com o modal fechado — sem isso, os erros ficam escondidos e
+            // parece que o clique em "Gravar" não fez nada.
+            cadastrarModal.show();
+        @endif
         //Rotina para Abrir o Modal
         const abrirModal = (info) => {
             // info.dateStr já vem no fuso configurado do calendário (UTC-4); usar

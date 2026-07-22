@@ -78,8 +78,7 @@ class ClienteTest extends TestCase
         $user = User::factory()->rh()->create();
         $cliente = Client::factory()->create(['nome' => 'Nome Antigo']);
 
-        $this->actingAs($user)->post('/clientes/update-cliente', $this->dadosCliente([
-            'id'   => $cliente->id,
+        $this->actingAs($user)->post('/clientes/update-cliente/' . Crypt::encrypt($cliente->id), $this->dadosCliente([
             'nome' => 'Nome Novo',
         ]))->assertRedirect(route('clientes'));
 

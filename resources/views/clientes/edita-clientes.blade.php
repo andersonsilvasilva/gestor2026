@@ -3,24 +3,22 @@
     <div class="border-light shadow w-100 p-3">
         <h4>Alterar o Cliente</h4>
         <hr>
-        {{--
+
         @if($errors->any())
             <span classe="alert alert-dange" style="color: #ff0000;">
                 @foreach ($errors->all() as $error)
-                    {{ error }} <br>                    
+                    {{ errors }} <br>
                 @endforeach
 
             </span>
             <br>
         @endif
-        --}}
-        
 
-        <form action="{{ route('cliente.update-cliente') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('cliente.update-cliente',  ['id' => Crypt::encrypt($clientes->id)]) }}" method="post">
 
             @csrf
 
-            <input type="hidden"  name="id" value="{{ $clientes->id }}"> 
+            <input type="hidden"  name="id" value="{{ $clientes->id }}">
 
             <div class="container-fluid">
                 <div class="row gap-2">
@@ -29,7 +27,7 @@
                         <div  class="row">
                             <div class="col-md-2 col-sm-12 mb-2">
                                 <label for="cns" class="form-label">Número do cartão do SUS</label>
-                                <input type="text" class="form-control" id="cns" 
+                                <input type="text" class="form-control" id="cns"
                                         name="cns" maxlength="20" size=20 data-mask="000.0000.0000.0000" value="{{ old('cns', $clientes->cns) }}">
                                 @error('cns')
                                     <div class="text-danger">{{ $message }}</div>
@@ -42,10 +40,10 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
                             <div class="col-md-6 col-sm-12 mb-2">
                                 <label for="nome" class="form-label">Nome Completo do Cliente</label>
-                                <input type="text" class="form-control" id="nome" name="nome"  value="{{ old('nome', $clientes->nome) }}">
+                                <input type="text" class="form-control" id="nome" name="nome" oninput="this.value = this.value.toUpperCase()" value="{{ old('nome', $clientes->nome) }}">
                                 @error('nome')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -63,60 +61,60 @@
                                         <label for="sexo" class="form-label">Sexo</label>
                                         <select name="sexo" class="form-select {{$errors->has('sexo')?'is-invalid':''}}" id="sexo">
                                             <option value="" selected> Selecione</option>
-                                            <option {{$clientes->sexo == "Brasileira"      ? 'selected': ''}} value="Masculino">Masculino</option>
-                                            <option {{$clientes->sexo == "Brasileira"      ? 'selected': ''}} value="Feminino">Feminino</option>
+                                            <option {{$clientes->sexo == "MASCULINO"       ? 'selected': ''}} value="MASCULINO">MASCULINO</option>
+                                            <option {{$clientes->sexo == "FEMÍNINO"        ? 'selected': ''}} value="FEMÍNINO">FEMÍNINO</option>
                                         </select>
                                         @error('sexo')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
-  
+
                                 </div>
-    
+
                                 <div class="col-md-2 col-sm-12 mb-2">
                                     <div class="form-group">
-                                        <label for="nacionalidade" class="form-label">Nacionalidade</label>                   
+                                        <label for="nacionalidade" class="form-label">Nacionalidade</label>
                                         <select name="nacionalidade" class="form-select {{$errors->has('nacionalidade')?'is-invalid':''}}" id="nacionalidade" >
                                             <option value="" selected> Selecione</option>
-                                            <option {{$clientes->nacionalidade == "Brasileira"      ? 'selected': ''}} value="Brasileira">Brasileira</option>
-                                            <option {{$clientes->nacionalidade == "Estrangeira"     ? 'selected': ''}} value="Estrangeira">Estrangeira</option>
+                                            <option {{$clientes->nacionalidade == "BRASILEIRA"      ? 'selected': ''}} value="BRASILEIRA">BRASILEIRA</option>
+                                            <option {{$clientes->nacionalidade == "ESTRANGEIRA"     ? 'selected': ''}} value="ESTRANGEIRA">ESTRANGEIRA</option>
                                         </select>
                                         @error('nacionalidade')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
-                                    </div>        
+                                    </div>
                                 </div>
                                 <div class="col-md-2 col-sm-12 mb-2">
-                                    <label for="cor" class="form-label">Cor</label>                  
+                                    <label for="cor" class="form-label">Cor</label>
                                     <select name="cor" class="form-select {{$errors->has('cor')?'is-invalid':''}}" id="cor" >
                                         <option value="" selected> Selecione</option>
-                                        <option {{$clientes->cor == "Branca"     ? 'selected': ''}} value="Branca">     Branca</option>
-                                        <option {{$clientes->cor == "Preta"      ? 'selected': ''}} value="Preta">      Preta</option>
-                                        <option {{$clientes->cor == "Amarela"    ? 'selected': ''}} value="Amarela">    Amarela</option>
-                                        <option {{$clientes->cor == "Parda"      ? 'selected': ''}} value="Parda">      Parda</option>
-                                        <option {{$clientes->cor == "Indigena"   ? 'selected': ''}} value="Indigena">   Indígena</option>
-                                    </select>    
+                                        <option {{$clientes->cor == "BRANCA"     ? 'selected': ''}} value="BRANCA">     BRANCA</option>
+                                        <option {{$clientes->cor == "PRETA"      ? 'selected': ''}} value="PRETA">      PRETA</option>
+                                        <option {{$clientes->cor == "AMARELA"    ? 'selected': ''}} value="AMARELA">    AMARELA</option>
+                                        <option {{$clientes->cor == "PARDA"      ? 'selected': ''}} value="PARDA">      PARDA</option>
+                                        <option {{$clientes->cor == "INDÍGENA"   ? 'selected': ''}} value="INDÍGENA">   INDÍGENA</option>
+                                    </select>
                                     @error('cor')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-4 col-sm-12 mb-2">
                                     <label for="etnia" class="form-label">Etnia</label>
-                                    <input type="text" class="form-control" id="etnia" name="etnia" value="{{ old('etnia', $clientes->etnia) }}">
+                                    <input type="text" class="form-control" id="etnia" name="etnia" oninput="this.value = this.value.toUpperCase()" value="{{ old('etnia', $clientes->etnia) }}">
                                     @error('etnia')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                
+
                             <div class="col-md-2 col-sm-12 mb-2">
                                 <div class="form-group">
                                     <label for="estado_civil" class="form-label">Estado Civil</label>
                                     <select  name="estado_civil" class="form-select {{$errors->has('estado_civil')?'is-invalid':''}}" id="estado_civil">
                                         <option value="" selected> Selecione</option>
-                                        <option {{$clientes->estado_civil == "Solteiro(a)" ? 'selected': ''}} value="Solteiro(a)">Solteiro(a)</option>
-                                        <option {{$clientes->estado_civil == "Casado(a)" ? 'selected': ''}} value="Casado(a)">Casado(a)</option>
-                                        <option {{$clientes->estado_civil == "Viúvo(a)" ? 'selected': ''}} value="Viúvo(a)">Viúvo(a)</option>
-                                        <option {{$clientes->estado_civil == "Divorciado(a)" ? 'selected': ''}} value="Divorciado(a)">Divorciado(a)</option>
-                                        <option {{$clientes->estado_civil == "União estável" ? 'selected': ''}} value="União estável">União Estável</option>
+                                        <option {{$clientes->estado_civil == "SOLTEIRO(A)"      ? 'selected': ''}} value="SOLTEIRO(A)">SOLTEIRO(A)</option>
+                                        <option {{$clientes->estado_civil == "CASADO(A)"        ? 'selected': ''}} value="CASADO(A)">CASADO(A)</option>
+                                        <option {{$clientes->estado_civil == "VIÚVO(A)"         ? 'selected': ''}} value="VIÚVO(A)">VIÚVO(A)</option>
+                                        <option {{$clientes->estado_civil == "DIVORCIADO(A)"    ? 'selected': ''}} value="DIVORCIADO(A)">DIVORCIADO(A)</option>
+                                        <option {{$clientes->estado_civil == "UNIÃO ESTÁVEL"    ? 'selected': ''}} value="UNIÃO ESTÁVEL">NIÃO ESTÁVEL</option>
                                     </select>
                                     @error('estado_civil')
                                         <div class="text-danger">{{ $message }}</div>
@@ -126,25 +124,31 @@
                         </div>
                         <hr>
                         <div class="row">
+                            <div class="col-md-2 col-sm-12">
+                                <label for="cep" class="form-label">Cep</label>
+                                <input type="text" class="form-control" id="cep" name="cep" maxlength="9" data-mask="00000-000"  size=9 value="{{ old('cep', $clientes->cep) }}">
+                                @error('cep')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                             <div class="col-md-2 col-sm-2">
                                 <div class="form-group">
                                     <label for="logradouro" class="form-label">Logradouro</label>
-                                    <select name="logradouro" class="form-select {{$errors->has('logradouro')?'is-invalid':''}}" id="logradouro"  >
+                                    <select  name="logradouro" class="form-select {{$errors->has('logradouro')?'is-invalid':''}}" id="logradouro">
                                         <option value="" selected> Selecione</option>
-                                        <option {{$clientes->uf == "Rua" ? 'selected': ''}}         value="Rua">Rua</option>
-                                        <option {{$clientes->uf == "Avenida" ? 'selected': ''}}     value="Avenida">Avenida</option>
-                                        <option {{$clientes->uf == "Travessa" ? 'selected': ''}}    value="Travessa">Travessa</option>
-                                        <option {{$clientes->uf == "Viela" ? 'selected': ''}}       value="Viela">Viela</option>
-                                        <option {{$clientes->uf == "Trecho" ? 'selected': ''}}      value="Trecho">Trecho</option>
-                                        <option {{$clientes->uf == "Alameda" ? 'selected': ''}}     value="Alameda">Alameda</option>
-                                        <option {{$clientes->uf == "Chácara" ? 'selected': ''}}     value="Chácara">Chácara</option>
-                                        <option {{$clientes->uf == "Fazenda" ? 'selected': ''}}     value="Fazenda">Fazenda</option>
-                                        <option {{$clientes->uf == "Loteamento" ? 'selected': ''}}  value="Loteamento">Loteamento</option>
-                                        <option {{$clientes->uf == "Sitio" ? 'selected': ''}}       value="Sitío">Sítio</option>
-                                        <option {{$clientes->uf == "Colônia" ? 'selected': ''}}     value="Colônia">Colônia</option>
-                                        <option {{$clientes->uf == "Condominio" ? 'selected': ''}}  value="Condominio">Condomínio</option>
-                                        <option {{$clientes->uf == "estrada" ? 'selected': ''}}     value="Estrada">Estrada</option>
-                                        <option {{$clientes->uf == "Beco" ? 'selected': ''}}        value="Beco">Beco</option>
+                                        <option {{$clientes->logradouro == "RUA"            ? 'selected': ''}} value="RUA">RUA</option>
+                                        <option {{$clientes->logradouro == "AVENIDA"        ? 'selected': ''}} value="AVENIDA">AVENIDA</option>
+                                        <option {{$clientes->logradouro == "TRAVESSA"       ? 'selected': ''}} value="TRAVESSA">TRAVESSA</option>
+                                        <option {{$clientes->logradouro == "VIELA"          ? 'selected': ''}} value="VIELA">VIELA</option>
+                                        <option {{$clientes->logradouro == "ALAMEDA"        ? 'selected': ''}} value="ALAMEDA">ALAMEDA</option>
+                                        <option {{$clientes->logradouro == "CHACÁRA"        ? 'selected': ''}} value="CHACÁRA">CHACÁRA</option>
+                                        <option {{$clientes->logradouro == "FAZENDA"        ? 'selected': ''}} value="FAZENDA">FAZENDA</option>
+                                        <option {{$clientes->logradouro == "LOTEAMENTO"     ? 'selected': ''}} value="LOTEAMENTO">LOTEAMENTO</option>
+                                        <option {{$clientes->logradouro == "SITIO"          ? 'selected': ''}} value="SITIO">SITIO</option>
+                                        <option {{$clientes->logradouro == "COLÔNIA"        ? 'selected': ''}} value="COLÔNIA">COLÔNIA</option>
+                                        <option {{$clientes->logradouro == "CONDOMíNIO"     ? 'selected': ''}} value="CONDOMíNIO">CONDOMíNIO</option>
+                                        <option {{$clientes->logradouro == "ESTRADA"        ? 'selected': ''}} value="ESTRADA">ESTRADA</option>
+                                        <option {{$clientes->logradouro == "BECO"           ? 'selected': ''}} value="BECO">BECO</option>
                                     </select>
                                     @error('logradouro')
                                         <div class="text-danger">{{ $message }}</div>
@@ -153,7 +157,7 @@
                             </div>
                             <div class="col-md-7 col-sm-12">
                                 <label for="endereco" class="form-label">Endereço</label>
-                                <input type="text" class="form-control" id="endereco" name="endereco" value="{{ old('endereco', $clientes->endereco) }}">
+                                <input type="text" class="form-control" id="endereco" name="endereco" oninput="this.value = this.value.toUpperCase()" value="{{ old('endereco', $clientes->endereco) }}">
                                 @error('endereco')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -165,62 +169,56 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-md-2 col-sm-12">
-                                <label for="cep" class="form-label">Cep</label>
-                                <input type="text" class="form-control" id="cep" name="cep" maxlength="9" data-mask="00000-000"  size=9 value="{{ old('cep', $clientes->cep) }}">
-                                @error('cep')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-md-4 col-sm-12 m">
                                 <label for="bairro" class="form-label">Bairro</label>
-                                <input type="text" class="form-control" id="bairro" name="bairro" value="{{ old('bairro', $clientes->bairro) }}">
+                                <input type="text" class="form-control" id="bairro" name="bairro" oninput="this.value = this.value.toUpperCase()" value="{{ old('bairro', $clientes->bairro) }}">
                                 @error('bairro')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <label for="cidade" class="form-label">Cidade</label>
-                                <input type="text" class="form-control" id="cidade" name="cidade" value="{{ old('cidade', $clientes->cidade) }}">
+                                <input type="text" class="form-control" id="cidade" name="cidade" oninput="this.value = this.value.toUpperCase()" default-value="CUIABÁ" value="{{ old('cidade', $clientes->cidade) }}">
                                 @error('cidade')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-2 col-sm-12">
                                 <div class="form-group">
-                                    <label for="uf" class="form-label">Estado</label>                    
-                                    <select name="uf" id="uf" class="form-select {{$errors->has('uf')?'is-invalid':''}}">
-                                        <option value="" selected> Selecione</option>                                      
-                                        <option {{$clientes->uf == "AC" ? 'selected': ''}}value="AC">Acre</option>
-                                        <option {{$clientes->uf == "AL" ? 'selected': ''}}value="AL">Alagoas</option>
-                                        <option {{$clientes->uf == "AP" ? 'selected': ''}}value="AP">Amapá</option>
-                                        <option {{$clientes->uf == "AM" ? 'selected': ''}}value="AM">Amazonas</option>
-                                        <option {{$clientes->uf == "BA" ? 'selected': ''}}value="BA">Bahia</option>
-                                        <option {{$clientes->uf == "CE" ? 'selected': ''}}value="CE">Ceará</option>
-                                        <option {{$clientes->uf == "DF" ? 'selected': ''}}value="DF">Distrito Federal</option>
-                                        <option {{$clientes->uf == "ES" ? 'selected': ''}}value="ES">Espírito Santo</option>
-                                        <option {{$clientes->uf == "GO" ? 'selected': ''}}value="GO">Goiás</option>
-                                        <option {{$clientes->uf == "MA" ? 'selected': ''}}value="MA">Maranhão</option>
-                                        <option {{$clientes->uf == "MT" ? 'selected': ''}}value="MT">Mato Grosso</option>
-                                        <option {{$clientes->uf == "MS" ? 'selected': ''}}value="MS">Mato Grosso do Sul</option>
-                                        <option {{$clientes->uf == "MG" ? 'selected': ''}}value="MG">Minas Gerais</option>
-                                        <option {{$clientes->uf == "PA" ? 'selected': ''}}value="PA">Pará</option>
-                                        <option {{$clientes->uf == "PB" ? 'selected': ''}}value="PB">Paraíba</option>
-                                        <option {{$clientes->uf == "PR" ? 'selected': ''}}value="PR">Paraná</option>
-                                        <option {{$clientes->uf == "PE" ? 'selected': ''}}value="PE">Pernambuco</option>
-                                        <option {{$clientes->uf == "PI" ? 'selected': ''}}value="PI">Piauí</option>
-                                        <option {{$clientes->uf == "RJ" ? 'selected': ''}}value="RJ">Rio de Janeiro</option>
-                                        <option {{$clientes->uf == "RN" ? 'selected': ''}}value="RN">Rio Grande do Norte</option>
-                                        <option {{$clientes->uf == "RS" ? 'selected': ''}}value="RS">Rio Grande do Sul</option>
-                                        <option {{$clientes->uf == "RO" ? 'selected': ''}}value="RO">Rondônia</option>
-                                        <option {{$clientes->uf == "RR" ? 'selected': ''}}value="RR">Roraima</option>
-                                        <option {{$clientes->uf == "SC" ? 'selected': ''}}value="SC">Santa Catarina</option>
-                                        <option {{$clientes->uf == "SP" ? 'selected': ''}}value="SP">São Paulo</option>
-                                        <option {{$clientes->uf == "SE" ? 'selected': ''}}value="SE">Sergipe</option>
-                                        <option {{$clientes->uf == "TO" ? 'selected': ''}}value="TO">Tocantins</option>
-                                        <option {{$clientes->uf == "EX" ? 'selected': ''}}value="EX">Estrangeiro</option>
+                                    <label for="uf" class="form-label">Estado</label>
+                                    <select name="uf" class="form-select {{$errors->has('uf')?'is-invalid':''}}" id="uf">
+                                        <option value="" selected> Selecione</option>
+                                        <option {{$clientes->uf == "AC" ? 'selected': ''}} value="AC">ACRE</option>
+                                        <option {{$clientes->uf == "AL" ? 'selected': ''}} value="AL">ALAGOAS</option>
+                                        <option {{$clientes->uf == "AP" ? 'selected': ''}} value="AP">AMAPÁ</option>
+                                        <option {{$clientes->uf == "AM" ? 'selected': ''}} value="AM">AMAZONAS</option>
+                                        <option {{$clientes->uf == "BA" ? 'selected': ''}} value="BA">BAHIA</option>
+                                        <option {{$clientes->uf == "CE" ? 'selected': ''}} value="CE">CEARÁ</option>
+                                        <option {{$clientes->uf == "DF" ? 'selected': ''}} value="DF">DISTRITO FEDERAL</option>
+                                        <option {{$clientes->uf == "ES" ? 'selected': ''}} value="ES">ESPÍRITO SANTO</option>
+                                        <option {{$clientes->uf == "GO" ? 'selected': ''}} value="GO">GOIÁS</option>
+                                        <option {{$clientes->uf == "MA" ? 'selected': ''}} value="MA">MARANHÃO</option>
+                                        <option {{$clientes->uf == "MT" ? 'selected': ''}} value="MT">MATO GROSSO</option>
+                                        <option {{$clientes->uf == "MS" ? 'selected': ''}} value="MS">MATO GROSSO DO SUL</option>
+                                        <option {{$clientes->uf == "MG" ? 'selected': ''}} value="MG">MINAS GERAIS</option>
+                                        <option {{$clientes->uf == "PA" ? 'selected': ''}} value="PA">PARÁ</option>
+                                        <option {{$clientes->uf == "PB" ? 'selected': ''}} value="PB">PARAÍBA</option>
+                                        <option {{$clientes->uf == "PR" ? 'selected': ''}} value="PR">PARANÁ</option>
+                                        <option {{$clientes->uf == "PE" ? 'selected': ''}} value="PE">PERNAMBUCO</option>
+                                        <option {{$clientes->uf == "PI" ? 'selected': ''}} value="PI">PIAUÍ</option>
+                                        <option {{$clientes->uf == "RJ" ? 'selected': ''}} value="RJ">RIO DE JANEIRO</option>
+                                        <option {{$clientes->uf == "RN" ? 'selected': ''}} value="RN">RIO GRANDE DO NORTE</option>
+                                        <option {{$clientes->uf == "RS" ? 'selected': ''}} value="RS">RIO  GRANDE DO SUL</option>
+                                        <option {{$clientes->uf == "RO" ? 'selected': ''}} value="RO">RONDÔNIA</option>
+                                        <option {{$clientes->uf == "RR" ? 'selected': ''}} value="RR">RORAIMA</option>
+                                        <option {{$clientes->uf == "SC" ? 'selected': ''}} value="SC">SANTA CATARINA</option>
+                                        <option {{$clientes->uf == "SP" ? 'selected': ''}} value="SP">SÃO PAULO</option>
+                                        <option {{$clientes->uf == "SE" ? 'selected': ''}} value="SE">SERGIPE</option>
+                                        <option {{$clientes->uf == "TO" ? 'selected': ''}} value="TO">TOCANTINS</option>
+                                        <option {{$clientes->uf == "EX" ? 'selected': ''}} value="EX">ESTRANGEIRO</option>
                                     </select>
                                     @error('uf')
                                         <div class="text-danger">{{ $message }}</div>
@@ -239,13 +237,13 @@
                             </div>
                             <div class="col-md-8 col-sm-12 mb-2">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="email" name="email" value="{{ old('email', $clientes->email) }}">
+                                <input type="text" class="form-control" id="email" name="email" oninput="this.value = this.value.toUpperCase()" value="{{ old('email', $clientes->email) }}">
                                 @error('email')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-2 col-sm-12 mb-2">
-                                <label for="tipo_sangue" class="form-label">Tipo Sanguineo</label>                   
+                                <label for="tipo_sangue" class="form-label">Tipo Sanguineo</label>
                                 <select name="tipo_sangue" class="form-select {{$errors->has('tipo_sangue')?'is-invalid':''}}" id="tipo_sangue">
                                     <option value="" selected> Selecione</option>
                                     <option  {{$clientes->tipo_sangue == "NS" ? 'selected': ''}} value="NS">Não Sabe</option>
@@ -266,14 +264,14 @@
                         <div class="row">
                             <div class="col-md-4 col-sm-12 mb-2">
                                 <label for="ativ_laboral" class="form-label">Atividade Laboral</label>
-                                <input type="text" class="form-control" id="ativ_laboral" name="ativ_laboral" value="{{ old('ativ_laboral', $clientes->ativ_laboral) }}">
+                                <input type="text" class="form-control" id="ativ_laboral" name="ativ_laboral" oninput="this.value = this.value.toUpperCase()" value="{{ old('ativ_laboral', $clientes->ativ_laboral) }}">
                                 @error('ativ_laboral')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-8 col-sm-12 mb-2">
                                 <label for="observacao" class="form-label">Observação</label>
-                                <input type="text" class="form-control" id="observacao" name="observacao" value="{{ old('observacao' ,$clientes->observacao) }}">
+                                <input type="text" class="form-control" id="observacao" name="observacao" oninput="this.value = this.value.toUpperCase()" value="{{ old('observacao' ,$clientes->observacao) }}">
                                 @error('observacao')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -291,9 +289,99 @@
         </form>
 
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>   
-    
+    {{--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    ---}}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            function limpa_formulário_cep() {
+                // Limpa valores do formulário de cep.
+                $("#cep").val("");
+                $("#endereco").val("");
+                $("#bairro").val("");
+                $("#cidade").val("");
+                $("#uf").val("");
+                $("#cep").focus();
+                //$("#ibge").val("");
+            }
+
+            //Quando o campo cep perde o foco.
+            $("#cep").blur(function() {
+
+                //Nova variável "cep" somente com dígitos.
+                var cep = $(this).val().replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if(validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+                        $("#endereco").val("...");
+                        $("#bairro").val("...");
+                        $("#cidade").val("...");
+                        $("#uf").val("...");
+                        //$("#ibge").val("...");
+
+                        //Consulta o webservice viacep.com.br/
+                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+
+                            if (!("erro" in dados)) {
+                                //Atualiza os campos com os valores da consulta.
+                                rua= dados.logradouro.toUpperCase();
+                                bairro = dados.bairro.toUpperCase();
+                                logradouro= rua.substring(0, rua.indexOf(" ") + 0).toUpperCase();
+                                rua= rua.substring(rua.indexOf(" ") + 1, 60);
+                                cidade = dados.localidade.toUpperCase();
+                                uf = dados.uf.toUpperCase();
+                                $("#logradouro").val(logradouro);
+                                $("#endereco").val(rua);
+                                $("#bairro").val(bairro);
+                                $("#cidade").val(cidade);
+                                $("#uf").val(uf);
+                                $("#numero").focus();
+                            } else {
+                                //CEP pesquisado não foi encontrado.
+                                limpa_formulário_cep();
+                                Swal.fire({
+                                        position: "top-center",
+                                        icon: "error",
+                                        title: "CEP não encontrado!",
+                                        showConfirmButton: false,
+                                        timer: 2500
+                                });
+                            }
+                        });
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário_cep();
+                        Swal.fire({
+                            position: "top-center",
+                            icon: "error",
+                            title: "CEP não encontrado!",
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                    limpa_formulário_cep();
+                }
+            });
+        });
+    </script>
     <script>
            $(document).ready(function(){
               $('.date').mask('00/00/0000');
@@ -331,8 +419,9 @@
                 });
               $('.selectonfocus').mask("00/00/0000", {selectOnFocus: true});
             });
-        
+
     </script>
+
 
 </x-layout-app>
 

@@ -6,7 +6,6 @@ use App\Models\Configuracao;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ConfiguracaoTest extends TestCase
@@ -41,7 +40,6 @@ class ConfiguracaoTest extends TestCase
 
     public function test_admin_can_upload_a_logo(): void
     {
-        Storage::fake('public');
         $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)->post('/configuracoes', [
@@ -53,7 +51,10 @@ class ConfiguracaoTest extends TestCase
 
         $configuracao = Configuracao::atual();
         $this->assertNotNull($configuracao->logo_path);
-        Storage::disk('public')->assertExists($configuracao->logo_path);
+        // Salvo direto em public/ (não no disco `public` do Storage) porque a
+        // hospedagem não tem terminal pra rodar `storage:link`.
+        $this->assertFileExists(public_path($configuracao->logo_path));
+        @unlink(public_path($configuracao->logo_path));
     }
 
     public function test_non_admin_cannot_update_configuracoes(): void
