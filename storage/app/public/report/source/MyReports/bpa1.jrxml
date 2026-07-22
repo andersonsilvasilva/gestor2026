@@ -222,7 +222,7 @@
 			<box padding="5"/>
 		</element>
 		<element kind="textField" uuid="c3223d16-e0fb-4d35-8b73-1379cef9623b" x="49" y="112" width="239" height="20" backcolor="#CCFFFF" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
-			<expression><![CDATA[$F{cpf_col} == null ? "" : $F{cpf_col}.toUpperCase()]]></expression>
+			<expression><![CDATA[$F{cpf_col} == null ? "" : $F{cpf_col}.replaceAll("[^0-9]", "").replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4")]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box padding="5"/>
 		</element>

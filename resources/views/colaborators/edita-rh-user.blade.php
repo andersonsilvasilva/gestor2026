@@ -57,7 +57,7 @@
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="cpf" class="form-label">CPF</label>
-                                    <input type="text" class="form-control" id="cpf" name="cpf" required placeholder="000.000.000-00" value="{{ old('cpf', $colaborator->detail->cpf) }}">
+                                    <input type="text" class="form-control cpf" id="cpf" name="cpf" required data-mask="000.000.000-00" placeholder="000.000.000-00" value="{{ old('cpf', $colaborator->detail->cpf) }}">
                                     @error('cpf')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -107,5 +107,11 @@
         </form>
 
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.cpf').mask('000.000.000-00', {reverse: true});
+        });
+    </script>
 
 </x-layout-app>
