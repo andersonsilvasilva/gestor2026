@@ -6,10 +6,10 @@ use App\Models\Configuracao;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use PHPJasper\PHPJasper;
-use Symfony\Component\Process\Process;
 
 define('driver_path', '/vendor/geekcom/phpjasper/bin/jasperstarter/jdbc');
 define('source_path', '/app/public/report/source/MyReports/gestor');
@@ -89,76 +89,39 @@ class ControllerReport extends Controller
 
         $report = self::REPORTS[$validated['q_relatorio']];
 
-        $jrxmlPath = storage_path('app/public/report/source/MyReports/' . $report . '.jrxml');
-        $jasperPath = storage_path('app/public/report/compiled/' . $report . '.jasper');
-        $binDir = storage_path('app/jasperstarter7/bin');
-
-        if (!file_exists($jasperPath) && file_exists($jrxmlPath)) {
-            $compile = new Process([$binDir . '/jasperstarter.bat', 'compile', $jrxmlPath, '-o', dirname($jasperPath)], $binDir);
-            $compile->setTimeout(60);
-            $compile->run();
-        }
-
-        if (!file_exists($jasperPath)) {
-            return redirect()->back()->with('error', 'Relatório não encontrado: ' . $report);
-        }
-
-        $outputDir = storage_path('app/public/report/output');
-        if (!is_dir($outputDir)) {
-            mkdir($outputDir, 0777, true);
-        }
-        $outputBasename = $report . '_' . uniqid();
-        $outputPath = $outputDir . '/' . $outputBasename;
-
-        $dbUrl = sprintf(
-            "jdbc:mysql://%s:%s/%s?sessionVariables=sql_mode=''",
-            env('DB_HOST', '127.0.0.1'),
-            env('DB_PORT', '3306'),
-            env('DB_DATABASE', 'gestor')
-        );
-
         $parametros = [
             'id_colaborador=' . $validated['id_colaborador'],
             'dta_inicio=' . $validated['dta_inicio'],
             'dta_fim=' . $validated['dta_fim'],
         ];
 
+        $payload = [
+            'relatorio'  => $report,
+            'parametros' => $parametros,
+        ];
+
         if (in_array($report, self::REPORTS_COM_CABECALHO_CONFIGURAVEL, true)) {
             $configuracao = Configuracao::atual();
-            $logoPath = $configuracao->logo_path
-                ? Configuracao::webRootPath() . '/' . $configuracao->logo_path
-                : storage_path('app/jasperstarter7/bin/images/logo_prefeitura.png');
 
-            $parametros[] = 'LOGO_PATH=' . $logoPath;
+            $payload['incluir_logo'] = true;
+            if ($configuracao->logo_path) {
+                $payload['logo_url'] = rtrim(config('app.url'), '/') . '/' . $configuracao->logo_path;
+            }
+
             $parametros[] = 'NOME_INSTITUICAO=' . $configuracao->nome_instituicao;
             $parametros[] = 'NOME_SECRETARIA=' . $configuracao->nome_secretaria;
             $parametros[] = 'UNIDADE_SAUDE=' . $configuracao->unidade_saude;
+            $payload['parametros'] = $parametros;
         }
 
-        $args = [
-            $binDir . '/jasperstarter.bat',
-            'process',
-            $jasperPath,
-            '-o', $outputPath,
-            '-f', 'pdf',
-            '-P',
-            ...$parametros,
-            '-t', 'generic',
-            '--db-driver', 'com.mysql.cj.jdbc.Driver',
-            '--db-url', $dbUrl,
-            '-u', env('DB_USERNAME', 'root'),
-        ];
-        if (env('DB_PASSWORD')) {
-            $args[] = '-p';
-            $args[] = env('DB_PASSWORD');
-        }
+        // O motor Java do JasperReports roda num VPS externo (a Hostinger nao
+        // tem Java) - ver reports-service/ na raiz do repo.
+        $response = Http::withToken(config('services.reports.secret'))
+            ->timeout(130)
+            ->post(rtrim(config('services.reports.url'), '/') . '/gerar', $payload);
 
-        $process = new Process($args, $binDir);
-        $process->setTimeout(120);
-        $process->run();
-
-        if (!$process->isSuccessful() || !file_exists($outputPath . '.pdf')) {
-            \Log::error('Falha ao gerar relatório ' . $report . ': ' . $process->getOutput() . $process->getErrorOutput());
+        if (!$response->successful()) {
+            \Log::error('Falha ao gerar relatório ' . $report . ': ' . $response->status() . ' ' . $response->body());
 
             return redirect()->back()->with('error', 'Não foi possível gerar o relatório. Verifique os parâmetros e tente novamente.');
         }
@@ -172,7 +135,7 @@ class ControllerReport extends Controller
             . '_' . Str::slug($colaborador->name ?? 'colaborador')
             . '.pdf';
 
-        return Response::make(file_get_contents($outputPath . '.pdf'), 200, [
+        return Response::make($response->body(), 200, [
             'Content-Type'        => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);

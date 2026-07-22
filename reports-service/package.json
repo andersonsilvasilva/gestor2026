@@ -1,0 +1,14 @@
+{
+  "name": "gestor-relatorios",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Microsservico que roda o JasperReports 7 (Java) e devolve PDFs para o Gestor, hospedado fora da Hostinger por falta de Java la.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  }
+}

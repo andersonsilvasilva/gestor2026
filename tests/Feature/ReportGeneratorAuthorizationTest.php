@@ -4,15 +4,15 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /**
  * Cobre a validação e a autorização de `ControllerReport::generateReport`.
- * Os dois testes de "sucesso" (que passam da validação/autorização) acabam
- * acionando o motor JasperReports de verdade — não tem como testar só a
- * autorização sem chegar lá, já que o controller não retorna antes disso.
- * Por isso são bem mais lentos (~5-20s cada) e exigem Java instalado; os
- * 3 testes de bloqueio (validação/403) são rápidos e não tocam o motor.
+ * Os dois testes de "sucesso" (que passam da validação/autorização) usam
+ * Http::fake() para simular a resposta do serviço de relatórios (VPS
+ * externo, que roda o motor JasperReports/Java) — o motor real usa o banco
+ * de produção, então não deve ser acionado durante os testes.
  */
 class ReportGeneratorAuthorizationTest extends TestCase
 {
@@ -53,11 +53,10 @@ class ReportGeneratorAuthorizationTest extends TestCase
 
     public function test_rh_can_pass_validation_and_authorization_for_their_own_report(): void
     {
+        Http::fake(['*/gerar' => Http::response('%PDF-fake%', 200, ['Content-Type' => 'application/pdf'])]);
+
         $user = User::factory()->rh()->create();
 
-        // Não afirma sucesso (isso exigiria o motor Jasper/Java rodando);
-        // só confirma que passou da validação e da checagem de autorização
-        // sem ser bloqueado por elas.
         $response = $this->actingAs($user)->post('/gerar', [
             'q_relatorio'    => 'bpa1',
             'id_colaborador' => $user->id,
@@ -66,11 +65,14 @@ class ReportGeneratorAuthorizationTest extends TestCase
         ]);
 
         $response->assertSessionHasNoErrors();
-        $this->assertNotEquals(403, $response->getStatusCode());
+        $response->assertOk();
+        Http::assertSent(fn ($request) => str_contains($request->url(), '/gerar'));
     }
 
     public function test_admin_rt_and_sec_can_generate_a_report_for_any_colaborador(): void
     {
+        Http::fake(['*/gerar' => Http::response('%PDF-fake%', 200, ['Content-Type' => 'application/pdf'])]);
+
         $colaborador = User::factory()->rh()->create();
 
         foreach (['admin', 'rt', 'sec'] as $role) {
@@ -84,6 +86,7 @@ class ReportGeneratorAuthorizationTest extends TestCase
             ]);
 
             $this->assertNotEquals(403, $response->getStatusCode());
+            $response->assertOk();
         }
     }
 }

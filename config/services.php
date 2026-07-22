@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    // Microsservico externo (VPS) que roda o motor Java do JasperReports 7 -
+    // a Hostinger nao tem Java. Ver reports-service/ na raiz do repo.
+    'reports' => [
+        'url'    => env('REPORTS_SERVICE_URL'),
+        'secret' => env('REPORTS_SERVICE_SECRET'),
+    ],
+
 ];

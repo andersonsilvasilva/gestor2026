@@ -1,0 +1,8 @@
+node_modules/
+.env
+# Motor Java (~74MB, jars de terceiros) e os relatorios compilados/gerados -
+# nao sao fonte de verdade aqui. Os .jrxml originais vivem no repo do Gestor
+# em storage/app/public/report/source/MyReports; isso aqui e so uma copia de
+# deploy, feita manualmente (ver processo usado na primeira instalacao).
+jasperstarter7/
+reports/
