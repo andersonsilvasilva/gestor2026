@@ -60,9 +60,9 @@
                                 <div class="col-md-2 col-sm-12 mb-2">
                                         <label for="sexo" class="form-label">Sexo</label>
                                         <select name="sexo" class="form-select {{$errors->has('sexo')?'is-invalid':''}}" id="sexo">
-                                            <option value="" selected> Selecione</option>
-                                            <option {{$clientes->sexo == "MASCULINO"       ? 'selected': ''}} value="MASCULINO">MASCULINO</option>
-                                            <option {{$clientes->sexo == "FEMÍNINO"        ? 'selected': ''}} value="FEMÍNINO">FEMÍNINO</option>
+                                            <option value=""> Selecione</option>
+                                            <option {{old('sexo', $clientes->sexo) == "MASCULINO" ? 'selected': ''}} value="MASCULINO">MASCULINO</option>
+                                            <option {{old('sexo', $clientes->sexo) == "FEMININO"  ? 'selected': ''}} value="FEMININO">FEMININO</option>
                                         </select>
                                         @error('sexo')
                                             <div class="text-danger">{{ $message }}</div>
@@ -74,9 +74,9 @@
                                     <div class="form-group">
                                         <label for="nacionalidade" class="form-label">Nacionalidade</label>
                                         <select name="nacionalidade" class="form-select {{$errors->has('nacionalidade')?'is-invalid':''}}" id="nacionalidade" >
-                                            <option value="" selected> Selecione</option>
-                                            <option {{$clientes->nacionalidade == "BRASILEIRA"      ? 'selected': ''}} value="BRASILEIRA">BRASILEIRA</option>
-                                            <option {{$clientes->nacionalidade == "ESTRANGEIRA"     ? 'selected': ''}} value="ESTRANGEIRA">ESTRANGEIRA</option>
+                                            <option value=""> Selecione</option>
+                                            <option {{old('nacionalidade', $clientes->nacionalidade) == "BRASILEIRA"  ? 'selected': ''}} value="BRASILEIRA">BRASILEIRA</option>
+                                            <option {{old('nacionalidade', $clientes->nacionalidade) == "ESTRANGEIRA" ? 'selected': ''}} value="ESTRANGEIRA">ESTRANGEIRA</option>
                                         </select>
                                         @error('nacionalidade')
                                             <div class="text-danger">{{ $message }}</div>
@@ -86,12 +86,12 @@
                                 <div class="col-md-2 col-sm-12 mb-2">
                                     <label for="cor" class="form-label">Cor</label>
                                     <select name="cor" class="form-select {{$errors->has('cor')?'is-invalid':''}}" id="cor" >
-                                        <option value="" selected> Selecione</option>
-                                        <option {{$clientes->cor == "BRANCA"     ? 'selected': ''}} value="BRANCA">     BRANCA</option>
-                                        <option {{$clientes->cor == "PRETA"      ? 'selected': ''}} value="PRETA">      PRETA</option>
-                                        <option {{$clientes->cor == "AMARELA"    ? 'selected': ''}} value="AMARELA">    AMARELA</option>
-                                        <option {{$clientes->cor == "PARDA"      ? 'selected': ''}} value="PARDA">      PARDA</option>
-                                        <option {{$clientes->cor == "INDÍGENA"   ? 'selected': ''}} value="INDÍGENA">   INDÍGENA</option>
+                                        <option value=""> Selecione</option>
+                                        <option {{old('cor', $clientes->cor) == "BRANCA"   ? 'selected': ''}} value="BRANCA">  BRANCA</option>
+                                        <option {{old('cor', $clientes->cor) == "PRETA"    ? 'selected': ''}} value="PRETA">   PRETA</option>
+                                        <option {{old('cor', $clientes->cor) == "AMARELA"  ? 'selected': ''}} value="AMARELA"> AMARELA</option>
+                                        <option {{old('cor', $clientes->cor) == "PARDA"    ? 'selected': ''}} value="PARDA">   PARDA</option>
+                                        <option {{old('cor', $clientes->cor) == "INDIGINA" ? 'selected': ''}} value="INDIGINA">INDÍGENA</option>
                                     </select>
                                     @error('cor')
                                         <div class="text-danger">{{ $message }}</div>
@@ -109,12 +109,12 @@
                                 <div class="form-group">
                                     <label for="estado_civil" class="form-label">Estado Civil</label>
                                     <select  name="estado_civil" class="form-select {{$errors->has('estado_civil')?'is-invalid':''}}" id="estado_civil">
-                                        <option value="" selected> Selecione</option>
-                                        <option {{$clientes->estado_civil == "SOLTEIRO(A)"      ? 'selected': ''}} value="SOLTEIRO(A)">SOLTEIRO(A)</option>
-                                        <option {{$clientes->estado_civil == "CASADO(A)"        ? 'selected': ''}} value="CASADO(A)">CASADO(A)</option>
-                                        <option {{$clientes->estado_civil == "VIÚVO(A)"         ? 'selected': ''}} value="VIÚVO(A)">VIÚVO(A)</option>
-                                        <option {{$clientes->estado_civil == "DIVORCIADO(A)"    ? 'selected': ''}} value="DIVORCIADO(A)">DIVORCIADO(A)</option>
-                                        <option {{$clientes->estado_civil == "UNIÃO ESTÁVEL"    ? 'selected': ''}} value="UNIÃO ESTÁVEL">NIÃO ESTÁVEL</option>
+                                        <option value=""> Selecione</option>
+                                        <option {{old('estado_civil', $clientes->estado_civil) == "SOLTEIRO(A)"   ? 'selected': ''}} value="SOLTEIRO(A)">SOLTEIRO(A)</option>
+                                        <option {{old('estado_civil', $clientes->estado_civil) == "CASADO(A)"     ? 'selected': ''}} value="CASADO(A)">CASADO(A)</option>
+                                        <option {{old('estado_civil', $clientes->estado_civil) == "VIÚVO(A)"      ? 'selected': ''}} value="VIÚVO(A)">VIÚVO(A)</option>
+                                        <option {{old('estado_civil', $clientes->estado_civil) == "DIVORCIADO(A)" ? 'selected': ''}} value="DIVORCIADO(A)">DIVORCIADO(A)</option>
+                                        <option {{old('estado_civil', $clientes->estado_civil) == "UNIÃO ESTÁVEL" ? 'selected': ''}} value="UNIÃO ESTÁVEL">UNIÃO ESTÁVEL</option>
                                     </select>
                                     @error('estado_civil')
                                         <div class="text-danger">{{ $message }}</div>
@@ -135,20 +135,21 @@
                                 <div class="form-group">
                                     <label for="logradouro" class="form-label">Logradouro</label>
                                     <select  name="logradouro" class="form-select {{$errors->has('logradouro')?'is-invalid':''}}" id="logradouro">
-                                        <option value="" selected> Selecione</option>
-                                        <option {{$clientes->logradouro == "RUA"            ? 'selected': ''}} value="RUA">RUA</option>
-                                        <option {{$clientes->logradouro == "AVENIDA"        ? 'selected': ''}} value="AVENIDA">AVENIDA</option>
-                                        <option {{$clientes->logradouro == "TRAVESSA"       ? 'selected': ''}} value="TRAVESSA">TRAVESSA</option>
-                                        <option {{$clientes->logradouro == "VIELA"          ? 'selected': ''}} value="VIELA">VIELA</option>
-                                        <option {{$clientes->logradouro == "ALAMEDA"        ? 'selected': ''}} value="ALAMEDA">ALAMEDA</option>
-                                        <option {{$clientes->logradouro == "CHACÁRA"        ? 'selected': ''}} value="CHACÁRA">CHACÁRA</option>
-                                        <option {{$clientes->logradouro == "FAZENDA"        ? 'selected': ''}} value="FAZENDA">FAZENDA</option>
-                                        <option {{$clientes->logradouro == "LOTEAMENTO"     ? 'selected': ''}} value="LOTEAMENTO">LOTEAMENTO</option>
-                                        <option {{$clientes->logradouro == "SITIO"          ? 'selected': ''}} value="SITIO">SITIO</option>
-                                        <option {{$clientes->logradouro == "COLÔNIA"        ? 'selected': ''}} value="COLÔNIA">COLÔNIA</option>
-                                        <option {{$clientes->logradouro == "CONDOMíNIO"     ? 'selected': ''}} value="CONDOMíNIO">CONDOMíNIO</option>
-                                        <option {{$clientes->logradouro == "ESTRADA"        ? 'selected': ''}} value="ESTRADA">ESTRADA</option>
-                                        <option {{$clientes->logradouro == "BECO"           ? 'selected': ''}} value="BECO">BECO</option>
+                                        <option value=""> Selecione</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "RUA"         ? 'selected': ''}} value="RUA">RUA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "AVENIDA"     ? 'selected': ''}} value="AVENIDA">AVENIDA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "TRAVESSA"    ? 'selected': ''}} value="TRAVESSA">TRAVESSA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "VIELA"       ? 'selected': ''}} value="VIELA">VIELA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "TRECHO"      ? 'selected': ''}} value="TRECHO">TRECHO</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "ALAMEDA"     ? 'selected': ''}} value="ALAMEDA">ALAMEDA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "CHÁCARA"     ? 'selected': ''}} value="CHÁCARA">CHÁCARA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "FAZENDA"     ? 'selected': ''}} value="FAZENDA">FAZENDA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "LOTEAMENTO"  ? 'selected': ''}} value="LOTEAMENTO">LOTEAMENTO</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "SITIO"       ? 'selected': ''}} value="SITIO">SITIO</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "COLONIA"     ? 'selected': ''}} value="COLONIA">COLONIA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "CONDOMINIO"  ? 'selected': ''}} value="CONDOMINIO">CONDOMINIO</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "ESTRADA"     ? 'selected': ''}} value="ESTRADA">ESTRADA</option>
+                                        <option {{old('logradouro', $clientes->logradouro) == "BECO"        ? 'selected': ''}} value="BECO">BECO</option>
                                     </select>
                                     @error('logradouro')
                                         <div class="text-danger">{{ $message }}</div>
@@ -190,35 +191,35 @@
                                 <div class="form-group">
                                     <label for="uf" class="form-label">Estado</label>
                                     <select name="uf" class="form-select {{$errors->has('uf')?'is-invalid':''}}" id="uf">
-                                        <option value="" selected> Selecione</option>
-                                        <option {{$clientes->uf == "AC" ? 'selected': ''}} value="AC">ACRE</option>
-                                        <option {{$clientes->uf == "AL" ? 'selected': ''}} value="AL">ALAGOAS</option>
-                                        <option {{$clientes->uf == "AP" ? 'selected': ''}} value="AP">AMAPÁ</option>
-                                        <option {{$clientes->uf == "AM" ? 'selected': ''}} value="AM">AMAZONAS</option>
-                                        <option {{$clientes->uf == "BA" ? 'selected': ''}} value="BA">BAHIA</option>
-                                        <option {{$clientes->uf == "CE" ? 'selected': ''}} value="CE">CEARÁ</option>
-                                        <option {{$clientes->uf == "DF" ? 'selected': ''}} value="DF">DISTRITO FEDERAL</option>
-                                        <option {{$clientes->uf == "ES" ? 'selected': ''}} value="ES">ESPÍRITO SANTO</option>
-                                        <option {{$clientes->uf == "GO" ? 'selected': ''}} value="GO">GOIÁS</option>
-                                        <option {{$clientes->uf == "MA" ? 'selected': ''}} value="MA">MARANHÃO</option>
-                                        <option {{$clientes->uf == "MT" ? 'selected': ''}} value="MT">MATO GROSSO</option>
-                                        <option {{$clientes->uf == "MS" ? 'selected': ''}} value="MS">MATO GROSSO DO SUL</option>
-                                        <option {{$clientes->uf == "MG" ? 'selected': ''}} value="MG">MINAS GERAIS</option>
-                                        <option {{$clientes->uf == "PA" ? 'selected': ''}} value="PA">PARÁ</option>
-                                        <option {{$clientes->uf == "PB" ? 'selected': ''}} value="PB">PARAÍBA</option>
-                                        <option {{$clientes->uf == "PR" ? 'selected': ''}} value="PR">PARANÁ</option>
-                                        <option {{$clientes->uf == "PE" ? 'selected': ''}} value="PE">PERNAMBUCO</option>
-                                        <option {{$clientes->uf == "PI" ? 'selected': ''}} value="PI">PIAUÍ</option>
-                                        <option {{$clientes->uf == "RJ" ? 'selected': ''}} value="RJ">RIO DE JANEIRO</option>
-                                        <option {{$clientes->uf == "RN" ? 'selected': ''}} value="RN">RIO GRANDE DO NORTE</option>
-                                        <option {{$clientes->uf == "RS" ? 'selected': ''}} value="RS">RIO  GRANDE DO SUL</option>
-                                        <option {{$clientes->uf == "RO" ? 'selected': ''}} value="RO">RONDÔNIA</option>
-                                        <option {{$clientes->uf == "RR" ? 'selected': ''}} value="RR">RORAIMA</option>
-                                        <option {{$clientes->uf == "SC" ? 'selected': ''}} value="SC">SANTA CATARINA</option>
-                                        <option {{$clientes->uf == "SP" ? 'selected': ''}} value="SP">SÃO PAULO</option>
-                                        <option {{$clientes->uf == "SE" ? 'selected': ''}} value="SE">SERGIPE</option>
-                                        <option {{$clientes->uf == "TO" ? 'selected': ''}} value="TO">TOCANTINS</option>
-                                        <option {{$clientes->uf == "EX" ? 'selected': ''}} value="EX">ESTRANGEIRO</option>
+                                        <option value=""> Selecione</option>
+                                        <option {{old('uf', $clientes->uf) == "AC" ? 'selected': ''}} value="AC">ACRE</option>
+                                        <option {{old('uf', $clientes->uf) == "AL" ? 'selected': ''}} value="AL">ALAGOAS</option>
+                                        <option {{old('uf', $clientes->uf) == "AP" ? 'selected': ''}} value="AP">AMAPÁ</option>
+                                        <option {{old('uf', $clientes->uf) == "AM" ? 'selected': ''}} value="AM">AMAZONAS</option>
+                                        <option {{old('uf', $clientes->uf) == "BA" ? 'selected': ''}} value="BA">BAHIA</option>
+                                        <option {{old('uf', $clientes->uf) == "CE" ? 'selected': ''}} value="CE">CEARÁ</option>
+                                        <option {{old('uf', $clientes->uf) == "DF" ? 'selected': ''}} value="DF">DISTRITO FEDERAL</option>
+                                        <option {{old('uf', $clientes->uf) == "ES" ? 'selected': ''}} value="ES">ESPÍRITO SANTO</option>
+                                        <option {{old('uf', $clientes->uf) == "GO" ? 'selected': ''}} value="GO">GOIÁS</option>
+                                        <option {{old('uf', $clientes->uf) == "MA" ? 'selected': ''}} value="MA">MARANHÃO</option>
+                                        <option {{old('uf', $clientes->uf) == "MT" ? 'selected': ''}} value="MT">MATO GROSSO</option>
+                                        <option {{old('uf', $clientes->uf) == "MS" ? 'selected': ''}} value="MS">MATO GROSSO DO SUL</option>
+                                        <option {{old('uf', $clientes->uf) == "MG" ? 'selected': ''}} value="MG">MINAS GERAIS</option>
+                                        <option {{old('uf', $clientes->uf) == "PA" ? 'selected': ''}} value="PA">PARÁ</option>
+                                        <option {{old('uf', $clientes->uf) == "PB" ? 'selected': ''}} value="PB">PARAÍBA</option>
+                                        <option {{old('uf', $clientes->uf) == "PR" ? 'selected': ''}} value="PR">PARANÁ</option>
+                                        <option {{old('uf', $clientes->uf) == "PE" ? 'selected': ''}} value="PE">PERNAMBUCO</option>
+                                        <option {{old('uf', $clientes->uf) == "PI" ? 'selected': ''}} value="PI">PIAUÍ</option>
+                                        <option {{old('uf', $clientes->uf) == "RJ" ? 'selected': ''}} value="RJ">RIO DE JANEIRO</option>
+                                        <option {{old('uf', $clientes->uf) == "RN" ? 'selected': ''}} value="RN">RIO GRANDE DO NORTE</option>
+                                        <option {{old('uf', $clientes->uf) == "RS" ? 'selected': ''}} value="RS">RIO  GRANDE DO SUL</option>
+                                        <option {{old('uf', $clientes->uf) == "RO" ? 'selected': ''}} value="RO">RONDÔNIA</option>
+                                        <option {{old('uf', $clientes->uf) == "RR" ? 'selected': ''}} value="RR">RORAIMA</option>
+                                        <option {{old('uf', $clientes->uf) == "SC" ? 'selected': ''}} value="SC">SANTA CATARINA</option>
+                                        <option {{old('uf', $clientes->uf) == "SP" ? 'selected': ''}} value="SP">SÃO PAULO</option>
+                                        <option {{old('uf', $clientes->uf) == "SE" ? 'selected': ''}} value="SE">SERGIPE</option>
+                                        <option {{old('uf', $clientes->uf) == "TO" ? 'selected': ''}} value="TO">TOCANTINS</option>
+                                        <option {{old('uf', $clientes->uf) == "EX" ? 'selected': ''}} value="EX">ESTRANGEIRO</option>
                                     </select>
                                     @error('uf')
                                         <div class="text-danger">{{ $message }}</div>
@@ -245,16 +246,16 @@
                             <div class="col-md-2 col-sm-12 mb-2">
                                 <label for="tipo_sangue" class="form-label">Tipo Sanguineo</label>
                                 <select name="tipo_sangue" class="form-select {{$errors->has('tipo_sangue')?'is-invalid':''}}" id="tipo_sangue">
-                                    <option value="" selected> Selecione</option>
-                                    <option  {{$clientes->tipo_sangue == "NS" ? 'selected': ''}} value="NS">Não Sabe</option>
-                                    <option  {{$clientes->tipo_sangue == "O+" ? 'selected': ''}} value="O+">O+</option>
-                                    <option  {{$clientes->tipo_sangue == "O-" ? 'selected': ''}} value="O-">O-</option>
-                                    <option  {{$clientes->tipo_sangue == "A+" ? 'selected': ''}} value="A+">A+</option>
-                                    <option  {{$clientes->tipo_sangue == "A-" ? 'selected': ''}} value="A-">A-</option>
-                                    <option  {{$clientes->tipo_sangue == "B+" ? 'selected': ''}} value="B+">B+</option>
-                                    <option  {{$clientes->tipo_sangue == "B-" ? 'selected': ''}} value="B-">B-</option>
-                                    <option  {{$clientes->tipo_sangue == "AB+" ? 'selected': ''}} value="AB+">AB+</option>
-                                    <option  {{$clientes->tipo_sangue == "AB-" ? 'selected': ''}} value="AB-">AB-</option>
+                                    <option value=""> Selecione</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "NS"  ? 'selected': ''}} value="NS">Não Sabe</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "O+"  ? 'selected': ''}} value="O+">O+</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "O-"  ? 'selected': ''}} value="O-">O-</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "A+"  ? 'selected': ''}} value="A+">A+</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "A-"  ? 'selected': ''}} value="A-">A-</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "B+"  ? 'selected': ''}} value="B+">B+</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "B-"  ? 'selected': ''}} value="B-">B-</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "AB+" ? 'selected': ''}} value="AB+">AB+</option>
+                                    <option  {{old('tipo_sangue', $clientes->tipo_sangue) == "AB-" ? 'selected': ''}} value="AB-">AB-</option>
                                 </select>
                                 @error('tipo_sangue')
                                     <div class="text-danger">{{ $message }}</div>

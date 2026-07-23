@@ -149,6 +149,46 @@ class ClienteTest extends TestCase
         $this->assertMatchesRegularExpression('/<option value="MT"\s+selected[^>]*>/', $html);
     }
 
+    public function test_edit_form_preselects_the_clientes_current_values(): void
+    {
+        $user = User::factory()->rh()->create();
+        $cliente = Client::factory()->create(['sexo' => 'FEMININO', 'cor' => 'INDIGINA', 'uf' => 'SP']);
+
+        $response = $this->actingAs($user)->get(route('cliente.edita-cliente', ['id' => Crypt::encrypt($cliente->id)]));
+
+        $response->assertOk();
+        $html = $response->getContent();
+        $this->assertMatchesRegularExpression('/selected[^>]*\s+value="FEMININO"/', $html);
+        $this->assertMatchesRegularExpression('/selected[^>]*\s+value="INDIGINA"/', $html);
+        $this->assertMatchesRegularExpression('/selected[^>]*\s+value="SP"/', $html);
+    }
+
+    public function test_update_validation_failure_keeps_select_choices_on_redisplay(): void
+    {
+        $user = User::factory()->rh()->create();
+        $cliente = Client::factory()->create(['sexo' => 'MASCULINO', 'cor' => 'BRANCA', 'uf' => 'MT']);
+
+        $dados = $this->dadosCliente(['sexo' => 'FEMININO', 'cor' => 'PARDA', 'uf' => 'SP']);
+        unset($dados['nome']); // força a validação a falhar (nome é obrigatório)
+
+        $editUrl = route('cliente.edita-cliente', ['id' => Crypt::encrypt($cliente->id)]);
+
+        $this->actingAs($user)
+            ->from($editUrl)
+            ->post('/clientes/update-cliente/' . Crypt::encrypt($cliente->id), $dados)
+            ->assertSessionHasErrors('nome');
+
+        $edit = $this->actingAs($user)->get($editUrl);
+        $edit->assertOk();
+
+        $html = $edit->getContent();
+        // deve refletir o que foi tentado salvar (FEMININO/PARDA/SP), não o
+        // que já estava no banco (MASCULINO/BRANCA/MT)
+        $this->assertMatchesRegularExpression('/selected[^>]*\s+value="FEMININO"/', $html);
+        $this->assertMatchesRegularExpression('/selected[^>]*\s+value="PARDA"/', $html);
+        $this->assertMatchesRegularExpression('/selected[^>]*\s+value="SP"/', $html);
+    }
+
     public function test_deleting_a_cliente_is_a_soft_delete_via_post(): void
     {
         $user = User::factory()->rh()->create();
