@@ -5,9 +5,9 @@
         <hr>
 
         @if($errors->any())
-            <span classe="alert alert-dange" style="color: #ff0000;">
+            <span class="alert alert-danger" style="color: #ff0000;">
                 @foreach ($errors->all() as $error)
-                    {{ errors }} <br>
+                    {{ $error }} <br>
                 @endforeach
 
             </span>

@@ -104,6 +104,30 @@ class ClienteTest extends TestCase
         $this->assertDatabaseHas('clients', ['id' => $cliente->id, 'nome' => 'Nome Novo']);
     }
 
+    public function test_update_validation_failure_redisplays_the_form_without_crashing(): void
+    {
+        $user = User::factory()->rh()->create();
+        $cliente = Client::factory()->create();
+
+        // omite 'nome' (obrigatório) pra forçar a validação a falhar e cair
+        // no bloco @if($errors->any()) do formulário de edição
+        $dados = $this->dadosCliente();
+        unset($dados['nome']);
+
+        $response = $this->actingAs($user)
+            ->from(route('cliente.edita-cliente', ['id' => Crypt::encrypt($cliente->id)]))
+            ->post('/clientes/update-cliente/' . Crypt::encrypt($cliente->id), $dados);
+
+        $response->assertSessionHasErrors('nome');
+
+        // a asserção real é que isto não derruba a página com um 500 (era o
+        // bug: {{ errors }} em vez de {{ $error }} disparava um erro fatal
+        // de "constante indefinida" assim que $errors->any() era verdadeiro)
+        $edit = $this->actingAs($user)->get(route('cliente.edita-cliente', ['id' => Crypt::encrypt($cliente->id)]));
+        $edit->assertOk();
+        $edit->assertSee('alert-danger', false);
+    }
+
     public function test_deleting_a_cliente_is_a_soft_delete_via_post(): void
     {
         $user = User::factory()->rh()->create();
