@@ -49,10 +49,10 @@
                         <div class="row">
                                 <div class="col-md-2 col-sm-12 mb-2">
                                         <label for="sexo" class="form-label">Sexo</label>
-                                        <select class="form-select" id="sexo" name="sexo" value="{{ old('sexo') }}" >
-                                            <option value="">           Selecione</option>
-                                            <option value="MASCULINO">  MASCULINO</option>
-                                            <option value="FEMININO">   FEMININO</option>
+                                        <select class="form-select" id="sexo" name="sexo">
+                                            <option value=""            @selected(old('sexo') === '')>Selecione</option>
+                                            <option value="MASCULINO"   @selected(old('sexo') === 'MASCULINO')>MASCULINO</option>
+                                            <option value="FEMININO"    @selected(old('sexo') === 'FEMININO')>FEMININO</option>
                                         </select>
                                         @error('sexo')
                                             <div class="text-danger">{{ $message }}</div>
@@ -63,10 +63,10 @@
                                 <div class="col-md-2 col-sm-12 mb-2">
                                     <div class="form-group">
                                         <label for="nacionalidade" class="form-label">Nacionalidade</label>
-                                        <select class="form-select" id="nacionalidade" name="nacionalidade" value="{{ old('nacionalidade') }}">
-                                            <option value="">           Selecione</option>
-                                            <option value="BRASILEIRA"> BRASILEIRA</option>
-                                            <option value="ESTRANGEIRA">ESTRANGEIRA</option>
+                                        <select class="form-select" id="nacionalidade" name="nacionalidade">
+                                            <option value=""            @selected(old('nacionalidade') === '')>Selecione</option>
+                                            <option value="BRASILEIRA"  @selected(old('nacionalidade') === 'BRASILEIRA')>BRASILEIRA</option>
+                                            <option value="ESTRANGEIRA" @selected(old('nacionalidade') === 'ESTRANGEIRA')>ESTRANGEIRA</option>
                                         </select>
                                         @error('nacionalidade')
                                             <div class="text-danger">{{ $message }}</div>
@@ -75,13 +75,13 @@
                                 </div>
                                 <div class="col-md-2 col-sm-12 mb-2">
                                     <label for="cor" class="form-label">Cor</label>
-                                    <select class="form-select" id="cor" name="cor" value="{{ old('cor') }}">
-                                        <option value="">Selecione</option>
-                                        <option value="BRANCA">     BRANCA</option>
-                                        <option value="PRETA">      PRETA</option>
-                                        <option value="AMARELA">    AMARELA</option>
-                                        <option value="PARDA">      PARDA</option>
-                                        <option value="INDIGINA">   INDÍGENA</option>
+                                    <select class="form-select" id="cor" name="cor">
+                                        <option value=""          @selected(old('cor') === '')>Selecione</option>
+                                        <option value="BRANCA"    @selected(old('cor') === 'BRANCA')>BRANCA</option>
+                                        <option value="PRETA"     @selected(old('cor') === 'PRETA')>PRETA</option>
+                                        <option value="AMARELA"   @selected(old('cor') === 'AMARELA')>AMARELA</option>
+                                        <option value="PARDA"     @selected(old('cor') === 'PARDA')>PARDA</option>
+                                        <option value="INDIGINA"  @selected(old('cor') === 'INDIGINA')>INDÍGENA</option>
                                     </select>
                                     @error('cor')
                                         <div class="text-danger">{{ $message }}</div>
@@ -98,13 +98,13 @@
                             <div class="col-md-2 col-sm-12 mb-2">
                                 <div class="form-group">
                                     <label for="estado_civil" class="form-label">Estado Civil</label>
-                                    <select class="form-select" id="estado_civil" name="estado_civil" value="{{old('estado_civil') }}" >
-                                        <option value=" ">Selecione</option>
-                                        <option value="SOLTEIRO(A)">    SOLTEIRO(A)</option>
-                                        <option value="CASADO(A)">      CASADO(A)</option>
-                                        <option value="VIÚVO(A)">       VIÚVO(A)</option>
-                                        <option value="DIVORCIADO(A)">  DIVORCIADO(A)</option>
-                                        <option value="UNIÃO ESTÁVEL">  UNIÃO ESTÁVEL</option>
+                                    <select class="form-select" id="estado_civil" name="estado_civil">
+                                        <option value=" "               @selected(old('estado_civil') === null || old('estado_civil') === ' ')>Selecione</option>
+                                        <option value="SOLTEIRO(A)"     @selected(old('estado_civil') === 'SOLTEIRO(A)')>SOLTEIRO(A)</option>
+                                        <option value="CASADO(A)"       @selected(old('estado_civil') === 'CASADO(A)')>CASADO(A)</option>
+                                        <option value="VIÚVO(A)"        @selected(old('estado_civil') === 'VIÚVO(A)')>VIÚVO(A)</option>
+                                        <option value="DIVORCIADO(A)"   @selected(old('estado_civil') === 'DIVORCIADO(A)')>DIVORCIADO(A)</option>
+                                        <option value="UNIÃO ESTÁVEL"   @selected(old('estado_civil') === 'UNIÃO ESTÁVEL')>UNIÃO ESTÁVEL</option>
                                     </select>
                                     @error('estado_civil')
                                         <div class="text-danger">{{ $message }}</div>
@@ -124,22 +124,22 @@
                             <div class="col-md-2 col-sm-2">
                                 <div class="form-group">
                                     <label for="logradouro" class="form-label">Logradouro</label>
-                                    <select class="form-select" id="logradouro" name="logradouro" value="{{ old('logradouro') }}">
-                                        <option value="">           Selecione</option>
-                                        <option value="RUA">        RUA</option>
-                                        <option value="AVENIDA">    AVENIDA</option>
-                                        <option value="TRAVESSA">   TRAVESSA</option>
-                                        <option value="VIELA">      VIELA</option>
-                                        <option value="TRECHO">     TRECHO</option>
-                                        <option value="ALAMEDA">    ALAMEDA</option>
-                                        <option value="CHÁCARA">    CHÁCARA</option>
-                                        <option value="FAZENDA">    FAZENDA</option>
-                                        <option value="LOTEAMENTO"> LOTEAMENTO</option>
-                                        <option value="SITIO">      SITIO</option>
-                                        <option value="COLONIA">    COLONIA</option>
-                                        <option value="CONDOMINIO"> CONDOMINIO</option>
-                                        <option value="ESTRADA">    ESTRADA</option>
-                                        <option value="BECO">       BECO</option>
+                                    <select class="form-select" id="logradouro" name="logradouro">
+                                        <option value=""            @selected(old('logradouro') === '')>Selecione</option>
+                                        <option value="RUA"         @selected(old('logradouro') === 'RUA')>RUA</option>
+                                        <option value="AVENIDA"     @selected(old('logradouro') === 'AVENIDA')>AVENIDA</option>
+                                        <option value="TRAVESSA"    @selected(old('logradouro') === 'TRAVESSA')>TRAVESSA</option>
+                                        <option value="VIELA"       @selected(old('logradouro') === 'VIELA')>VIELA</option>
+                                        <option value="TRECHO"      @selected(old('logradouro') === 'TRECHO')>TRECHO</option>
+                                        <option value="ALAMEDA"     @selected(old('logradouro') === 'ALAMEDA')>ALAMEDA</option>
+                                        <option value="CHÁCARA"     @selected(old('logradouro') === 'CHÁCARA')>CHÁCARA</option>
+                                        <option value="FAZENDA"     @selected(old('logradouro') === 'FAZENDA')>FAZENDA</option>
+                                        <option value="LOTEAMENTO"  @selected(old('logradouro') === 'LOTEAMENTO')>LOTEAMENTO</option>
+                                        <option value="SITIO"       @selected(old('logradouro') === 'SITIO')>SITIO</option>
+                                        <option value="COLONIA"     @selected(old('logradouro') === 'COLONIA')>COLONIA</option>
+                                        <option value="CONDOMINIO"  @selected(old('logradouro') === 'CONDOMINIO')>CONDOMINIO</option>
+                                        <option value="ESTRADA"     @selected(old('logradouro') === 'ESTRADA')>ESTRADA</option>
+                                        <option value="BECO"        @selected(old('logradouro') === 'BECO')>BECO</option>
                                     </select>
                                     @error('logradouro')
                                         <div class="text-danger">{{ $message }}</div>
@@ -180,36 +180,36 @@
                             <div class="col-md-2 col-sm-12">
                                 <div class="form-group">
                                     <label for="uf" class="form-label">Estado</label>
-                                    <select class="form-select" id="uf" name="uf" value="{{ old('uf'),'uf'}}">
-                                        <option value="">   Selecione</option>
-                                        <option value="AC"> ACRE</option>
-                                        <option value="AL"> ALAGOAS</option>
-                                        <option value="AP"> AMAPÁ</option>
-                                        <option value="AM"> AMAZONAS</option>
-                                        <option value="BA"> BAHIA</option>
-                                        <option value="CE"> CEARÁ</option>
-                                        <option value="DF"> DISTRITO FEDERAL</option>
-                                        <option value="ES"> ESPÍRITO SANTO</option>
-                                        <option value="GO"> GOIÁS</option>
-                                        <option value="MA"> MARANHÃO</option>
-                                        <option value="MT"> MATO GROSSO</option>
-                                        <option value="MS"> MATO GROSSO DO SUL</option>
-                                        <option value="MG"> MINAS GERAIS</option>
-                                        <option value="PA"> PARÁ</option>
-                                        <option value="PB"> PARAÍBA</option>
-                                        <option value="PR"> PARANÁ</option>
-                                        <option value="PE"> PERNAMBUCO</option>
-                                        <option value="PI"> PIAUÍ</option>
-                                        <option value="RJ"> RIO DE JANEIRO</option>
-                                        <option value="RN"> RIO GRANDE DO NORTE</option>
-                                        <option value="RS"> RIO GRANDE DO SUL</option>
-                                        <option value="RO"> RONDÔNIA</option>
-                                        <option value="RR"> RORAIMA</option>
-                                        <option value="SC"> SANTA CATARINA</option>
-                                        <option value="SP"> SÃO PAULO</option>
-                                        <option value="SE"> SERGIPE</option>
-                                        <option value="TO"> TOCANTINS</option>
-                                        <option value="EX"> ESTRANGEIRO</option>
+                                    <select class="form-select" id="uf" name="uf">
+                                        <option value=""    @selected(old('uf') === '')>Selecione</option>
+                                        <option value="AC"  @selected(old('uf') === 'AC')>ACRE</option>
+                                        <option value="AL"  @selected(old('uf') === 'AL')>ALAGOAS</option>
+                                        <option value="AP"  @selected(old('uf') === 'AP')>AMAPÁ</option>
+                                        <option value="AM"  @selected(old('uf') === 'AM')>AMAZONAS</option>
+                                        <option value="BA"  @selected(old('uf') === 'BA')>BAHIA</option>
+                                        <option value="CE"  @selected(old('uf') === 'CE')>CEARÁ</option>
+                                        <option value="DF"  @selected(old('uf') === 'DF')>DISTRITO FEDERAL</option>
+                                        <option value="ES"  @selected(old('uf') === 'ES')>ESPÍRITO SANTO</option>
+                                        <option value="GO"  @selected(old('uf') === 'GO')>GOIÁS</option>
+                                        <option value="MA"  @selected(old('uf') === 'MA')>MARANHÃO</option>
+                                        <option value="MT"  @selected(old('uf') === 'MT')>MATO GROSSO</option>
+                                        <option value="MS"  @selected(old('uf') === 'MS')>MATO GROSSO DO SUL</option>
+                                        <option value="MG"  @selected(old('uf') === 'MG')>MINAS GERAIS</option>
+                                        <option value="PA"  @selected(old('uf') === 'PA')>PARÁ</option>
+                                        <option value="PB"  @selected(old('uf') === 'PB')>PARAÍBA</option>
+                                        <option value="PR"  @selected(old('uf') === 'PR')>PARANÁ</option>
+                                        <option value="PE"  @selected(old('uf') === 'PE')>PERNAMBUCO</option>
+                                        <option value="PI"  @selected(old('uf') === 'PI')>PIAUÍ</option>
+                                        <option value="RJ"  @selected(old('uf') === 'RJ')>RIO DE JANEIRO</option>
+                                        <option value="RN"  @selected(old('uf') === 'RN')>RIO GRANDE DO NORTE</option>
+                                        <option value="RS"  @selected(old('uf') === 'RS')>RIO GRANDE DO SUL</option>
+                                        <option value="RO"  @selected(old('uf') === 'RO')>RONDÔNIA</option>
+                                        <option value="RR"  @selected(old('uf') === 'RR')>RORAIMA</option>
+                                        <option value="SC"  @selected(old('uf') === 'SC')>SANTA CATARINA</option>
+                                        <option value="SP"  @selected(old('uf') === 'SP')>SÃO PAULO</option>
+                                        <option value="SE"  @selected(old('uf') === 'SE')>SERGIPE</option>
+                                        <option value="TO"  @selected(old('uf') === 'TO')>TOCANTINS</option>
+                                        <option value="EX"  @selected(old('uf') === 'EX')>ESTRANGEIRO</option>
                                     </select>
                                     @error('uf')
                                         <div class="text-danger">{{ $message }}</div>
@@ -235,17 +235,17 @@
                             </div>
                             <div class="col-md-2 col-sm-12 mb-2">
                                 <label for="tipo_sangue" class="form-label">Tipo Sanguineo</label>
-                                <select name="tipo_sangue" id="tipo_sangue" class="form-select" value={{old('tipo_sangue')}}>
-                                    <option value="">Selecione</option>
-                                    <option value="NS"> Não Sabe</option>
-                                    <option value="O+"> O+</option>
-                                    <option value="O-"> O-</option>
-                                    <option value="A+"> A+</option>
-                                    <option value="A-"> A-</option>
-                                    <option value="B+"> B+</option>
-                                    <option value="B-"> B-</option>
-                                    <option value="AB+">AB+</option>
-                                    <option value="AB-">AB-</option>
+                                <select name="tipo_sangue" id="tipo_sangue" class="form-select">
+                                    <option value=""    @selected(old('tipo_sangue') === '')>Selecione</option>
+                                    <option value="NS"  @selected(old('tipo_sangue') === 'NS')>Não Sabe</option>
+                                    <option value="O+"  @selected(old('tipo_sangue') === 'O+')>O+</option>
+                                    <option value="O-"  @selected(old('tipo_sangue') === 'O-')>O-</option>
+                                    <option value="A+"  @selected(old('tipo_sangue') === 'A+')>A+</option>
+                                    <option value="A-"  @selected(old('tipo_sangue') === 'A-')>A-</option>
+                                    <option value="B+"  @selected(old('tipo_sangue') === 'B+')>B+</option>
+                                    <option value="B-"  @selected(old('tipo_sangue') === 'B-')>B-</option>
+                                    <option value="AB+" @selected(old('tipo_sangue') === 'AB+')>AB+</option>
+                                    <option value="AB-" @selected(old('tipo_sangue') === 'AB-')>AB-</option>
                                 </select>
                                 @error('tipo_sangue')
                                     <div class="text-danger">{{ $message }}</div>

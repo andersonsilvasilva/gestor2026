@@ -128,6 +128,27 @@ class ClienteTest extends TestCase
         $edit->assertSee('alert-danger', false);
     }
 
+    public function test_create_validation_failure_keeps_select_choices_on_redisplay(): void
+    {
+        $user = User::factory()->rh()->create();
+
+        $dados = $this->dadosCliente(['sexo' => 'FEMININO', 'cor' => 'PARDA', 'uf' => 'MT']);
+        unset($dados['nome']); // força a validação a falhar (nome é obrigatório)
+
+        $this->actingAs($user)
+            ->from(route('clientes.new-cliente'))
+            ->post('/clientes/create-cliente', $dados)
+            ->assertSessionHasErrors('nome');
+
+        $form = $this->actingAs($user)->get(route('clientes.new-cliente'));
+        $form->assertOk();
+
+        $html = $form->getContent();
+        $this->assertMatchesRegularExpression('/<option value="FEMININO"\s+selected[^>]*>/', $html);
+        $this->assertMatchesRegularExpression('/<option value="PARDA"\s+selected[^>]*>/', $html);
+        $this->assertMatchesRegularExpression('/<option value="MT"\s+selected[^>]*>/', $html);
+    }
+
     public function test_deleting_a_cliente_is_a_soft_delete_via_post(): void
     {
         $user = User::factory()->rh()->create();
