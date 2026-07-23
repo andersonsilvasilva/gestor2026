@@ -139,10 +139,47 @@ class ClienteTest extends TestCase
         Client::factory()->create(['nome' => 'Maria da Silva']);
         Client::factory()->create(['nome' => 'João Pereira']);
 
-        $response = $this->actingAs($user)->get('/clientes?nome=Maria');
+        $response = $this->actingAs($user)->get('/clientes?busca=Maria');
 
         $response->assertOk();
         $this->assertTrue($response->viewData('clientes')->contains('nome', 'Maria da Silva'));
         $this->assertFalse($response->viewData('clientes')->contains('nome', 'João Pereira'));
+    }
+
+    public function test_search_by_cpf_filters_the_cliente_list(): void
+    {
+        $user = User::factory()->rh()->create();
+        $alvo = Client::factory()->create(['nome' => 'Maria da Silva', 'cpf' => '111.222.333-44']);
+        Client::factory()->create(['nome' => 'João Pereira', 'cpf' => '555.666.777-88']);
+
+        $response = $this->actingAs($user)->get('/clientes?busca=111.222.333-44');
+
+        $response->assertOk();
+        $this->assertTrue($response->viewData('clientes')->contains('id', $alvo->id));
+        $this->assertSame(1, $response->viewData('clientes')->count());
+    }
+
+    public function test_search_by_cpf_ignores_punctuation(): void
+    {
+        $user = User::factory()->rh()->create();
+        $alvo = Client::factory()->create(['nome' => 'Maria da Silva', 'cpf' => '111.222.333-44']);
+
+        // busca só com os números, sem pontuação, ainda deve encontrar o cliente
+        $response = $this->actingAs($user)->get('/clientes?busca=11122233344');
+
+        $response->assertOk();
+        $this->assertTrue($response->viewData('clientes')->contains('id', $alvo->id));
+    }
+
+    public function test_search_by_telefone_filters_the_cliente_list(): void
+    {
+        $user = User::factory()->rh()->create();
+        $alvo = Client::factory()->create(['nome' => 'Maria da Silva', 'telefone' => '(65) 99999-1234']);
+        Client::factory()->create(['nome' => 'João Pereira', 'telefone' => '(65) 98888-5678']);
+
+        $response = $this->actingAs($user)->get('/clientes?busca=999991234');
+
+        $response->assertOk();
+        $this->assertTrue($response->viewData('clientes')->contains('id', $alvo->id));
     }
 }

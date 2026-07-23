@@ -5,42 +5,47 @@
         <h3>Clientes</h3>
         <hr>
 
+        <div class="card-header p-2 mb-2  border-light shadow">
+            <form action="{{ route('clientes')}}" id="form-busca-cliente">
+                <div class="justify-content-left">
+                    <div class="input-group">
+
+                        <div class="col mt-0 mb-2 me-lg-2">
+                            {{--<label class="form-label" for="busca"></label>--}}
+                            <input type="text" name="busca" id="busca"
+                                class="form-control form-control-white text-bg-info" value="{{ $busca }}"
+                                placeholder="Pesquisar por nome, CPF ou telefone"/>
+                        </div>
+                        <div class="col mt-0 mb-2 me-lg-2 float-start">
+                                <button type="submit" class="btn btn-info btn-md input-group-btn">Pequisar</button>
+
+                                <a href="{{ route('clientes')}}" class="btn btn-warning btn-md input-group-btn">Limpar</a>
+                                <a href="{{ route('clientes.new-cliente')}}"
+                                    class="btn btn-danger btn-md input-group-btn">Novo cliente</a>
+                        </div>
+                        <div class="col mt-0 mb-2 me-lg-2 float-end">
+
+                                <a href="{{ route('home') }}" class="btn btn-success">Home</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         @if($clientes->count() ===0)
             <div class="card p-2 mb-2 border-light shadow">
                 <div class="card d-flex justify-content-center">
-                    <p>Nenhum cliente cadastrado</p>
+                    @if($busca)
+                        <p>Nenhum cliente encontrado para essa busca.</p>
+                    @else
+                        <p>Nenhum cliente cadastrado</p>
+                    @endif
                 </div>
                 <div class="card d-flex justify-content-center">
                     <a href="{{route('clientes.new-cliente')}}" class="btn btn-danger btn-md mb-2">Criar um novo cliente</a>
                 </div>
             </div>
             @else
-            <div class="card-header p-2 mb-2  border-light shadow">
-                <form action="{{ route('clientes')}}">
-                    <div class="justify-content-left">
-                        <div class="input-group">
-
-                            <div class="col mt-0 mb-2 me-lg-2">
-                                {{--<label class="form-label" for="nome"></label>--}}
-                                <input type="text" name="nome" id="nome"
-                                    class="form-control form-control-white text-bg-info" value="{{ $nome }}"
-                                    placeholder="Pesquisar o nome do cliente"/>
-                            </div>
-                            <div class="col mt-0 mb-2 me-lg-2 float-start">
-                                    <button type="submit" class="btn btn-info btn-md input-group-btn">Pequisar</button>
-
-                                    <a href="{{ route('clientes')}}" class="btn btn-warning btn-md input-group-btn">Limpar</a>
-                                    <a href="{{ route('clientes.new-cliente')}}"
-                                        class="btn btn-danger btn-md input-group-btn">Novo cliente</a>
-                            </div>
-                            <div class="col mt-0 mb-2 me-lg-2 float-end">
-
-                                    <a href="{{ route('home') }}" class="btn btn-success">Home</a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
             <div class="card-body">
                 <table class="table table-striped table-success" id="table">
                     <thead class="table-dark text-left">
@@ -104,5 +109,25 @@
             </div>
           </div>
         @endif
+
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+                var input = document.getElementById('busca');
+                var form = document.getElementById('form-busca-cliente');
+                if (!input || !form) return;
+
+                var timer = null;
+                input.addEventListener('input', function () {
+                    clearTimeout(timer);
+                    timer = setTimeout(function () { form.submit(); }, 500);
+                });
+
+                // devolve o foco (e o cursor no fim do texto) depois do recarregamento
+                if (input.value) {
+                    input.focus();
+                    input.setSelectionRange(input.value.length, input.value.length);
+                }
+            });
+        </script>
 
 </x-layout-app>

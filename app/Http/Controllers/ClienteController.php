@@ -23,18 +23,30 @@ class ClienteController extends Controller
     {
        // Auth::user()->can('admin') ?: abort(403, "Você não tem acesso a essa página!");
 
-        $clientes = Client::when($request->has('nome'), function($whenQuery) use ($request){
-            $whenQuery->where('nome', 'like', '%' . $request->nome . '%');
+        $busca = $request->input('busca');
+        $buscaDigits = $busca ? preg_replace('/\D/', '', $busca) : '';
+
+        $clientes = Client::when($busca, function ($whenQuery) use ($busca, $buscaDigits) {
+            $whenQuery->where(function ($sub) use ($busca, $buscaDigits) {
+                $sub->where('nome', 'like', '%' . $busca . '%')
+                    ->orWhere('cpf', 'like', '%' . $busca . '%')
+                    ->orWhere('telefone', 'like', '%' . $busca . '%');
+
+                if ($buscaDigits !== '') {
+                    $sub->orWhereRaw("REGEXP_REPLACE(cpf, '[^0-9]', '') LIKE ?", ['%' . $buscaDigits . '%'])
+                        ->orWhereRaw("REGEXP_REPLACE(telefone, '[^0-9]', '') LIKE ?", ['%' . $buscaDigits . '%']);
+                }
+            });
         })
         ->orderBy('nome','asc')
         ->withTrashed()
         ->paginate(11)
-        ->withQueryString();  
+        ->withQueryString();
 
 
         return view('clientes.cliente',[
             'clientes' => $clientes,
-            'nome' => $request->nome,
+            'busca' => $busca,
         ]);
 
     }
