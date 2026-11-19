@@ -10,7 +10,8 @@
             <a href="{{ route('usuarios.index')}}"><i class="fas fa-users-gear me-2"></i>Gestão de Usuários</a>
             <a href="{{ route('configuracoes.edit')}}"><i class="fas fa-sliders me-2"></i>Configurações</a>
         @endcan
-            <a href="{{ route('gerador')}}"><i class="fa-regular fa-newspaper me-2"></i>Relatórios</a>                                 
+            <a href="{{ route('gerador')}}"><i class="fa-regular fa-newspaper me-2"></i>Relatórios</a>
+            <a href="{{ route('licenca') }}"><i class="fas fa-shield-halved me-2"></i>Licença e Privacidade</a>
     <hr>
     <a href="{{route('user.profile')}}"><i class="fas fa-cog me-2"></i>Perfil Usuário</a>
     <hr>
@@ -23,5 +24,6 @@
                 </button>
             </form>
         </div>
+
 </div>
 

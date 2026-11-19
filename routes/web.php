@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function(){
     //Gerador de relatorio JasperReport Studio
 
     Route::get('gerador', [ControllerReport::class,'index'])->name('gerador');
+    Route::view('licenca', 'licenca.index')->name('licenca');
     Route::post('/gerar', [ControllerReport::class,'generateReport'])->name('gerar');
     Route::get('/parametros' , [ControllerReport::class,'getParametros']) ->name('parametros');
 
